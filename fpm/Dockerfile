@@ -1,0 +1,40 @@
+FROM debian:stable
+LABEL maintainer="Elastic Beats Team"
+
+RUN \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        autoconf build-essential libffi-dev ruby-dev rpm zip dos2unix libgmp3-dev \
+        curl make gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG SUEXEC_VERSION=0.2
+ARG SUEXEC_DOWNLOAD_URL=https://github.com/ncopa/su-exec/archive/v${SUEXEC_VERSION}.tar.gz
+ARG SUEXEC_DOWNLOAD_SHA256=ec4acbd8cde6ceeb2be67eda1f46c709758af6db35cacbcde41baac349855e25
+
+RUN \
+    curl -fsSL "$SUEXEC_DOWNLOAD_URL" -o suexec.tar.gz \
+    && echo "$SUEXEC_DOWNLOAD_SHA256  suexec.tar.gz" | sha256sum -c - \
+    && mkdir /suexec \
+    && tar -C /suexec --strip-components=1 -xzf suexec.tar.gz \
+    && make -C /suexec \
+    && mv /suexec/su-exec /usr/bin/ \
+    && rm -rf /suexec suexec.tar.gz
+
+ARG FPM_VERSION
+RUN gem install fpm -v "$FPM_VERSION"
+
+COPY rootfs /
+
+ENTRYPOINT  ["/entrypoint.sh"]
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
