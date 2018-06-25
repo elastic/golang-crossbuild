@@ -37,3 +37,17 @@ docker run -it --rm \
 This will execute your projects `make build` target. While executing the build
 command the following variables with be added to the environment: GOOS, GOARCH,
 GOARM, PLATFORM_ID, CC, and CXX.
+
+## Releasing images for a new Go version
+
+1. Update the Docker tag in
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/Makefile.common#L5).
+1. Update the Go version and SHA256 in the
+   [Dockerfile](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/base/Dockerfile#L19-L21).
+   The SHA256 must be obtained from https://golang.org/dl/.
+1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
+1. Build the images from the project's root with `make`.
+1. Get a logon token for the container registry by visiting https://docker.elastic.co:7000.
+   In the provided login command change `docker.elastic.co` to `push.docker.elastic.co`.
+1. Publish the images with `make push`.
+
