@@ -1,0 +1,9 @@
+---
+
+linux:
+  386:
+    CC:  gcc
+    CXX: g++
+  amd64:
+    CC:  gcc
+    CXX: g++

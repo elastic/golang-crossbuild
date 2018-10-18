@@ -1,0 +1,28 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN \
+    dpkg --add-architecture i386 \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        g++ \
+        gcc \
+        gcc-multilib \
+        libc6-dev \
+        patch \
+        xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
