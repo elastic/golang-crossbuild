@@ -14,6 +14,7 @@ RUN \
             file \
             flex \
             bison \
+            libsystemd-dev \
         && rm -rf /var/lib/apt/lists/*
 
 ARG GOLANG_VERSION=1.11
