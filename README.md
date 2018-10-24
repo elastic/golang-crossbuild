@@ -21,6 +21,8 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 - `1.10.3-main-debian7`, `1.11-main-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
   uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
   compatibility.)
+- `1.10.3-main-debian8`, `1.11-main-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
+  uses glibc 2.19)
 
 ## Usage Example
 
@@ -41,7 +43,8 @@ GOARM, PLATFORM_ID, CC, and CXX.
 ## Releasing images for a new Go version
 
 1. Update the Docker tag in
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/Makefile.common#L5).
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/Makefile.common#L5) and/or
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.11/Makefile.common#L5).
 1. Update the Go version and SHA256 in the
    [Dockerfile](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/base/Dockerfile#L19-L21).
    The SHA256 must be obtained from https://golang.org/dl/.
