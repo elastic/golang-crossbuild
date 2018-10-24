@@ -31,17 +31,6 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
-ARG MAGE_VERSION=2.1
-ARG MAGE_DOWNLOAD_URL=https://github.com/magefile/mage/releases/download/${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-64bit.tar.gz
-ARG MAGE_DOWNLOAD_SHA256=44f4a34fcf7bd17c11c6ed2a7b495900c771289c580fdef517a950fdccd15e02
-
-RUN curl -fsSL "$MAGE_DOWNLOAD_URL" -o mage.tar.gz \
-	&& echo "$MAGE_DOWNLOAD_SHA256  mage.tar.gz" | sha256sum -c - \
-    && mkdir /usr/local/mage \
-	&& tar -C /usr/local/mage -xzf mage.tar.gz \
-	&& rm mage.tar.gz
-ENV PATH /usr/local/mage:$PATH
-
 COPY rootfs /
 
 WORKDIR /
