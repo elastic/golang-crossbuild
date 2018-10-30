@@ -30,7 +30,7 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 docker run -it --rm \
   -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
   -w /go/src/github.com/user/go-project \
-  -env CGO_ENABLED=1 \
+  -e CGO_ENABLED=1 \
   docker.elastic.co/beats-dev/golang-crossbuild:1.10.4-arm \
   --build-cmd "make build" \
   -p "linux/armv7"
