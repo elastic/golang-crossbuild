@@ -8,12 +8,12 @@ RUN \
         llvm \
     && rm -rf /var/lib/apt/lists/*
 
-ARG OSXCROSS_SDK_URL=https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.11.sdk.tar.xz
+ARG OSXCROSS_SDK_URL=https://s3.amazonaws.com/beats-files/deps/MacOSX10.11.sdk.tar.xz
 ARG OSXCROSS_PATH=/usr/osxcross
 ARG OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa
 ARG SDK_VERSION=10.11
 ARG DARWIN_VERSION=15
-ARG OSX_VERSION_MIN=10.6
+ARG OSX_VERSION_MIN=10.10
 
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
