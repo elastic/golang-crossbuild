@@ -12,16 +12,16 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 ## Build Tags
 
-- `1.10.6-main`, `1.11.3-main` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.6-arm`, `1.11.3-arm` - linux/{armv5,armv6,armv7,arm64}
-- `1.10.6-darwin`, `1.11.3-darwin` - darwin/{amd64,386}
-- `1.10.6-ppc`, `1.11.3-ppc` - linux/{ppc64,ppc64le}
-- `1.10.6-mips`, `1.11.3-mips` - linux/{mips,mipsle,mips64,mips64le}
-- `1.10.6-s390x`, `1.11.3-s390x` - linux/s390x
-- `1.10.6-main-debian7`, `1.11.3-main-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
+- `1.10.7-main`, `1.11.4-main` - linux/{amd64,386} and windows/{amd64,386}
+- `1.10.7-arm`, `1.11.4-arm` - linux/{armv5,armv6,armv7,arm64}
+- `1.10.7-darwin`, `1.11.4-darwin` - darwin/{amd64,386}
+- `1.10.7-ppc`, `1.11.4-ppc` - linux/{ppc64,ppc64le}
+- `1.10.7-mips`, `1.11.4-mips` - linux/{mips,mipsle,mips64,mips64le}
+- `1.10.7-s390x`, `1.11.4-s390x` - linux/s390x
+- `1.10.7-main-debian7`, `1.11.4-main-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
   uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
   compatibility.)
-- `1.10.6-main-debian8`, `1.11.3-main-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
+- `1.10.7-main-debian8`, `1.11.4-main-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
   uses glibc 2.19)
 
 ## Usage Example
@@ -31,7 +31,7 @@ docker run -it --rm \
   -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
   -w /go/src/github.com/user/go-project \
   -e CGO_ENABLED=1 \
-  docker.elastic.co/beats-dev/golang-crossbuild:1.10.6-arm \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.10.7-arm \
   --build-cmd "make build" \
   -p "linux/armv7"
 ```

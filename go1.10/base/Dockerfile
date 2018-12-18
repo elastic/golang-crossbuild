@@ -16,7 +16,7 @@ RUN \
             bison \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.10.6
+ARG GOLANG_VERSION=1.10.7
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=acbdedf28b55b38d2db6f06209a25a869a36d31bdcf09fd2ec3d40e1279e0592
 
