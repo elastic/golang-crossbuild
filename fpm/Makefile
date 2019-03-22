@@ -5,6 +5,7 @@ VERSION := 1.11.0
 
 build:
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)"
+	@go run ../template.go -t Dockerfile.tmpl -o Dockerfile
 	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)" \
 	--build-arg FPM_VERSION=$(VERSION) \
 	--build-arg IMAGE="$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
