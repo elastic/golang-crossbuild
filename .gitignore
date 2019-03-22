@@ -4,3 +4,4 @@
 .idea
 .vagrant
 _obj
+Dockerfile
