@@ -1,7 +1,7 @@
 ARG DEBIAN_VERSION
 FROM debian:${DEBIAN_VERSION}
 
-{{if eq .DEBIAN_VERSION "7" -}}
+{{if or (eq .DEBIAN_VERSION "7") (eq .DEBIAN_VERSION "8") -}}
 # Replace sources.list in order to use archive.debian.org.
 COPY sources-debian{{.DEBIAN_VERSION}}.list /etc/apt/sources.list
 {{end -}}
