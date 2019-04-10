@@ -7,7 +7,7 @@ COPY sources-debian{{.DEBIAN_VERSION}}.list /etc/apt/sources.list
 {{end -}}
 
 RUN \
-    apt-get update \
+    apt-get -o Acquire::Check-Valid-Until=false update \
         && apt-get dist-upgrade -y \
         && apt-get install -y --no-install-recommends \
             build-essential \
