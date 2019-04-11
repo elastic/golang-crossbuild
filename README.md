@@ -12,16 +12,16 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 ## Build Tags
 
-- `1.10.8-main`, `1.11.6-main` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.8-arm`, `1.11.6-arm` - linux/{armv5,armv6,armv7,arm64}
-- `1.10.8-darwin`, `1.11.6-darwin` - darwin/{amd64,386}
-- `1.10.8-ppc`, `1.11.6-ppc` - linux/{ppc64,ppc64le}
-- `1.10.8-mips`, `1.11.6-mips` - linux/{mips,mipsle,mips64,mips64le}
-- `1.10.8-s390x`, `1.11.6-s390x` - linux/s390x
-- `1.10.8-main-debian7`, `1.11.6-main-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
+- `1.10.8-main`, `1.11.6-main`, `1.12.1-main` - linux/{amd64,386} and windows/{amd64,386}
+- `1.10.8-arm`, `1.11.6-arm`, `1.12.1-arm` - linux/{armv5,armv6,armv7,arm64}
+- `1.10.8-darwin`, `1.11.6-darwin`, `1.12.1-darwin` - darwin/{amd64,386}
+- `1.10.8-ppc`, `1.11.6-ppc`, `1.12.1-ppc` - linux/{ppc64,ppc64le}
+- `1.10.8-mips`, `1.11.6-mips`, `1.12.1-mips` - linux/{mips,mipsle,mips64,mips64le}
+- `1.10.8-s390x`, `1.11.6-s390x`, `1.12.1-s390` - linux/s390x
+- `1.10.8-main-debian7`, `1.11.6-main-debian7`, `1.12.1-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
   uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
   compatibility.)
-- `1.10.8-main-debian8`, `1.11.6-main-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
+- `1.10.8-main-debian8`, `1.11.6-main-debian8`, `1.12.1-main-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
   uses glibc 2.19)
 
 ## Usage Example
@@ -44,7 +44,8 @@ GOARM, PLATFORM_ID, CC, and CXX.
 
 1. Update the Docker tag in
    [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.11/Makefile.common#L5).
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.11/Makefile.common#L5) and/or
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.12/Makefile.common#L5).
 1. Update the Go version and SHA256 in the
    [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/base/Dockerfile#L19-L21).
    The SHA256 must be obtained from https://golang.org/dl/.
