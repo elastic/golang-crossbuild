@@ -1,0 +1,27 @@
+ARG REPOSITORY
+ARG VERSION
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
+
+RUN \
+    apt-get update && apt-get install -y --no-install-recommends \
+        crossbuild-essential-mipsel \
+        gcc-mips-linux-gnu \
+        g++-mips-linux-gnu \
+        gcc-6-mips64-linux-gnuabi64 \
+        g++-6-mips64-linux-gnuabi64 \
+        gcc-6-mips64el-linux-gnuabi64 \
+        g++-6-mips64el-linux-gnuabi64 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
