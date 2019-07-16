@@ -48,10 +48,10 @@ GOARM, PLATFORM_ID, CC, and CXX.
    [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.12/Makefile.common#L5).
 1. Update the Go version and SHA256 in the
    [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/base/Dockerfile#L19-L21).
-   The SHA256 must be obtained from https://golang.org/dl/.
+   The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
 1. Build the images from the project's root with `make`.
-1. Get a logon token for the container registry by visiting https://docker.elastic.co:7000.
+1. Get a logon token for the container registry by visiting <https://docker.elastic.co:7000.>
    In the provided login command change `docker.elastic.co` to `push.docker.elastic.co`.
 1. Publish the images with `make push`.
