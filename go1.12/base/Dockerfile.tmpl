@@ -21,9 +21,9 @@ RUN \
             bison \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.12.10
+ARG GOLANG_VERSION=1.12.11
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=aaa84147433aed24e70b31da369bb6ca2859464a45de47c2a5023d8573412f6b
+ARG GOLANG_DOWNLOAD_SHA256=2c5960292da8b747d83f171a28a04116b2977e809169c344268c893e4cf0a857
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
