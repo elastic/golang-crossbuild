@@ -1,4 +1,4 @@
-TARGETS=go1.10 go1.11 go1.12
+TARGETS=go1.10 go1.11 go1.12 go1.13
 
 build:
 	@$(foreach var,$(TARGETS), \
