@@ -3,6 +3,7 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
+    dpkg --add-architecture s390x \
     apt-get update && apt-get install -y --no-install-recommends \
         g++-s390x-linux-gnu \
         gcc-s390x-linux-gnu \

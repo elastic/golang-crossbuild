@@ -3,6 +3,7 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
+    dpkg--add-architecture mips64el \
     apt-get update && apt-get install -y --no-install-recommends \
         crossbuild-essential-mipsel \
         gcc-mips-linux-gnu \
