@@ -6,6 +6,7 @@ RUN \
     apt-get update && apt-get install -y --no-install-recommends \
         g++-s390x-linux-gnu \
         gcc-s390x-linux-gnu \
+        librpm-dev:s390x \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

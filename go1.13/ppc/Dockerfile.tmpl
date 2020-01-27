@@ -7,6 +7,7 @@ RUN \
         g++-6-powerpc64-linux-gnu \
         gcc-6-powerpc64-linux-gnu \
         crossbuild-essential-ppc64el \
+        librpm-dev:ppc64el \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

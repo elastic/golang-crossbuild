@@ -10,6 +10,9 @@ RUN \
         linux-libc-dev-arm64-cross \
         linux-libc-dev-armel-cross \
         linux-libc-dev-armhf-cross \
+        librpm-dev:arm64 \
+        librpm-dev:armhf \
+        librpm-dev:armel \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
