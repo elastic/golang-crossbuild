@@ -4,7 +4,7 @@ FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
     dpkg --add-architecture ppc64el \
-    apt-get update && apt-get install -y --no-install-recommends \
+    && apt-get update && apt-get install -y --no-install-recommends \
         g++-6-powerpc64-linux-gnu \
         gcc-6-powerpc64-linux-gnu \
         crossbuild-essential-ppc64el \

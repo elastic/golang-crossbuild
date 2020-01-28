@@ -3,10 +3,10 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    dpkg--add-architecture arm64 \
-    dpkg--add-architecture armhf \
-    dpkg--add-architecture armel \
-    apt-get update && apt-get install -y --no-install-recommends \
+    dpkg --add-architecture arm64 \
+    && dpkg --add-architecture armhf \
+    && dpkg --add-architecture armel \
+    && apt-get update && apt-get install -y --no-install-recommends \
         crossbuild-essential-arm64 \
         crossbuild-essential-armel \
         crossbuild-essential-armhf \
