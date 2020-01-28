@@ -12,9 +12,9 @@ RUN \
         g++-6-mips64-linux-gnuabi64 \
         gcc-6-mips64el-linux-gnuabi64 \
         g++-6-mips64el-linux-gnuabi64 \
-        librpm-dev:mips \
+        #        librpm-dev:mips \
         librpm-dev:mips64el \
-        librpm-dev:mipsel \
+        #        librpm-dev:mipsel \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
