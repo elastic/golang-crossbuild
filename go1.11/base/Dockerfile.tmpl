@@ -19,7 +19,9 @@ RUN \
             file \
             flex \
             bison \
+{{- if not (or (eq .DEBIAN_VERSION "7") (eq .DEBIAN_VERSION "8"))}}
             swig \
+{{- end}}
         && rm -rf /var/lib/apt/lists/*
 
 ARG GOLANG_VERSION=1.11.13
