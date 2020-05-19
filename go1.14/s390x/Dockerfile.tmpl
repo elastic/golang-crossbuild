@@ -3,7 +3,7 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    apt-get update && apt-get install -y --no-install-recommends \
+    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
         g++-s390x-linux-gnu \
         gcc-s390x-linux-gnu \
     && rm -rf /var/lib/apt/lists/*

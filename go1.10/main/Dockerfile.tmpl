@@ -5,7 +5,7 @@ FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture i386 \
-    && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
+    && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends --allow-unauthenticated \
         clang \
         g++ \
         gcc \

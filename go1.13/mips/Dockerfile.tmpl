@@ -3,7 +3,7 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    apt-get update && apt-get install -y --no-install-recommends \
+    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
         crossbuild-essential-mipsel \
         gcc-mips-linux-gnu \
         g++-mips-linux-gnu \
