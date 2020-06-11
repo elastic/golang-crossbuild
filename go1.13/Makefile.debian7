@@ -1,4 +1,4 @@
-IMAGES         := base main
+IMAGES         := base amd64
 DEBIAN_VERSION := 7
 TAG_EXTENSION  := -debian7
 
