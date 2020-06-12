@@ -8,14 +8,13 @@ pipeline {
     BASE_DIR = "src/github.com/elastic/${env.REPO}"
     NOTIFY_TO = credentials('notify-to')
     PIPELINE_LOG_LEVEL = 'INFO'
-    PATH = "${env.PATH}:${env.WORKSPACE}/bin"
     HOME = "${env.WORKSPACE}"
     DOCKER_REGISTRY_SECRET = 'secret/apm-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
   }
   options {
-    timeout(time: 1, unit: 'HOURS')
+    timeout(time: 2, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
@@ -49,12 +48,10 @@ pipeline {
     stage('Staging') {
       steps {
         withGithubNotify(context: 'Staging') {
-          deleteDir()
-          unstash 'source'
           dir(BASE_DIR){
             dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
-            sh(label: "push docker image to ${env.STAGING_IMAGE}/${env.REPO_NAME}",
-               script: "REPOSITORY=${env.STAGING_IMAGE}/${env.REPO_NAME} VERSION==${env.BRANCH_NAME} make push")
+            sh(label: "push docker image to ${env.STAGING_IMAGE}/${env.REPO}",
+               script: "REPOSITORY=${env.STAGING_IMAGE}/${env.REPO} VERSION=${env.BRANCH_NAME} make push")
           }
         }
       }
@@ -69,8 +66,6 @@ pipeline {
         stage('Publish') {
           steps {
             withGithubNotify(context: 'Publish') {
-              deleteDir()
-              unstash 'source'
               dir(BASE_DIR){
                 dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
                 sh 'make push'
