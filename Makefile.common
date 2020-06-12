@@ -1,4 +1,4 @@
-REPOSITORY    := docker.elastic.co/beats-dev
+REPOSITORY    ?= docker.elastic.co/beats-dev
 VCS_REF       := $(shell git rev-parse HEAD)
 VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
