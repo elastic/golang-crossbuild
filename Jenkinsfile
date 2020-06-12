@@ -50,8 +50,12 @@ pipeline {
         withGithubNotify(context: 'Staging') {
           dir(BASE_DIR){
             dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
-            sh(label: "push docker image to ${env.STAGING_IMAGE}/${env.REPO}",
-               script: "REPOSITORY=${env.STAGING_IMAGE}/${env.REPO} VERSION=${env.BRANCH_NAME} make push")
+            withEnv( [ "REPOSITORY=${env.STAGING_IMAGE}" ] ) {
+              // It will use the already cached docker images that were created in the
+              // Build stage. But it's required to retag them with the staging repo.
+              sh 'make build'
+              sh(label: "push docker image to ${env.REPOSITORY}", script: 'make push')
+            }
           }
         }
       }

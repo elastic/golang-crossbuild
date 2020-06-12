@@ -1,7 +1,7 @@
 include ../Makefile.common
 
 NAME    := fpm
-VERSION ?= 1.11.0
+VERSION := 1.11.0
 
 build:
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)"
