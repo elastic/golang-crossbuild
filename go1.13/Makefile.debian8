@@ -1,4 +1,4 @@
-IMAGES         := base amd64
+IMAGES         := base amd64 i386
 DEBIAN_VERSION := 8
 TAG_EXTENSION  := -debian8
 
