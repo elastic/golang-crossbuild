@@ -4,16 +4,15 @@ ARG TAG_EXTENSION=
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
-    dpkg --add-architecture i386 \
-    && apt-get -o Acquire::Check-Valid-Until=false update \
+    apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install -y --no-install-recommends --allow-unauthenticated \
         clang \
         g++ \
         gcc \
         gcc-multilib \
         libc6-dev \
-        libc6-dev-i386 \
-        linux-libc-dev:i386 \
+        librpm-dev \
+        libsystemd-dev \
         mingw-w64 \
         mingw-w64-tools \
         patch \
