@@ -27,9 +27,7 @@ RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install -y --no-install-recommends --allow-unauthenticated libsystemd-journal-dev:i386 \
     && rm -rf /var/lib/apt/lists/*
-{{- end}}
-
-{{if or (eq .DEBIAN_VERSION "8") (eq .DEBIAN_VERSION "9") -}}
+{{else if or (eq .DEBIAN_VERSION "8") (eq .DEBIAN_VERSION "9") -}}
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install -y --no-install-recommends --allow-unauthenticated libsystemd-dev:i386 \
