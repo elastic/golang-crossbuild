@@ -62,9 +62,7 @@ pipeline {
     }
     stage('Release') {
       when {
-        anyOf {
-          tag pattern: 'v\\d+\\.\\d+.*', comparator: 'REGEXP'
-        }
+        branch 'master'
       }
       stages {
         stage('Publish') {
