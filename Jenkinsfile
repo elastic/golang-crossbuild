@@ -9,7 +9,7 @@ pipeline {
     NOTIFY_TO = credentials('notify-to')
     PIPELINE_LOG_LEVEL = 'INFO'
     HOME = "${env.WORKSPACE}"
-    DOCKER_REGISTRY_SECRET = 'secret/apm-team/ci/docker-registry/prod'
+    DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
     GO_VERSION = '1.14.2'
