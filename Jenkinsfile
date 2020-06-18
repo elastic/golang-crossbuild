@@ -12,6 +12,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/apm-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
+    GO_VERSION = '1.14.2'
   }
   options {
     timeout(time: 2, unit: 'HOURS')
@@ -39,8 +40,10 @@ pipeline {
         withGithubNotify(context: 'Build') {
           deleteDir()
           unstash 'source'
-          dir(BASE_DIR){
-            sh 'make build'
+          withGoEnv(){
+            dir(BASE_DIR){
+              sh 'make build'
+            }
           }
         }
       }
@@ -48,13 +51,15 @@ pipeline {
     stage('Staging') {
       steps {
         withGithubNotify(context: 'Staging') {
-          dir(BASE_DIR){
-            dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
-            withEnv( [ "REPOSITORY=${env.STAGING_IMAGE}" ] ) {
-              // It will use the already cached docker images that were created in the
-              // Build stage. But it's required to retag them with the staging repo.
-              sh 'make build'
-              sh(label: "push docker image to ${env.REPOSITORY}", script: 'make push')
+          withGoEnv(){
+            dir(BASE_DIR){
+              dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
+              withEnv( [ "REPOSITORY=${env.STAGING_IMAGE}" ] ) {
+                // It will use the already cached docker images that were created in the
+                // Build stage. But it's required to retag them with the staging repo.
+                sh 'make build'
+                sh(label: "push docker image to ${env.REPOSITORY}", script: 'make push')
+              }
             }
           }
         }
@@ -68,9 +73,11 @@ pipeline {
         stage('Publish') {
           steps {
             withGithubNotify(context: 'Publish') {
-              dir(BASE_DIR){
-                dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
-                sh 'make push'
+              withGoEnv(){
+                dir(BASE_DIR){
+                  dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
+                  sh 'make push'
+                }
               }
             }
           }
