@@ -7,8 +7,8 @@ pipeline {
     REPO = 'golang-crossbuild'
     BASE_DIR = "src/github.com/elastic/${env.REPO}"
     NOTIFY_TO = credentials('notify-to')
-    PIPELINE_LOG_LEVEL = 'INFO'
     HOME = "${env.WORKSPACE}"
+    PIPELINE_LOG_LEVEL = 'INFO'
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
@@ -40,11 +40,7 @@ pipeline {
         withGithubNotify(context: 'Build') {
           deleteDir()
           unstash 'source'
-          withGoEnv(){
-            dir(BASE_DIR){
-              sh 'make build'
-            }
-          }
+          buildImages()
         }
       }
     }
@@ -54,15 +50,10 @@ pipeline {
       }
       steps {
         withGithubNotify(context: 'Staging') {
-          withGoEnv(){
-            dir(BASE_DIR){
-              dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
-              // It will use the already cached docker images that were created in the
-              // Build stage. But it's required to retag them with the staging repo.
-              sh 'make build'
-              sh(label: "push docker image to ${env.REPOSITORY}", script: 'make push')
-            }
-          }
+          // It will use the already cached docker images that were created in the
+          // Build stage. But it's required to retag them with the staging repo.
+          buildImages()
+          publishImages()
         }
       }
     }
@@ -74,12 +65,7 @@ pipeline {
         stage('Publish') {
           steps {
             withGithubNotify(context: 'Publish') {
-              withGoEnv(){
-                dir(BASE_DIR){
-                  dockerLogin(secret: "${DOCKER_REGISTRY_SECRET}", registry: "${REGISTRY}")
-                  sh 'make push'
-                }
-              }
+              publishImages()
             }
           }
         }
@@ -90,5 +76,20 @@ pipeline {
     always {
       notifyBuildResult()
     }
+  }
+}
+
+def buildImages(){
+  withGoEnv(){
+    dir("${env.BASE_DIR}"){
+      sh 'make build'
+    }
+  }
+}
+
+def publishImages(){
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  dir("${env.BASE_DIR}"){
+    sh(label: "push docker image to ${env.REPOSITORY}", script: 'make push')
   }
 }
