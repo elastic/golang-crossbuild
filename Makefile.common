@@ -7,7 +7,6 @@ BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 # Requires login at https://docker.elastic.co:7000/.
 push:
 	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
-	@docker tag "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" "push.$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
-	@docker push "push.$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
 .PHONY: push
