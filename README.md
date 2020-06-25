@@ -1,3 +1,5 @@
+[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmaster)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/master/)
+
 # golang-crossbuild
 
 golang-crossbuild is a set of Docker images containing the requisite
@@ -51,6 +53,13 @@ GOARM, PLATFORM_ID, CC, and CXX.
    The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
+1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
+1. When merging the PR then the automation will release those docker images.
+
+### Manual steps
+
+> This is not required unless the CI service is down.
+
 1. Build the images from the project's root with `make`.
 1. Get a logon token for the container registry by visiting <https://docker.elastic.co:7000>.
 1. Publish the images with `make push`.
