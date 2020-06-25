@@ -54,7 +54,7 @@ GOARM, PLATFORM_ID, CC, and CXX.
 1. Update the versions listed in this README.md.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
 1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
-1. When merging the PR then the automation will releases those docker images.
+1. When merging the PR then the automation will release those docker images.
 
 ### Manual steps
 
