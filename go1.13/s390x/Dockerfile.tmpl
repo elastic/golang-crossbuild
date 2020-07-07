@@ -11,6 +11,15 @@ RUN \
         g++-s390x-linux-gnu \
         gcc-s390x-linux-gnu \
         librpm-dev:s390x \
+        libc-dev:s390x \
+        libpopt-dev:s390x \
+        linux-libc-dev:s390x \
+        libxml2-dev:s390x \
+        libxml2:s390x \
+        libicu-dev:s390x \
+        libicu57:s390x \
+        icu-devtools:s390x \
+        libsystemd-dev:s390x \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

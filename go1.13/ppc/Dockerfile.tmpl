@@ -12,6 +12,15 @@ RUN \
         gcc-6-powerpc64-linux-gnu \
         crossbuild-essential-ppc64el \
         librpm-dev:ppc64el \
+        libc-dev:ppc64el \
+        libpopt-dev:ppc64el \
+        linux-libc-dev:ppc64el \
+        libxml2-dev:ppc64el \
+        libxml2:ppc64el \
+        libicu-dev:ppc64el \
+        libicu57:ppc64el \
+        icu-devtools:ppc64el \
+        libsystemd-dev:ppc64el \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
