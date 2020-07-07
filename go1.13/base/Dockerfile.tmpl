@@ -9,7 +9,7 @@ COPY sources-debian{{.DEBIAN_VERSION}}.list /etc/apt/sources.list
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
         && apt-get dist-upgrade -y \
-        && apt-get install -y --no-install-recommends \
+        && apt-get install -y --no-install-recommends --allow-unauthenticated \
             build-essential \
             ca-certificates \
             curl \
@@ -21,9 +21,9 @@ RUN \
             bison \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.13.6
+ARG GOLANG_VERSION=1.13.12
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=a1bc06deb070155c4f67c579f896a45eeda5a8fa54f35ba233304074c4abbbbd
+ARG GOLANG_DOWNLOAD_SHA256=9cacc6653563771b458c13056265aa0c21b8a23ca9408278484e4efde4160618
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \

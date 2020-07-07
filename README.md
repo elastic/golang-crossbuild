@@ -1,3 +1,5 @@
+[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmaster)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/master/)
+
 # golang-crossbuild
 
 golang-crossbuild is a set of Docker images containing the requisite
@@ -12,16 +14,16 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 ## Build Tags
 
-- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.6-main` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.6-arm` - linux/{armv5,armv6,armv7,arm64}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin, `1.13.6-darwin`` - darwin/{amd64,386}
-- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.6-ppc` - linux/{ppc64,ppc64le}
-- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips, `1.13.6-mips`` - linux/{mips,mipsle,mips64,mips64le}
-- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390, `1.13.6-s390`` - linux/s390x
-- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7, `1.13.6-debian7`` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
+- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.4` - linux/{amd64,386} and windows/{amd64,386}
+- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.4` - linux/{armv5,armv6,armv7,arm64}
+- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.4` - darwin/{amd64,386}
+- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.4` - linux/{ppc64,ppc64le}
+- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.4` - linux/{mips,mipsle,mips64,mips64le}
+- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.4` - linux/s390x
+- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.4` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
   uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
   compatibility.)
-- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8, `1.13.6-debian8`` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
+- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.4` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
   uses glibc 2.19)
 
 ## Usage Example
@@ -51,7 +53,13 @@ GOARM, PLATFORM_ID, CC, and CXX.
    The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
+1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
+1. When merging the PR then the automation will release those docker images.
+
+### Manual steps
+
+> This is not required unless the CI service is down.
+
 1. Build the images from the project's root with `make`.
 1. Get a logon token for the container registry by visiting <https://docker.elastic.co:7000>.
-   In the provided login command change `docker.elastic.co` to `push.docker.elastic.co`.
 1. Publish the images with `make push`.
