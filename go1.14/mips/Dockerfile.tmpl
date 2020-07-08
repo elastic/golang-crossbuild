@@ -3,7 +3,11 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
+    dpkg --add-architecture mips64el \
+    && apt-get update -qq \
+    && apt-get install -qq -y \
+      --no-install-recommends \
+      --allow-unauthenticated \
         crossbuild-essential-mipsel \
         gcc-mips-linux-gnu \
         g++-mips-linux-gnu \
@@ -11,6 +15,16 @@ RUN \
         g++-6-mips64-linux-gnuabi64 \
         gcc-6-mips64el-linux-gnuabi64 \
         g++-6-mips64el-linux-gnuabi64 \
+        librpm-dev:mips64el \
+        libc-dev:mips64el \
+        libpopt-dev:mips64el \
+        linux-libc-dev:mips64el \
+        libxml2-dev:mips64el \
+        libxml2:mips64el \
+        libicu-dev:mips64el \
+        libicu57:mips64el \
+        icu-devtools:mips64el \
+        libsystemd-dev:mips64el \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

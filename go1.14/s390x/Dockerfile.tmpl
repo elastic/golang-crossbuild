@@ -3,9 +3,23 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
+    dpkg --add-architecture s390x \
+    && apt-get update -qq \
+    && apt-get install -y -qq \
+      --no-install-recommends \
+      --allow-unauthenticated \
         g++-s390x-linux-gnu \
         gcc-s390x-linux-gnu \
+        librpm-dev:s390x \
+        libc-dev:s390x \
+        libpopt-dev:s390x \
+        linux-libc-dev:s390x \
+        libxml2-dev:s390x \
+        libxml2:s390x \
+        libicu-dev:s390x \
+        libicu57:s390x \
+        icu-devtools:s390x \
+        libsystemd-dev:s390x \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
