@@ -4,30 +4,31 @@ ARG TAG_EXTENSION=
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
-    dpkg --add-architecture i386 \
+    dpkg --add-architecture amd64 \
     && apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install -y --no-install-recommends --allow-unauthenticated \
         clang \
         g++ \
         gcc \
         gcc-multilib \
+        #libc6-dev-amd64-cross \
         libc6-dev \
-        libc6-dev-i386 \
-        linux-libc-dev:i386 \
+        #libc6-dev-amd64 \
+        linux-libc-dev:amd64 \
         mingw-w64 \
         mingw-w64-tools \
         patch \
         xz-utils \
-        librpm-dev \
-        libc-dev \
-        libpopt-dev \
-        linux-libc-dev \
-        libxml2-dev \
-        libxml2 \
-        libicu-dev \
-        libicu57 \
-        icu-devtools \
-        libsystemd-dev \
+        librpm-dev:amd64 \
+        libc-dev:amd64 \
+        libpopt-dev:amd64 \
+        linux-libc-dev:amd64 \
+        libxml2-dev:amd64 \
+        libxml2:amd64 \
+        libicu-dev:amd64 \
+        libicu57:amd64 \
+        icu-devtools:amd64 \
+        libsystemd-dev:amd64 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
