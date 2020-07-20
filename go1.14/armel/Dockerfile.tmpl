@@ -3,23 +3,23 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    dpkg --add-architecture arm64 \
+    dpkg --add-architecture armel \
     && apt-get update -qq \
     && apt-get install -qq -y \
       --no-install-recommends \
       --allow-unauthenticated \
-        crossbuild-essential-arm64 \
-        linux-libc-dev-arm64-cross \
-        librpm-dev:arm64 \
-        libc-dev:arm64 \
-        libpopt-dev:arm64 \
-        linux-libc-dev:arm64 \
-        libxml2-dev:arm64 \
-        libxml2:arm64 \
-        libicu-dev:arm64 \
-        libicu57:arm64 \
-        icu-devtools:arm64 \
-        libsystemd-dev:arm64 \
+        crossbuild-essential-armel \
+        linux-libc-dev-armel-cross \
+        librpm-dev:armel \
+        libc-dev:armel \
+        libpopt-dev:armel \
+        linux-libc-dev:armel \
+        libxml2-dev:armel \
+        libxml2:armel \
+        libicu-dev:armel \
+        libicu57:armel \
+        icu-devtools:armel \
+        libsystemd-dev:armel \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
