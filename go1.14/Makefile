@@ -1,4 +1,4 @@
-IMAGES := base main amd64 darwin arm armel armhf mips ppc s390x
+IMAGES := base i386 amd64 darwin arm64 armel armhf mips mips64 mipsel mips64el ppc64 ppc64el s390x
 
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
