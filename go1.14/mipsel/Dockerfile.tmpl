@@ -3,35 +3,36 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    dpkg --add-architecture mips \
+    dpkg --add-architecture mipsel \
     && apt-get update -qq \
     && apt-get install -qq -y \
       --no-install-recommends \
       --allow-unauthenticated \
-        dpkg-cross \
-        gcc-mips-linux-gnu \
-        g++-mips-linux-gnu \
-        librpm-dev:mips \
-        libc-dev:mips \
-        libpopt-dev:mips \
-        linux-libc-dev:mips \
-        libxml2-dev:mips \
-        libxml2:mips \
-        libicu-dev:mips \
-        libicu57:mips \
-        icu-devtools:mips \
-        libsystemd-dev:mips \
+        crossbuild-essential-mipsel \
+        gcc-mipsel-linux-gnu \
+        g++-mipsel-linux-gnu \
+        librpm-dev:mipsel \
+        libc-dev:mipsel \
+        libpopt-dev:mipsel \
+        linux-libc-dev:mipsel \
+        libxml2-dev:mipsel \
+        libxml2:mipsel \
+        libicu-dev:mipsel \
+        libicu57:mipsel \
+        icu-devtools:mipsel \
+        libsystemd-dev:mipsel \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
 
 # Basic test
 RUN cd / \
-  && mips-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && mipsel-linux-gnu-gcc helloWorld.c -o helloWorld \
   && file helloWorld \
   && readelf -h helloWorld \
   && readelf -h helloWorld | grep -c 'MIPS R3000' \
   && readelf -h helloWorld | grep -c 'ELF32' \
+  && readelf -h helloWorld | grep -c "little endian" \
   && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.

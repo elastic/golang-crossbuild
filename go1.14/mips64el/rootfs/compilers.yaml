@@ -1,0 +1,6 @@
+---
+
+linux:
+  mips64le:
+    CC:  mips64el-linux-gnuabi64-gcc
+    CXX: mips64el-linux-gnuabi64-g++

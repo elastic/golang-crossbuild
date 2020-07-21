@@ -1,0 +1,6 @@
+---
+
+linux:
+  mipsle:
+    CC:  mipsel-linux-gnu-gcc
+    CXX: mipsel-linux-gnu-g++
