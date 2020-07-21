@@ -24,6 +24,16 @@ RUN \
 
 COPY rootfs /
 
+# Basic test
+RUN cd / \
+  && s390x-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'IBM S/390' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "big endian" \
+  && rm helloWorld.c helloWorld
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE
