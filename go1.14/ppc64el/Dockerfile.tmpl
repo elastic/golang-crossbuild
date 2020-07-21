@@ -8,8 +8,8 @@ RUN \
     && apt-get install -y -qq \
       --no-install-recommends \
       --allow-unauthenticated \
-        g++-6-powerpc64-linux-gnu \
-        gcc-6-powerpc64-linux-gnu \
+        g++-powerpc64le-linux-gnu \
+        gcc-powerpc64le-linux-gnu \
         crossbuild-essential-ppc64el \
         librpm-dev:ppc64el \
         libc-dev:ppc64el \
@@ -24,6 +24,16 @@ RUN \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && powerpc64le-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'PowerPC64' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "little endian" \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
