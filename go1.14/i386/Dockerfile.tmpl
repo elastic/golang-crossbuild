@@ -7,30 +7,35 @@ RUN \
     dpkg --add-architecture i386 \
     && apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install -y --no-install-recommends --allow-unauthenticated \
-        clang \
-        g++ \
-        gcc \
-        gcc-multilib \
-        libc6-dev \
-        libc6-dev-i386 \
+        clang:i386 \
+        g++:i386 \
+        gcc:i386 \
+        gcc-multilib:i386 \
+        libc6-dev:i386 \
         linux-libc-dev:i386 \
-        mingw-w64 \
-        mingw-w64-tools \
         patch \
         xz-utils \
-        librpm-dev \
-        libc-dev \
-        libpopt-dev \
-        linux-libc-dev \
-        libxml2-dev \
-        libxml2 \
-        libicu-dev \
-        libicu57 \
-        icu-devtools \
-        libsystemd-dev \
+        librpm-dev:i386 \
+        libc-dev:i386 \
+        libpopt-dev:i386 \
+        linux-libc-dev:i386 \
+        libxml2-dev:i386 \
+        libxml2:i386 \
+        libicu-dev:i386 \
+        libicu57:i386 \
+        icu-devtools:i386 \
+        libsystemd-dev:i386 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && file helloWorld | cut -d "," -f 2 | grep -c 'Intel 80386' \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

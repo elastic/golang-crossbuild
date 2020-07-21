@@ -33,6 +33,14 @@ RUN \
 
 COPY rootfs /
 
+# Basic test
+RUN cd / \
+  && gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && file helloWorld | cut -d "," -f 2 | grep -c 'x86-64' \
+  && rm helloWorld.c helloWorld
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE

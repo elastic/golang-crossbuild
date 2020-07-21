@@ -1,15 +1,17 @@
 ARG DEBIAN_VERSION
 FROM debian:${DEBIAN_VERSION}
 
-{{if or (eq .DEBIAN_VERSION "7") (eq .DEBIAN_VERSION "8") -}}
+{{if (le .DEBIAN_VERSION "8") -}}
 # Replace sources.list in order to use archive.debian.org.
 COPY sources-debian{{.DEBIAN_VERSION}}.list /etc/apt/sources.list
 {{- end}}
 
 RUN \
-    apt-get -o Acquire::Check-Valid-Until=false update \
-        && apt-get dist-upgrade -y \
-        && apt-get install -y --no-install-recommends --allow-unauthenticated \
+    apt-get -qq -o Acquire::Check-Valid-Until=false update \
+        && apt-get dist-upgrade -qq -y \
+        && apt-get install -y \
+          --no-install-recommends \
+          --allow-unauthenticated \
             build-essential \
             ca-certificates \
             curl \
@@ -21,7 +23,7 @@ RUN \
             bison \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.14.4
+ARG GOLANG_VERSION=1.14.6
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=aed845e4185a0b2a3c3d5e1d0a35491702c55889192bb9c30e67a3de6849c067
 
