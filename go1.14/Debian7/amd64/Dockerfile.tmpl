@@ -1,0 +1,70 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN \
+    dpkg --add-architecture amd64 \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get upgrade -qq -y \
+    && apt-get install -y --no-install-recommends --allow-unauthenticated \
+        clang:amd64 \
+        g++:amd64 \
+        gcc:amd64 \
+        gcc-multilib:amd64 \
+        libc6 \
+        libc-bin \
+        libc6-dev:amd64 \
+#        libc6:amd64 \
+#        libc-bin:amd64 \
+        libdb5.1-dev:amd64 \
+        libdb5.1:amd64 \
+        libmagic1:amd64 \
+        linux-libc-dev:amd64 \
+        patch \
+        xz-utils \
+        librpm-dev:amd64 \
+        libpopt-dev:amd64 \
+        libxml2-dev:amd64 \
+        libxml2:amd64 \
+        libsystemd-journal-dev:amd64 \
+        libsystemd-daemon-dev:amd64 \
+        libsystemd-id128-dev:amd64 \
+        libsystemd-daemon0:amd64 \
+        libsystemd-id128-0:amd64 \
+        libsystemd-journal0:amd64 \
+        libpopt0:amd64 \
+        librpm3:amd64 \
+        librpmio3:amd64 \
+        librpmbuild3:amd64 \
+        librpmsign1:amd64 \
+        libdb-dev:amd64 \
+        libbz2-dev:amd64 \
+        libz-dev:amd64 \
+        libreadline-dev:amd64 \
+        libselinux1-dev:amd64 \
+        libsqlite3-dev:amd64 \
+        liblzma5:amd64 \
+        zlib1g:amd64 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+#  && file helloWorld | cut -d "," -f 2 | grep -c 'Intel 80386' \
+  && rm helloWorld.c helloWorld
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
