@@ -4,7 +4,7 @@ FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
     dpkg --add-architecture ppc64el \
-    && apt-get update -qq \
+    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
     && apt-get install -y -qq \
       --no-install-recommends \
       --allow-unauthenticated \

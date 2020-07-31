@@ -3,7 +3,8 @@ ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
 RUN \
-    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
+    apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install -y --no-install-recommends --allow-unauthenticated \
         clang \
         llvm \
     && rm -rf /var/lib/apt/lists/*
