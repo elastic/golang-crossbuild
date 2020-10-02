@@ -2,7 +2,7 @@
 @Library('apm@current') _
 
 pipeline {
-  agent { label 'ubuntu && immutable' }
+  agent { label 'ubuntu-20 && immutable' }
   environment {
     REPO = 'golang-crossbuild'
     BASE_DIR = "src/github.com/elastic/${env.REPO}"
@@ -35,37 +35,54 @@ pipeline {
         stash name: 'source', useDefaultExcludes: false
       }
     }
-    stage('Build') {
-      steps {
-        withGithubNotify(context: 'Build') {
-          deleteDir()
-          unstash 'source'
-          buildImages()
+    stage('Package'){
+      matrix {
+        agent { label 'ubuntu-20 && immutable' }
+        axes {
+          axis {
+            name "MAKEFILE"
+            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
+          }
+          axis {
+            name 'GO_FOLDER'
+            values 'go1.10', 'go1.11', 'go1.12', 'go1.13', 'go1.14'
+          }
         }
-      }
-    }
-    stage('Staging') {
-      environment {
-        REPOSITORY = "${env.STAGING_IMAGE}"
-      }
-      steps {
-        withGithubNotify(context: 'Staging') {
-          // It will use the already cached docker images that were created in the
-          // Build stage. But it's required to retag them with the staging repo.
-          buildImages()
-          publishImages()
-        }
-      }
-    }
-    stage('Release') {
-      when {
-        branch 'master'
-      }
-      stages {
-        stage('Publish') {
-          steps {
-            withGithubNotify(context: 'Publish') {
-              publishImages()
+        stages {
+          stage('Build') {
+            steps {
+              withGithubNotify(context: 'Build') {
+                deleteDir()
+                unstash 'source'
+                buildImages()
+              }
+            }
+          }
+          stage('Staging') {
+            environment {
+              REPOSITORY = "${env.STAGING_IMAGE}"
+            }
+            steps {
+              withGithubNotify(context: 'Staging') {
+                // It will use the already cached docker images that were created in the
+                // Build stage. But it's required to retag them with the staging repo.
+                buildImages()
+                publishImages()
+              }
+            }
+          }
+          stage('Release') {
+            when {
+              branch 'master'
+            }
+            stages {
+              stage('Publish') {
+                steps {
+                  withGithubNotify(context: 'Publish') {
+                    publishImages()
+                  }
+                }
+              }
             }
           }
         }
@@ -82,7 +99,7 @@ pipeline {
 def buildImages(){
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      sh 'make build'
+      sh 'make -c ${GO_FOLDER} -f ${MAKEFILE} build'
     }
   }
 }

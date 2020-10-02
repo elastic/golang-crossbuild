@@ -1,6 +1,7 @@
 ARG REPOSITORY
 ARG VERSION
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
@@ -28,6 +29,18 @@ RUN \
 ENV PATH $OSXCROSS_PATH/bin:$PATH
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && o64-clang helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && file helloWorld | grep -c 'Mach-O 64-bit x86_64'
+
+RUN cd / \
+  && o32-clang helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && file helloWorld | grep -c 'Mach-O i386' \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

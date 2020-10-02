@@ -1,6 +1,7 @@
 ARG REPOSITORY
 ARG VERSION
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture mips64el \
@@ -25,9 +26,26 @@ RUN \
         libicu57:mips64el \
         icu-devtools:mips64el \
         libsystemd-dev:mips64el \
+        librpm3:mips64el \
+        librpmio3:mips64el \
+        librpmbuild3:mips64el \
+        librpmsign3:mips64el \
+        libsqlite3-dev:mips64el \
+        libnss3:mips64el \
+        libsqlite3-0:mips64el \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && mips64el-linux-gnuabi64-gcc-6 helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'MIPS R3000' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "little endian" \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

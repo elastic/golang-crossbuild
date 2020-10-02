@@ -1,11 +1,12 @@
 ARG REPOSITORY
 ARG VERSION
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture ppc64el \
     && apt-get -o Acquire::Check-Valid-Until=false update -qq \
-    && apt-get install -y -qq \
+    && apt-get install -qq -y \
       --no-install-recommends \
       --allow-unauthenticated \
         g++-6-powerpc64-linux-gnu \
@@ -21,9 +22,26 @@ RUN \
         libicu57:ppc64el \
         icu-devtools:ppc64el \
         libsystemd-dev:ppc64el \
+        librpm3:ppc64el \
+        librpmio3:ppc64el \
+        librpmbuild3:ppc64el \
+        librpmsign3:ppc64el \
+        libsqlite3-dev:ppc64el \
+        libnss3:ppc64el \
+        libsqlite3-0:ppc64el \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && powerpc64le-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'PowerPC64' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "little endian" \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
