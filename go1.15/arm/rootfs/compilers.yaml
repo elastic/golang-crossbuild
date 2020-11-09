@@ -1,0 +1,17 @@
+---
+
+linux:
+  armv7:
+    CC:  arm-linux-gnueabihf-gcc
+    CXX: arm-linux-gnueabihf-g++
+  armv6:
+    # Using debian armel for ARMv6.
+    # This is the same as ARMv5 so it will use softfp instead of hardfp.
+    CC:  arm-linux-gnueabi-gcc
+    CXX: arm-linux-gnueabi-g++
+  armv5:
+    CC:  arm-linux-gnueabi-gcc
+    CXX: arm-linux-gnueabi-g++
+  arm64:
+    CC:  aarch64-linux-gnu-gcc
+    CXX: aarch64-linux-gnu-g++

@@ -1,0 +1,36 @@
+ARG REPOSITORY
+ARG VERSION
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
+
+RUN \
+    dpkg --add-architecture s390x \
+    && apt-get update -qq \
+    && apt-get install -y -qq \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        g++-s390x-linux-gnu \
+        gcc-s390x-linux-gnu \
+        librpm-dev:s390x \
+        libc-dev:s390x \
+        libpopt-dev:s390x \
+        linux-libc-dev:s390x \
+        libxml2-dev:s390x \
+        libxml2:s390x \
+        libicu-dev:s390x \
+        libicu57:s390x \
+        icu-devtools:s390x \
+        libsystemd-dev:s390x \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
