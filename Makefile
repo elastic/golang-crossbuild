@@ -1,24 +1,26 @@
 TARGETS=go1.10 go1.11 go1.12 go1.13 go1.14
 
+build: status=".status.build"
 build:
-	error=0
+	@echo '0' > ${status}
 	@$(foreach var,$(TARGETS), \
-		$(MAKE) -C $(var) $@ || error=1; \
-		$(MAKE) -C $(var) -f Makefile.debian7 $@ || error=1; \
-		$(MAKE) -C $(var) -f Makefile.debian8 $@ || error=1; \
-		$(MAKE) -C $(var) -f Makefile.debian9 $@ || error=1;)
-	@make -C fpm $@ || error=1
-	exit $(error)
+		$(MAKE) -C $(var) $@ || echo '1' > ${status} ;\
+		$(MAKE) -C $(var) -f Makefile.debian7 $@ || echo '1' > ${status} ;\
+		$(MAKE) -C $(var) -f Makefile.debian8 $@ || echo '1' > ${status} ;\
+		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status})
+	@make -C fpm $@ || echo '1' > ${status}
+	exit $$(cat ${status})
 
 # Requires login at https://docker.elastic.co:7000/.
+push: status=".status.push"
 push:
-	error=0
+	@echo '0' > ${status}
 	@$(foreach var,$(TARGETS), \
-		$(MAKE) -C $(var) $@ || error=1; \
-		$(MAKE) -C $(var) -f Makefile.debian7 $@ || error=1; \
-		$(MAKE) -C $(var) -f Makefile.debian8 $@ || error=1; \
-		$(MAKE) -C $(var) -f Makefile.debian9 $@ || error=1;)
-	@make -C fpm $@ || error=1
-	exit $(error)
+		$(MAKE) -C $(var) $@ || echo '1' > ${status};\
+		$(MAKE) -C $(var) -f Makefile.debian7 $@ || echo '1' > ${status} ;\
+		$(MAKE) -C $(var) -f Makefile.debian8 $@ || echo '1' > ${status} ;\
+		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status})
+	@make -C fpm $@ || echo '1' > ${status}
+	exit $$(cat ${status})
 
 .PHONY: build push
