@@ -2,6 +2,7 @@ ARG REPOSITORY
 ARG VERSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
 
+RUN apt-get update
 RUN \
     dpkg --add-architecture mips64el \
     && apt-get update -qq \
