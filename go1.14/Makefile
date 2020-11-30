@@ -1,4 +1,4 @@
-# mips is temporarily disabled. See: TODO
+# mips is temporarily disabled. See: https://github.com/elastic/golang-crossbuild/issues/71
 IMAGES := base main darwin arm ppc s390x
 
 build:
