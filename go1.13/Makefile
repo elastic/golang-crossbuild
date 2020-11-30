@@ -1,5 +1,5 @@
-# mips is temporarily disabled. See: https://github.com/elastic/golang-crossbuild/issues/71
-IMAGES := base main darwin arm ppc s390x
+# mips ppc are temporarily disabled. See: https://github.com/elastic/golang-crossbuild/issues/71
+IMAGES := base main darwin arm s390x
 
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
