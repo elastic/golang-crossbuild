@@ -1,4 +1,5 @@
-IMAGES := base main darwin arm mips ppc s390x
+# mips is temporarily disabled. See: TODO
+IMAGES := base main darwin arm ppc s390x
 
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
