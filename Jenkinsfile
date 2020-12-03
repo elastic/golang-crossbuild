@@ -99,7 +99,7 @@ pipeline {
 def buildImages(){
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      sh 'make -c ${GO_FOLDER} -f ${MAKEFILE} build'
+      sh 'make -C ${GO_FOLDER} -f ${MAKEFILE} build'
     }
   }
 }
