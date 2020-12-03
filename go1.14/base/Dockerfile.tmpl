@@ -1,9 +1,9 @@
 ARG DEBIAN_VERSION
 FROM debian:${DEBIAN_VERSION}
 
-ARG TAG_EXTENSION
+ARG DEBIAN_VERSION
 # Replace sources.list in order to use archive.debian.org.
-COPY sources${TAG_EXTENSION}.list /etc/apt/sources.list
+COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
