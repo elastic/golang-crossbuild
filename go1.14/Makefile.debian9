@@ -1,4 +1,4 @@
-IMAGES         := base main
+IMAGES         := base main arm darwin mips ppc s390x
 DEBIAN_VERSION := 9
 TAG_EXTENSION  := -debian9
 
