@@ -3,6 +3,7 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
+RUN apt-get update
 RUN \
     dpkg --add-architecture mips64el \
     && apt-get -o Acquire::Check-Valid-Until=false update -qq \
