@@ -63,7 +63,7 @@ pipeline {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
             steps {
-              withGithubNotify(context: 'Staging ${GO_FOLDER} ${MAKEFILE}') {
+              withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE}") {
                 // It will use the already cached docker images that were created in the
                 // Build stage. But it's required to retag them with the staging repo.
                 buildImages()
@@ -78,7 +78,7 @@ pipeline {
             stages {
               stage('Publish') {
                 steps {
-                  withGithubNotify(context: 'Publish ${GO_FOLDER} ${MAKEFILE}') {
+                  withGithubNotify(context: "Publish ${GO_FOLDER} ${MAKEFILE}") {
                     publishImages()
                   }
                 }
@@ -99,7 +99,7 @@ pipeline {
 def buildImages(){
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      sh 'make -C ${GO_FOLDER} -f ${MAKEFILE} build'
+      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build"
     }
   }
 }
@@ -107,6 +107,6 @@ def buildImages(){
 def publishImages(){
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
-    sh(label: "push docker image to ${env.REPOSITORY}", script: 'make -C ${GO_FOLDER} -f ${MAKEFILE} push')
+    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push")
   }
 }
