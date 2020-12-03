@@ -1,10 +1,11 @@
 ARG REPOSITORY
 ARG VERSION
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture s390x \
-    && apt-get update -qq \
+    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
     && apt-get install -y -qq \
       --no-install-recommends \
       --allow-unauthenticated \
@@ -20,9 +21,26 @@ RUN \
         libicu57:s390x \
         icu-devtools:s390x \
         libsystemd-dev:s390x \
+        librpm3:s390x \
+        librpmio3:s390x \
+        librpmbuild3:s390x \
+        librpmsign3:s390x \
+        libsqlite3-dev:s390x \
+        libnss3:s390x \
+        libsqlite3-0:s390x \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && s390x-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'IBM S/390' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "big endian" \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

@@ -1,12 +1,12 @@
 ARG REPOSITORY
 ARG VERSION
-ARG TAG_EXTENSION=
+ARG TAG_EXTENSION
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture i386 \
     && apt-get -o Acquire::Check-Valid-Until=false update \
-    && apt-get install -y --no-install-recommends --allow-unauthenticated \
+    && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
         clang \
         g++ \
         gcc \
@@ -21,6 +21,14 @@ RUN \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && file helloWorld | cut -d "," -f 2 | grep -c 'x86-64' \
+  && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

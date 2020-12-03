@@ -1,15 +1,14 @@
 ARG DEBIAN_VERSION
 FROM debian:${DEBIAN_VERSION}
 
-{{if or (eq .DEBIAN_VERSION "7") (eq .DEBIAN_VERSION "8") -}}
+ARG DEBIAN_VERSION
 # Replace sources.list in order to use archive.debian.org.
-COPY sources-debian{{.DEBIAN_VERSION}}.list /etc/apt/sources.list
-{{- end}}
+COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
         && apt-get dist-upgrade -y \
-        && apt-get install -y --no-install-recommends --allow-unauthenticated \
+        && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
             build-essential \
             ca-certificates \
             curl \
