@@ -3,7 +3,7 @@ include $(SELF_DIR)/../Makefile.common
 
 NAME           := golang-crossbuild
 VERSION        := 1.14.7
-DEBIAN_VERSION ?= 7
+DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 
