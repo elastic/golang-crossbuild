@@ -37,6 +37,9 @@ WORKDIR $GOPATH
 
 COPY rootfs /
 
+# show the GLIBC version
+RUN ldd --version
+
 WORKDIR /
 RUN go get -d . \
     && go build -o /crossbuild /entrypoint.go \
