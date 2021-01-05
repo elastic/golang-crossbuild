@@ -12,7 +12,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.15.5'
+    GO_VERSION = '1.15.6'
   }
   options {
     timeout(time: 2, unit: 'HOURS')
@@ -75,13 +75,9 @@ pipeline {
             when {
               branch 'master'
             }
-            stages {
-              stage('Publish') {
-                steps {
-                  withGithubNotify(context: "Publish ${GO_FOLDER} ${MAKEFILE}") {
-                    publishImages()
-                  }
-                }
+            steps {
+              withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE}") {
+                publishImages()
               }
             }
           }
