@@ -7,7 +7,8 @@ COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
-        && apt-get install -y --no-install-recommends --allow-unauthenticated \
+        && apt-get dist-upgrade -y \
+        && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
             build-essential \
             ca-certificates \
             curl \
@@ -19,9 +20,9 @@ RUN \
             bison \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.14.12
+ARG GOLANG_VERSION=1.15.6
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=fb26f951c88c0685d7df393611189c58e6eabd3c17bdaef37df11355ab8db9d3
+ARG GOLANG_DOWNLOAD_SHA256=3918e6cc85e7eaaa6f859f1bdbaac772e7a825b0eb423c63d3ae68b21f84b844
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
@@ -35,6 +36,9 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
 COPY rootfs /
+
+# show the GLIBC version
+RUN ldd --version
 
 WORKDIR /
 RUN go get -d . \

@@ -1,11 +1,6 @@
-IMAGES         :=  base main darwin
-DEBIAN_VERSION := 8
-TAG_EXTENSION  := -debian8
-
-export DEBIAN_VERSION TAG_EXTENSION
+IMAGES := base main darwin arm mips ppc s390x
 
 build:
-	export |grep TAG_EXTENSION
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
 
 # Requires login at https://docker.elastic.co:7000/.

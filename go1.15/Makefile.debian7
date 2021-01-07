@@ -1,11 +1,10 @@
-IMAGES         :=  base main darwin
-DEBIAN_VERSION := 8
-TAG_EXTENSION  := -debian8
+IMAGES         := base main
+DEBIAN_VERSION := 7
+TAG_EXTENSION  := -debian7
 
 export DEBIAN_VERSION TAG_EXTENSION
 
 build:
-	export |grep TAG_EXTENSION
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
 
 # Requires login at https://docker.elastic.co:7000/.

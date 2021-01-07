@@ -14,17 +14,20 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 ## Build Tags
 
-- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.7` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.7` - linux/{armv5,armv6,armv7,arm64}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.7` - darwin/{amd64,386}
-- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.7` - linux/{ppc64,ppc64le}
-- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.7` - linux/{mips,mipsle,mips64,mips64le}
-- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.7` - linux/s390x
-- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
+- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.12-main`, `1.15.6-main` - linux/{amd64,386} and windows/{amd64,386}
+- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.12-arm`, `1.15.6-arm` - linux/{armv5,armv6,armv7,arm64}
+- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.12-darwin` - darwin/{386}
+- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.12-darwin`, `1.15.6-darwin` - darwin/{amd64}
+- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.12-ppc`, `1.15.6-ppc` - linux/{ppc64,ppc64le}
+- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.12-mips`, `1.15.6-mips` - linux/{mips,mipsle,mips64,mips64le}
+- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.12-s390`, `1.15.6-s390` - linux/s390x
+- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.12-debian7`, `1.15.6-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
   uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
   compatibility.)
-- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.7` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
+- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.12-debian8`, `1.15.6-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
   uses glibc 2.19)
+- `1.15.6-debian9` - linux/{amd64,386} and windows/{amd64,386} (Debian 9 uses glibc 2.24)
+- `1.15.6-debian10` - linux/{amd64,386} and windows/{amd64,386} (Debian 10 uses glibc 2.28)
 
 ## Usage Example
 
