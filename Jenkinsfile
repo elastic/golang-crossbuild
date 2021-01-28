@@ -84,6 +84,7 @@ pipeline {
 
 def buildAndPushImages(){
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  sh 'docker buildx create --use'
   withGoEnv(){
     dir("${env.BASE_DIR}"){
       sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build"
