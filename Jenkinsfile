@@ -50,6 +50,9 @@ pipeline {
         }
         stages {
           stage('Build') {
+            environment {
+              REPOSITORY = "${env.STAGING_IMAGE}"
+            }
             steps {
               withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE}") {
                 deleteDir()
