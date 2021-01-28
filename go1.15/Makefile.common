@@ -12,7 +12,10 @@ export DEBIAN_VERSION TAG_EXTENSION
 build:
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
-	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
+	@docker buildx build \
+	--progress=plain \
+	--platform linux/amd64,linux/arm64 \
+	-t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
 	--build-arg REPOSITORY=$(REPOSITORY) \
 	--build-arg VERSION=$(VERSION) \
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
@@ -21,6 +24,7 @@ build:
 	--build-arg VCS_REF="$(VCS_REF)" \
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
+	--push \
 	.
 
 .PHONY: build

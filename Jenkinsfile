@@ -2,7 +2,7 @@
 @Library('apm@current') _
 
 pipeline {
-  agent { label 'ubuntu-20 && immutable' }
+  agent { label 'ubuntu-20 && immutable && docker-buildx' }
   environment {
     REPO = 'golang-crossbuild'
     BASE_DIR = "src/github.com/elastic/${env.REPO}"
@@ -61,6 +61,9 @@ pipeline {
           stage('Staging') {
             environment {
               REPOSITORY = "${env.STAGING_IMAGE}"
+            }
+            when {
+              environment(name: 'GO_FOLDER', value: 'go1.13')
             }
             steps {
               withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE}") {
