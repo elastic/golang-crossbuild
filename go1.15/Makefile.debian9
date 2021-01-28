@@ -1,4 +1,5 @@
 IMAGES         := base main arm darwin mips ppc s390x
+ARM_IMAGES     := base-arm main
 DEBIAN_VERSION := 9
 TAG_EXTENSION  := -debian9
 
@@ -7,8 +8,14 @@ export DEBIAN_VERSION TAG_EXTENSION
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
 
+build-arm:
+	@$(foreach var,$(ARM_IMAGES),$(MAKE) -C $(var) build || exit 1;)
+
 # Requires login at https://docker.elastic.co:7000/.
 push:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) push || exit 1;)
 
-.PHONY: build push
+push-arm:
+	@$(foreach var,$(ARM_IMAGES),$(MAKE) -C $(var) push || exit 1;)
+
+.PHONY: build build-arm push push-arm
