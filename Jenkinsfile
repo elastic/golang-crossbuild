@@ -2,7 +2,7 @@
 @Library('apm@current') _
 
 pipeline {
-  agent { label 'ubuntu-18 && immutable && docker-buildx' }
+  agent { label 'ubuntu-20 && immutable' }
   environment {
     REPO = 'golang-crossbuild'
     BASE_DIR = "src/github.com/elastic/${env.REPO}"
