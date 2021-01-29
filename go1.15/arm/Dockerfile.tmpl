@@ -1,7 +1,8 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+ARG PLATFORM_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${PLATFORM_EXTENSION}${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture arm64 \
