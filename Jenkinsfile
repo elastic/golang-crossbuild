@@ -1,5 +1,5 @@
 
-@Library('apm@current') _
+@Library('apm@test/docker') _
 
 pipeline {
   agent { label 'ubuntu-20 && immutable' }
