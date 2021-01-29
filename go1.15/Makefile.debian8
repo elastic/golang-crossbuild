@@ -1,5 +1,5 @@
 IMAGES         :=  base main darwin
-ARM_IMAGES     :=  base-arm main
+ARM_IMAGES     :=  base-arm arm
 DEBIAN_VERSION := 8
 TAG_EXTENSION  := -debian8
 
