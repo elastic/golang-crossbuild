@@ -38,4 +38,4 @@ build-arm:
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
 
-.PHONY: build
+.PHONY: build build-arm
