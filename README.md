@@ -27,6 +27,7 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 - `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.14-debian8`, `1.15.7-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
   uses glibc 2.19)
 - `1.15.7-debian9` - linux/{amd64,386} and windows/{amd64,386} (Debian 9 uses glibc 2.24)
+- `1.15.7-base-arm-debian9` - linux/arm64 (Debian 9 uses glibc 2.24)
 - `1.15.7-debian10` - linux/{amd64,386} and windows/{amd64,386} (Debian 10 uses glibc 2.28)
 
 ## Usage Example

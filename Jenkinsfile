@@ -12,10 +12,10 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.15.6'
+    GO_VERSION = '1.15.7'
   }
   options {
-    timeout(time: 2, unit: 'HOURS')
+    timeout(time: 3, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
@@ -37,7 +37,7 @@ pipeline {
     }
     stage('Package'){
       matrix {
-        agent { label 'ubuntu-20 && immutable' }
+        agent { label "${PLATFORM}"  }
         axes {
           axis {
             name "MAKEFILE"
@@ -47,11 +47,67 @@ pipeline {
             name 'GO_FOLDER'
             values 'go1.14', 'go1.15'
           }
+          axis {
+            name 'PLATFORM'
+            values 'ubuntu-20 && immutable', 'worker-0eaeecf32aca4fe3a'
+          }
+        }
+        excludes {
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'worker-0eaeecf32aca4fe3a'
+            }
+            axis {
+              name 'GO_FOLDER'
+              values 'go1.14'
+            }
+          }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'worker-0eaeecf32aca4fe3a'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile'
+            }
+          }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'worker-0eaeecf32aca4fe3a'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile.debian7'
+            }
+          }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'worker-0eaeecf32aca4fe3a'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile.debian8'
+            }
+          }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'worker-0eaeecf32aca4fe3a'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile.debian10'
+            }
+          }
         }
         stages {
           stage('Build') {
             steps {
-              withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE}") {
+              withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                 deleteDir()
                 unstash 'source'
                 buildImages()
@@ -63,7 +119,7 @@ pipeline {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
             steps {
-              withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE}") {
+              withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                 // It will use the already cached docker images that were created in the
                 // Build stage. But it's required to retag them with the staging repo.
                 buildImages()
@@ -76,7 +132,7 @@ pipeline {
               branch 'master'
             }
             steps {
-              withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE}") {
+              withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                 publishImages()
               }
             }
@@ -93,16 +149,20 @@ pipeline {
 }
 
 def buildImages(){
+  log(level: 'INFO', text: "buildImages ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build"
+      def platform = (PLATFORM?.trim().equals('worker-0eaeecf32aca4fe3a')) ? '-arm' : ''
+      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
     }
   }
 }
 
 def publishImages(){
+  log(level: 'INFO', text: "publish ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
-    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push")
+    def platform = (PLATFORM?.trim().equals('worker-0eaeecf32aca4fe3a')) ? '-arm' : ''
+    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
   }
 }
