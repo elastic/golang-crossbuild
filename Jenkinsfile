@@ -117,7 +117,6 @@ pipeline {
           stage('Staging') {
             environment {
               REPOSITORY = "${env.STAGING_IMAGE}"
-              HOME = "${env.WORKSPACE}"
             }
             steps {
               withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
