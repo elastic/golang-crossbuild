@@ -62,7 +62,7 @@ RUN go get -d . \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-ENV GOLANG_CROSSBUILD=0
+ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app
 ENTRYPOINT  ["/crossbuild"]
