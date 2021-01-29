@@ -1,4 +1,4 @@
-IMAGES         := base main darwin
+IMAGES         :=  base main darwin
 DEBIAN_VERSION := 8
 TAG_EXTENSION  := -debian8
 
