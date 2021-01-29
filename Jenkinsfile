@@ -60,7 +60,7 @@ pipeline {
             }
             axis {
               name 'GO_FOLDER'
-              values 'go1.15'
+              values 'go1.14'
             }
           }
           exclude {
