@@ -18,10 +18,8 @@ build-arm:
 	@echo '0' > ${status}
 	@$(foreach var,$(ARM_TARGETS), \
 		$(MAKE) -C $(var) $@; || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian7 $@; || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian8 $@; || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@; || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian10 $@; || echo '1' > ${status};)
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})
 
@@ -38,4 +36,14 @@ push:
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})
 
-.PHONY: build push
+push-arm: status=".status.push.arm"
+push-arm:
+	@echo '0' > ${status}
+	@$(foreach var,$(ARM_TARGETS), \
+		$(MAKE) -C $(var) $@ || echo '1' > ${status}; \
+		$(MAKE) -C $(var) -f Makefile.debian8 $@ || echo '1' > ${status}; \
+		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status}; \
+	@make -C fpm $@ || echo '1' > ${status}
+	exit $$(cat ${status})
+
+.PHONY: build build-arm push push-arm

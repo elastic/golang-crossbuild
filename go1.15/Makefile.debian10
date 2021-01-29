@@ -1,5 +1,4 @@
 IMAGES         := base main darwin
-ARM_IMAGES     := base-arm main
 DEBIAN_VERSION := 10
 TAG_EXTENSION  := -debian10
 
@@ -8,14 +7,8 @@ export DEBIAN_VERSION TAG_EXTENSION
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
 
-build-arm:
-	@$(foreach var,$(ARM_IMAGES),$(MAKE) -C $(var) build || exit 1;)
-
 # Requires login at https://docker.elastic.co:7000/.
 push:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) push || exit 1;)
 
-push-arm:
-	@$(foreach var,$(ARM_IMAGES),$(MAKE) -C $(var) push || exit 1;)
-
-.PHONY: build build-arm push push-arm
+.PHONY: build push
