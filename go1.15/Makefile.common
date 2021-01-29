@@ -37,6 +37,5 @@ build-arm:
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
-	docker save -o "$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION).tar" "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
 .PHONY: build build-arm

@@ -1,5 +1,5 @@
 
-@Library('apm@test/docker') _
+@Library('apm@current') _
 
 pipeline {
   agent { label 'ubuntu-20 && immutable' }
@@ -111,7 +111,6 @@ pipeline {
                 deleteDir()
                 unstash 'source'
                 buildImages()
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/*.tar', defaultExcludes: false
               }
             }
           }
@@ -130,9 +129,6 @@ pipeline {
             }
           }
           stage('Release') {
-            environment {
-              HOME = "${env.WORKSPACE}"
-            }
             when {
               branch 'master'
             }
