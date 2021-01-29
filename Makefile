@@ -18,7 +18,6 @@ build-arm:
 	@echo '0' > ${status}
 	@$(foreach var,$(ARM_TARGETS), \
 		$(MAKE) -C $(var) $@; || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian8 $@; || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@; || echo '1' > ${status}; \
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})
@@ -41,7 +40,6 @@ push-arm:
 	@echo '0' > ${status}
 	@$(foreach var,$(ARM_TARGETS), \
 		$(MAKE) -C $(var) $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian8 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status}; \
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})

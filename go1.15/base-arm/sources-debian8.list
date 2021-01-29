@@ -1,2 +1,0 @@
-deb http://archive.debian.org/debian jessie main
-deb [arch=arm64] http://security.debian.org jessie/updates main
