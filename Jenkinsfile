@@ -15,7 +15,7 @@ pipeline {
     GO_VERSION = '1.15.7'
   }
   options {
-    timeout(time: 2, unit: 'HOURS')
+    timeout(time: 3, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
@@ -37,7 +37,7 @@ pipeline {
     }
     stage('Package'){
       matrix {
-        agent { label 'ubuntu-20 && immutable' }
+        agent { label "${PLATFORM}"  }
         axes {
           axis {
             name "MAKEFILE"
@@ -47,6 +47,42 @@ pipeline {
             name 'GO_FOLDER'
             values 'go1.14', 'go1.15'
           }
+          axis {
+            name 'PLATFORM'
+            values 'ubuntu-20 && immutable', 'arm'
+          }
+          excludes {
+            exclude {
+              axis {
+                name 'PLATFORM'
+                values 'arm'
+              }
+              axis {
+                name 'GO_FOLDER'
+                values 'go1.15'
+              }
+            }
+            exclude {
+              axis {
+                name 'PLATFORM'
+                values 'arm'
+              }
+              axis {
+                name 'MAKEFILE'
+                values 'Makefile.debian7'
+              }
+            }
+            exclude {
+              axis {
+                name 'PLATFORM'
+                values 'arm'
+              }
+              axis {
+                name 'MAKEFILE'
+                values 'Makefile.debian10'
+              }
+            }
+          }
         }
         stages {
           stage('Build') {
@@ -54,7 +90,7 @@ pipeline {
               withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE}") {
                 deleteDir()
                 unstash 'source'
-                buildImages()
+                buildImages(platform: "${PLATFORM}")
               }
             }
           }
@@ -66,8 +102,8 @@ pipeline {
               withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE}") {
                 // It will use the already cached docker images that were created in the
                 // Build stage. But it's required to retag them with the staging repo.
-                buildImages()
-                publishImages()
+                buildImages(platform: "${PLATFORM}")
+                publishImages(platform: "${PLATFORM}")
               }
             }
           }
@@ -77,56 +113,7 @@ pipeline {
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE}") {
-                publishImages()
-              }
-            }
-          }
-        }
-      }
-    }
-    stage('Package ARM images'){
-      matrix {
-        agent { label 'arm' }
-        axes {
-          axis {
-            name "MAKEFILE"
-            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
-          }
-          axis {
-            name 'GO_FOLDER'
-            values 'go1.15'
-          }
-        }
-        stages {
-          stage('Build ARM64') {
-            steps {
-              withGithubNotify(context: "Build ARM64 ${GO_FOLDER} ${MAKEFILE}") {
-                deleteDir()
-                unstash 'source'
-                buildImagesOnArm()
-              }
-            }
-          }
-          stage('Staging ARM64') {
-            environment {
-              REPOSITORY = "${env.STAGING_IMAGE}"
-            }
-            steps {
-              withGithubNotify(context: "Staging ARM64 ${GO_FOLDER} ${MAKEFILE}") {
-                // It will use the already cached docker images that were created in the
-                // Build stage. But it's required to retag them with the staging repo.
-                buildImagesOnArm()
-                publishArmImages()
-              }
-            }
-          }
-          stage('Release ARM64') {
-            when {
-              branch 'master'
-            }
-            steps {
-              withGithubNotify(context: "Release ARM64 ${GO_FOLDER} ${MAKEFILE}") {
-                publishArmImages()
+                publishImages(platform: "${PLATFORM}")
               }
             }
           }
@@ -141,32 +128,19 @@ pipeline {
   }
 }
 
-def buildImages(){
+def buildImages(Map args = [:]){
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build"
+      def platform = (args.get('platform', '').equals('arm')) ? '-arm' : ''
+      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
     }
   }
 }
 
-def buildImagesOnArm(){
-  withGoEnv(){
-    dir("${env.BASE_DIR}"){
-      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build-arm"
-    }
-  }
-}
-
-def publishImages(){
+def publishImages(Map args = [:]){
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
-    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push")
-  }
-}
-
-def publishArmImages(){
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
-  dir("${env.BASE_DIR}"){
-    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push-arm")
+    def platform = (args.get('platform', '').equals('arm')) ? '-arm' : ''
+    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
   }
 }
