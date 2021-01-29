@@ -90,7 +90,7 @@ pipeline {
               withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE}") {
                 deleteDir()
                 unstash 'source'
-                buildImages(platform: "${PLATFORM}")
+                buildImages()
               }
             }
           }
@@ -102,8 +102,8 @@ pipeline {
               withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE}") {
                 // It will use the already cached docker images that were created in the
                 // Build stage. But it's required to retag them with the staging repo.
-                buildImages(platform: "${PLATFORM}")
-                publishImages(platform: "${PLATFORM}")
+                buildImages()
+                publishImages()
               }
             }
           }
@@ -113,7 +113,7 @@ pipeline {
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE}") {
-                publishImages(platform: "${PLATFORM}")
+                publishImages()
               }
             }
           }
@@ -128,19 +128,21 @@ pipeline {
   }
 }
 
-def buildImages(Map args = [:]){
+def buildImages(){
+  log(level: 'INFO', text: "buildImages ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      def platform = (args.get('platform', '').equals('arm')) ? '-arm' : ''
+      def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
       sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
     }
   }
 }
 
-def publishImages(Map args = [:]){
+def publishImages(){
+  log(level: 'INFO', text: "publish ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
-    def platform = (args.get('platform', '').equals('arm')) ? '-arm' : ''
+    def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
     sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
   }
 }
