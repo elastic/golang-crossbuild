@@ -18,6 +18,23 @@ RUN \
             file \
             flex \
             bison \
+            librpm-dev \
+            libc-dev \
+            libpopt-dev \
+            linux-libc-dev \
+            libxml2-dev \
+            libxml2 \
+            libicu-dev \
+            libicu57 \
+            icu-devtools \
+            libsystemd-dev \
+            librpm3  \
+            librpmio3 \
+            librpmbuild3 \
+            librpmsign3 \
+            libsqlite3-dev \
+            libnss3 \
+            libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
 ARG GOLANG_VERSION=1.15.7
@@ -45,7 +62,7 @@ RUN go get -d . \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-ENV GOLANG_CROSSBUILD=1
+ENV GOLANG_CROSSBUILD=0
 VOLUME      /app
 WORKDIR     /app
 ENTRYPOINT  ["/crossbuild"]

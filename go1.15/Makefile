@@ -1,5 +1,5 @@
 IMAGES := base main darwin arm mips ppc s390x
-ARM_IMAGES := base-arm main
+ARM_IMAGES := base-arm
 
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
