@@ -49,14 +49,14 @@ pipeline {
           }
           axis {
             name 'PLATFORM'
-            values 'ubuntu-20 && immutable', 'worker-0eaeecf32aca4fe3a'
+            values 'ubuntu-20 && immutable', 'arm'
           }
         }
         excludes {
           exclude {
             axis {
               name 'PLATFORM'
-              values 'worker-0eaeecf32aca4fe3a'
+              values 'arm'
             }
             axis {
               name 'GO_FOLDER'
@@ -66,7 +66,7 @@ pipeline {
           exclude {
             axis {
               name 'PLATFORM'
-              values 'worker-0eaeecf32aca4fe3a'
+              values 'arm'
             }
             axis {
               name 'MAKEFILE'
@@ -76,7 +76,7 @@ pipeline {
           exclude {
             axis {
               name 'PLATFORM'
-              values 'worker-0eaeecf32aca4fe3a'
+              values 'arm'
             }
             axis {
               name 'MAKEFILE'
@@ -86,7 +86,7 @@ pipeline {
           exclude {
             axis {
               name 'PLATFORM'
-              values 'worker-0eaeecf32aca4fe3a'
+              values 'arm'
             }
             axis {
               name 'MAKEFILE'
@@ -96,7 +96,7 @@ pipeline {
           exclude {
             axis {
               name 'PLATFORM'
-              values 'worker-0eaeecf32aca4fe3a'
+              values 'arm'
             }
             axis {
               name 'MAKEFILE'
@@ -152,7 +152,7 @@ def buildImages(){
   log(level: 'INFO', text: "buildImages ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   withGoEnv(){
     dir("${env.BASE_DIR}"){
-      def platform = (PLATFORM?.trim().equals('worker-0eaeecf32aca4fe3a')) ? '-arm' : ''
+      def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
       sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
     }
   }
@@ -162,7 +162,7 @@ def publishImages(){
   log(level: 'INFO', text: "publish ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
-    def platform = (PLATFORM?.trim().equals('worker-0eaeecf32aca4fe3a')) ? '-arm' : ''
+    def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
     sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
   }
 }
