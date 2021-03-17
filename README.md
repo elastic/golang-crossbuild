@@ -14,21 +14,21 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 ## Build Tags
 
-- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.15-main`, `1.15.9-main` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.15-arm`, `1.15.9-arm` - linux/{armv5,armv6,armv7,arm64}
+- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.15-main`, `1.15.10-main` - linux/{amd64,386} and windows/{amd64,386}
+- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.15-arm`, `1.15.10-arm` - linux/{armv5,armv6,armv7,arm64}
 - `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin` - darwin/{386}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin`, `1.15.9-darwin` - darwin/{amd64}
-- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.15-ppc`, `1.15.9-ppc` - linux/{ppc64,ppc64le}
-- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.15-mips`, `1.15.9-mips` - linux/{mips,mipsle,mips64,mips64le}
-- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.15-s390`, `1.15.9-s390` - linux/s390x
-- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.15-debian7`, `1.15.9-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
+- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin`, `1.15.10-darwin` - darwin/{amd64}
+- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.15-ppc`, `1.15.10-ppc` - linux/{ppc64,ppc64le}
+- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.15-mips`, `1.15.10-mips` - linux/{mips,mipsle,mips64,mips64le}
+- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.15-s390`, `1.15.10-s390` - linux/s390x
+- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.15-debian7`, `1.15.10-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
   uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
   compatibility.)
-- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.15-debian8`, `1.15.9-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
+- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.15-debian8`, `1.15.10-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
   uses glibc 2.19)
-- `1.15.9-debian9` - linux/{amd64,386} and windows/{amd64,386} (Debian 9 uses glibc 2.24)
-- `1.15.9-base-arm-debian9` - linux/arm64 (Debian 9 uses glibc 2.24)
-- `1.15.9-debian10` - linux/{amd64,386} and windows/{amd64,386} (Debian 10 uses glibc 2.28)
+- `1.15.10-debian9` - linux/{amd64,386} and windows/{amd64,386} (Debian 9 uses glibc 2.24)
+- `1.15.10-base-arm-debian9` - linux/arm64 (Debian 9 uses glibc 2.24)
+- `1.15.10-debian10` - linux/{amd64,386} and windows/{amd64,386} (Debian 10 uses glibc 2.28)
 
 ## Usage Example
 
