@@ -1,0 +1,55 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN \
+    dpkg --add-architecture ppc64el \
+    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
+    && apt-get install -qq -y \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        g++-6-powerpc64-linux-gnu \
+        gcc-6-powerpc64-linux-gnu \
+        crossbuild-essential-ppc64el \
+        librpm-dev:ppc64el \
+        libc-dev:ppc64el \
+        libpopt-dev:ppc64el \
+        linux-libc-dev:ppc64el \
+        libxml2-dev:ppc64el \
+        libxml2:ppc64el \
+        libicu-dev:ppc64el \
+        libicu57:ppc64el \
+        icu-devtools:ppc64el \
+        libsystemd-dev:ppc64el \
+        librpm3:ppc64el \
+        librpmio3:ppc64el \
+        librpmbuild3:ppc64el \
+        librpmsign3:ppc64el \
+        libsqlite3-dev:ppc64el \
+        libnss3:ppc64el \
+        libsqlite3-0:ppc64el \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && powerpc64le-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'PowerPC64' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "little endian" \
+  && rm helloWorld.c helloWorld
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
