@@ -40,7 +40,7 @@ pipeline {
         agent { label "${PLATFORM}"  }
         axes {
           axis {
-            name "MAKEFILE"
+            name 'MAKEFILE'
             values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
           }
           axis {
