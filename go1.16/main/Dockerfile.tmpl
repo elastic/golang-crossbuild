@@ -1,0 +1,42 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN \
+    dpkg --add-architecture i386 \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
+        clang \
+        g++ \
+        gcc \
+        gcc-multilib \
+        libc6-dev \
+        libc6-dev-i386 \
+        linux-libc-dev:i386 \
+        mingw-w64 \
+        mingw-w64-tools \
+        patch \
+        xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && file helloWorld | cut -d "," -f 2 | grep -c 'x86-64' \
+  && rm helloWorld.c helloWorld
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"

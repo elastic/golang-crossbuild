@@ -12,7 +12,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.15.12'
+    GO_VERSION = '1.16.3'
   }
   options {
     timeout(time: 3, unit: 'HOURS')
@@ -40,12 +40,12 @@ pipeline {
         agent { label "${PLATFORM}"  }
         axes {
           axis {
-            name "MAKEFILE"
+            name 'MAKEFILE'
             values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
           }
           axis {
             name 'GO_FOLDER'
-            values 'go1.14', 'go1.15'
+            values 'go1.14', 'go1.15', 'go1.16'
           }
           axis {
             name 'PLATFORM'

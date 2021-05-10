@@ -1,0 +1,54 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN \
+    dpkg --add-architecture s390x \
+    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
+    && apt-get install -y -qq \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        g++-s390x-linux-gnu \
+        gcc-s390x-linux-gnu \
+        librpm-dev:s390x \
+        libc-dev:s390x \
+        libpopt-dev:s390x \
+        linux-libc-dev:s390x \
+        libxml2-dev:s390x \
+        libxml2:s390x \
+        libicu-dev:s390x \
+        libicu57:s390x \
+        icu-devtools:s390x \
+        libsystemd-dev:s390x \
+        librpm3:s390x \
+        librpmio3:s390x \
+        librpmbuild3:s390x \
+        librpmsign3:s390x \
+        libsqlite3-dev:s390x \
+        libnss3:s390x \
+        libsqlite3-0:s390x \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && s390x-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'IBM S/390' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "big endian" \
+  && rm helloWorld.c helloWorld
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"

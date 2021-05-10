@@ -1,0 +1,52 @@
+ARG DEBIAN_VERSION
+FROM debian:${DEBIAN_VERSION}
+
+ARG DEBIAN_VERSION
+# Replace sources.list in order to use archive.debian.org.
+COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
+
+RUN \
+    apt-get -o Acquire::Check-Valid-Until=false update \
+        && apt-get dist-upgrade -y \
+        && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
+            build-essential \
+            ca-certificates \
+            curl \
+            git \
+            gnupg \
+            make \
+            file \
+            flex \
+            bison \
+        && rm -rf /var/lib/apt/lists/*
+
+ARG GOLANG_VERSION=1.16.3
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ARG GOLANG_DOWNLOAD_SHA256=951a3c7c6ce4e56ad883f97d9db74d3d6d80d5fec77455c6ada6c1f7ac4776d2
+
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& tar -C /usr/local -xzf golang.tar.gz \
+	&& rm golang.tar.gz
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+WORKDIR $GOPATH
+
+COPY rootfs /
+
+# show the GLIBC version
+RUN ldd --version
+
+WORKDIR /
+RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
+    && go get -d . \
+    && go build -o /crossbuild /entrypoint.go \
+    && rm -rf /go/* /root/.cache/* /entrypoint.go
+
+ENV GOLANG_CROSSBUILD=1
+VOLUME      /app
+WORKDIR     /app
+ENTRYPOINT  ["/crossbuild"]
