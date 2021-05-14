@@ -1,2 +1,4 @@
 deb http://deb.debian.org/debian buster main
+# see https://wiki.debian.org/CrossToolchains
+deb http://emdebian.org/tools/debian/ buster main
 deb [arch=amd64,i386] http://security.debian.org/debian-security buster/updates main
