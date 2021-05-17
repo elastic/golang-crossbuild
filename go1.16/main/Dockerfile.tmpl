@@ -18,6 +18,7 @@ RUN \
         mingw-w64-tools \
         patch \
         xz-utils \
+        unzip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
@@ -29,6 +30,28 @@ RUN cd / \
   && readelf -h helloWorld \
   && file helloWorld | cut -d "," -f 2 | grep -c 'x86-64' \
   && rm helloWorld.c helloWorld
+
+RUN cd /libpcap/libpcap-1.8.1 \
+  && mkdir -p /libpcap/libpcap-1.8.1-i386 \
+  && mkdir -p /libpcap/libpcap-1.8.1-amd64 \
+	&& CFLAGS="-m32" LDFLAGS="-m32" ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
+	&& make \
+  && cp libpcap.* ../libpcap/libpcap-1.8.1-i386 \
+  && make clean \
+  && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
+  && make \
+  && cp libpcap.* ../libpcap/libpcap-1.8.1-amd64/ \
+  && make clean \
+
+RUN curl -sSLO https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip \
+  && mkdir -p /libpcap/win \
+  && unzip WpdPack_4_1_2.zip -d /libpcap/win \
+  && cd /libpcap/win/WpdPack \
+  && x86_64-w64-mingw32-dlltool \
+    --as-flags=--64 \
+    -m i386:x86-64 \
+    -k \
+    --output-lib /libpcap/win/WpdPack/Lib/x64/libwpcap.a
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
