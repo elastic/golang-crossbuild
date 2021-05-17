@@ -1,0 +1,78 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN apt-get update
+RUN \
+    dpkg --add-architecture mips \
+    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
+    && apt-get install -y \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        crossbuild-essential-mipsel \
+        gcc-mips-linux-gnu \
+        g++-mips-linux-gnu
+
+RUN apt-get install -y \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        libc-dev:mips \
+        libpopt-dev:mips \
+        linux-libc-dev:mips
+
+# librpm-dev
+RUN apt-get install -y \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        librpm-dev:mips \
+        librpm3:mips \
+        librpmio3:mips \
+        librpmbuild3:mips \
+        librpmsign3:mips \
+        libxml2-dev:mips \
+        libsqlite3-dev:mips \
+        libnss3:mips \
+        libsqlite3-0:mips \
+        libxml2:mips \
+        libsqlite3-0:mips
+
+# libsystemd-dev
+RUN apt-get install -y  \
+      --no-install-recommends \
+      --allow-unauthenticated \
+        libsystemd-dev:mips libsystemd0:mips liblz4-1:mips \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && mips-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'MIPS R3000' \
+  && readelf -h helloWorld | grep -c 'ELF32' \
+  && readelf -h helloWorld | grep -c "big endian" \
+  && rm helloWorld
+
+  # Basic test
+  RUN cd / \
+    && mipsel-linux-gnu-gcc helloWorld.c -o helloWorld \
+    && file helloWorld \
+    && readelf -h helloWorld \
+    && readelf -h helloWorld | grep -c 'MIPS R3000' \
+    && readelf -h helloWorld | grep -c 'ELF32' \
+    && readelf -h helloWorld | grep -c "little endian" \
+    && rm helloWorld.c helloWorld
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
