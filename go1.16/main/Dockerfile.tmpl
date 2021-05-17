@@ -32,16 +32,14 @@ RUN cd / \
   && rm helloWorld.c helloWorld
 
 RUN cd /libpcap/libpcap-1.8.1 \
-  && mkdir -p /libpcap/libpcap-1.8.1-i386 \
-  && mkdir -p /libpcap/libpcap-1.8.1-amd64 \
+  && cp -R /libpcap/libpcap-1.8.1 /libpcap/libpcap-1.8.1-i386 \
+  && cp -R /libpcap/libpcap-1.8.1 /libpcap/libpcap-1.8.1-amd64 \
+  && cd /libpcap/libpcap-1.8.1-i386 \
 	&& CFLAGS="-m32" LDFLAGS="-m32" ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
 	&& make \
-  && cp libpcap.* ../libpcap/libpcap-1.8.1-i386 \
-  && make clean \
+  && cd /libpcap/libpcap-1.8.1-amd64 \
   && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
   && make \
-  && cp libpcap.* ../libpcap/libpcap-1.8.1-amd64/ \
-  && make clean \
 
 RUN curl -sSLO https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip \
   && mkdir -p /libpcap/win \

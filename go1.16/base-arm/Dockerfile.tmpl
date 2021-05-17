@@ -63,6 +63,13 @@ RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
+RUN curl -sSLO https://s3.amazonaws.com/beats-files/deps/libpcap-1.8.1.tar.gz \
+  && mkdir /libpcap \
+	&& tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
+  && cd /libpcap/libpcap-1.8.1 \
+  && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=aarch64-unknown-linux-gnu --with-pcap=linux \
+  && make
+
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app
