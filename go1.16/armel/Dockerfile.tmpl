@@ -4,24 +4,21 @@ ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN dpkg --add-architecture armel \
-    && apt-get update -qq \
-    && apt-get install -y \
-      --no-install-recommends \
-      --allow-unauthenticated \
+    && apt update -y --no-install-recommends \
+    && apt upgrade -y --no-install-recommends \
+    && apt full-upgrade -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
         crossbuild-essential-armel \
         linux-libc-dev-armel-cross
 
-RUN apt-get install -y \
-      --no-install-recommends \
-      --allow-unauthenticated \
+RUN apt install -qq -y \
         libc-dev:armel \
         libpopt-dev:armel \
         linux-libc-dev:armel
 
+{{if eq .DEBIAN_VERSION "9"}}
 # librpm-dev
-RUN apt-get install -y \
-      --no-install-recommends \
-      --allow-unauthenticated \
+RUN apt install -y \
         librpm-dev:armel \
         librpm3:armel \
         librpmio3:armel \
@@ -35,11 +32,11 @@ RUN apt-get install -y \
         libsqlite3-0:armel
 
 # libsystemd-dev
-RUN apt-get install -y  \
-      --no-install-recommends \
-      --allow-unauthenticated \
-        libsystemd-dev:armel libsystemd0:armel liblz4-1:armel \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt install -y \
+        libsystemd-dev:armel libsystemd0:armel liblz4-1:armel
+{{ end }}
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
 

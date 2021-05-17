@@ -7,7 +7,9 @@ COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
-        && apt-get dist-upgrade -y \
+        && apt-get update -y --no-install-recommends --allow-unauthenticated \
+        && apt-get upgrade -y --no-install-recommends --allow-unauthenticated \
+        && apt-get dist-upgrade -y --no-install-recommends --allow-unauthenticated \
         && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
             build-essential \
             ca-certificates \

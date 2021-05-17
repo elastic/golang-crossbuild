@@ -1,3 +1,4 @@
 # see https://wiki.debian.org/CrossToolchains
+# https://bugs.launchpad.net/torios/+bug/1835529
 deb http://archive.debian.org/debian jessie main
 deb [arch=amd64,i386] http://security.debian.org/debian-security jessie/updates main

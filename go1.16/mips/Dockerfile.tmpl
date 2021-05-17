@@ -3,30 +3,26 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
-RUN apt-get update
-RUN \
-    dpkg --add-architecture mips64el \
-    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
-    && apt-get install -y \
-      --no-install-recommends \
-      --allow-unauthenticated \
+RUN dpkg --add-architecture mips64el \
+    && apt update -y --no-install-recommends \
+    && apt upgrade -y --no-install-recommends \
+    && apt full-upgrade -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
         crossbuild-essential-mipsel \
         gcc-6-mips64el-linux-gnuabi64 \
         g++-6-mips64el-linux-gnuabi64 \
         gcc-6-mips64-linux-gnuabi64 \
-        g++-6-mips64-linux-gnuabi64
+        g++-6-mips64-linux-gnuabi64 \
+        linux-libc-dev-mips64el-cross
 
-RUN apt-get install -y \
-      --no-install-recommends \
-      --allow-unauthenticated \
+RUN apt install -qq -y \
         libc-dev:mips64el \
         libpopt-dev:mips64el \
         linux-libc-dev:mips64el
 
+{{ if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
-RUN apt-get install -y \
-      --no-install-recommends \
-      --allow-unauthenticated \
+RUN apt install -y \
         librpm-dev:mips64el \
         librpm3:mips64el \
         librpmio3:mips64el \
@@ -40,11 +36,11 @@ RUN apt-get install -y \
         libsqlite3-0:mips64el
 
 # libsystemd-dev
-RUN apt-get install -y  \
-      --no-install-recommends \
-      --allow-unauthenticated \
-        libsystemd-dev:mips64el libsystemd0:mips64el liblz4-1:mips64el \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt install -y \
+#         libsystemd-dev:mips64el libsystemd0:mips64el liblz4-1:mips64el
+{{ end }}
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
 
