@@ -36,6 +36,16 @@ RUN apt install -y \
         libsystemd-dev:armhf libsystemd0:armhf liblz4-1:armhf
 {{ end }}
 
+{{if eq .DEBIAN_VERSION "10"}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev:armhf
+
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev:armhf
+{{ end }}
+
 RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
