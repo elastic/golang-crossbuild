@@ -73,3 +73,40 @@ GOARM, PLATFORM_ID, CC, and CXX.
 1. Build the images from the project's root with `make`.
 1. Get a logon token for the container registry by visiting <https://docker.elastic.co:7000>.
 1. Publish the images with `make push`.
+
+## Packaging MacOS SDK
+
+The osxcross repository used to cross compile for MacOSX has [instructions for packaging the SDK](https://github.com/tpoechtrager/osxcross#packaging-the-sdk).
+
+The instructions for packaging the SDK on a Linux instance are:
+
+1. Clone the [osxcross](https://github.com/tpoechtrager/osxcross) repo.
+1. Install `clang`, `make`, `libssl-dev`, `lzma-dev`, `libxml2-dev`, `libbz2-dev`.
+1. Download [Xcode from Apple](Download Xcode: https://developer.apple.com/download/more]).
+1. Run `./tools/gen_sdk_package_pbzx.sh <xcode>.xip`.
+
+### bzip2 issues
+
+If the `gen_sdk_package_pbza.sh` script gives an error that reads:
+
+```
+Error while extracting archive:(Metadata): bzip2 support not compiled in. (Success)
+```
+
+A manual work-around is needed in order to create the SDK (other people have reported that installing `libbz2-dev` fixed this issue).
+
+First edit `osxcross/tools/tools.sh` to remove the `trap` line from the `create_tmp_dir` function (currently line 264).
+
+Then re-run  `./tools/gen_sdk_package_pbzx.sh <xcode>.xip`.
+
+Go to the tmp dir created in the build dir: `cd osxcross/build/tmp_<X>`.
+
+Then run:
+``
+../../target/SDK/tools/bin/pbzx -n Content | cpio -i
+cd ../..
+XCODEDIR=osxcross/build/tmp_<X> ./tools/gen_sdk_package.sh
+```
+
+The SDK should be in the working directory.
+The tmp dir can be safely deleted after this.
