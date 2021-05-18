@@ -43,7 +43,9 @@ RUN cd /libpcap/libpcap-1.8.1 \
 
 RUN curl -sSLO https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip \
   && mkdir -p /libpcap/win \
+  && echo "ea799cf2f26e4afb1892938070fd2b1ca37ce5cf75fec4349247df12b784edbd  WpdPack_4_1_2.zip" | sha256sum -c - \
   && unzip WpdPack_4_1_2.zip -d /libpcap/win \
+  && rm WpdPack_4_1_2.zip \
   && cd /libpcap/win/WpdPack \
   && x86_64-w64-mingw32-dlltool \
     --as-flags=--64 \
