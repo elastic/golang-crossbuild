@@ -3,45 +3,47 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
-RUN dpkg --add-architecture ppc64el \
+RUN dpkg --add-architecture armel \
     && apt update -y --no-install-recommends \
     && apt upgrade -y --no-install-recommends \
     && apt full-upgrade -y --no-install-recommends \
     && apt install -qq -y --no-install-recommends \
-        g++-powerpc64-linux-gnu \
-        gcc-powerpc64-linux-gnu \
-        crossbuild-essential-ppc64el
+        crossbuild-essential-armel \
+        linux-libc-dev-armel-cross
 
 RUN apt install -qq -y \
-        libc-dev:ppc64el \
-        libpopt-dev:ppc64el \
-        linux-libc-dev:ppc64el
+        libc-dev:armel \
+        libpopt-dev:armel \
+        linux-libc-dev:armel
 
-{{ if eq .DEBIAN_VERSION "9" }}
-RUN apt install -qq -y \
-        librpm-dev:ppc64el \
-        libxml2-dev:ppc64el \
-        libxml2:ppc64el \
-        librpm3:ppc64el \
-        librpmio3:ppc64el \
-        librpmbuild3:ppc64el \
-        librpmsign3:ppc64el \
-        libsqlite3-dev:ppc64el \
-        libnss3:ppc64el \
-        libsqlite3-0:ppc64el
+{{if eq .DEBIAN_VERSION "9"}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev:armel \
+        librpm3:armel \
+        librpmio3:armel \
+        librpmbuild3:armel \
+        librpmsign3:armel \
+        libxml2-dev:armel \
+        libsqlite3-dev:armel \
+        libnss3:armel \
+        libsqlite3-0:armel \
+        libxml2:armel \
+        libsqlite3-0:armel
 
-# RUN apt install -y \
-#         libsystemd-dev:ppc64el libsystemd0:ppc64el liblz4-1:ppc64el
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev:armel libsystemd0:armel liblz4-1:armel
 {{ end }}
 
 {{if eq .DEBIAN_VERSION "10"}}
 # librpm-dev
 RUN apt install -y \
-        librpm-dev:ppc64el
+        librpm-dev:armel
 
 # libsystemd-dev
 RUN apt install -y \
-        libsystemd-dev:ppc64el
+        libsystemd-dev:armel
 {{ end }}
 
 RUN rm -rf /var/lib/apt/lists/*
@@ -50,12 +52,10 @@ COPY rootfs /
 
 # Basic test
 RUN cd / \
-  && powerpc64le-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && arm-linux-gnueabi-gcc helloWorld.c -o helloWorld \
   && file helloWorld \
   && readelf -h helloWorld \
-  && readelf -h helloWorld | grep -c 'PowerPC64' \
-  && readelf -h helloWorld | grep -c 'ELF64' \
-  && readelf -h helloWorld | grep -c "little endian" \
+  && file helloWorld | cut -d "," -f 3 | grep -c 'EABI'\
   && rm helloWorld.c helloWorld
 
 # Build-time metadata as defined at http://label-schema.org.

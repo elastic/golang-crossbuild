@@ -1,15 +1,9 @@
 ---
 
 linux:
-  mips:
-    CC:  mips-linux-gnu-gcc
-    CXX: mips-linux-gnu-g++
-  mipsle:
-    CC:  mipsel-linux-gnu-gcc
-    CXX: mipsel-linux-gnu-g++
-  mips64:
-    CC:  mips64-linux-gnuabi64-gcc-6
-    CXX: mips64-linux-gnuabi64-g++-6
   mips64le:
-    CC:  mips64el-linux-gnuabi64-gcc-6
-    CXX: mips64el-linux-gnuabi64-g++-6
+    CC:  mips64el-linux-gnuabi64-gcc
+    CXX: mips64el-linux-gnuabi64-g++
+  mips64:
+    CC:  mips64-linux-gnuabi64-gcc
+    CXX: mips64-linux-gnuabi64-g++

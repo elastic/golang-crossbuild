@@ -3,32 +3,47 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
-RUN \
-    dpkg --add-architecture s390x \
-    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
-    && apt-get install -y -qq \
-      --no-install-recommends \
-      --allow-unauthenticated \
+RUN dpkg --add-architecture s390x \
+    && apt update -y --no-install-recommends \
+    && apt upgrade -y --no-install-recommends \
+    && apt full-upgrade -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
         g++-s390x-linux-gnu \
-        gcc-s390x-linux-gnu \
-        librpm-dev:s390x \
+        gcc-s390x-linux-gnu
+
+RUN apt install -qq -y \
         libc-dev:s390x \
         libpopt-dev:s390x \
-        linux-libc-dev:s390x \
+        linux-libc-dev:s390x
+
+{{ if eq .DEBIAN_VERSION "9" }}
+RUN apt install -qq -y \
+        librpm-dev:s390x \
         libxml2-dev:s390x \
         libxml2:s390x \
-        libicu-dev:s390x \
-        libicu57:s390x \
-        icu-devtools:s390x \
-        libsystemd-dev:s390x \
         librpm3:s390x \
         librpmio3:s390x \
         librpmbuild3:s390x \
         librpmsign3:s390x \
         libsqlite3-dev:s390x \
         libnss3:s390x \
-        libsqlite3-0:s390x \
-    && rm -rf /var/lib/apt/lists/*
+        libsqlite3-0:s390x
+
+# RUN apt install -y \
+#         libsystemd-dev:s390x libsystemd0:s390x liblz4-1:s390x
+{{ end }}
+
+{{if eq .DEBIAN_VERSION "10"}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev:s390x
+
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev:s390x
+{{ end }}
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
 
