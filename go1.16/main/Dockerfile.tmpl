@@ -39,7 +39,7 @@ RUN cd /libpcap/libpcap-1.8.1 \
 	&& make \
   && cd /libpcap/libpcap-1.8.1-amd64 \
   && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
-  && make \
+  && make
 
 RUN curl -sSLO https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip \
   && mkdir -p /libpcap/win \
