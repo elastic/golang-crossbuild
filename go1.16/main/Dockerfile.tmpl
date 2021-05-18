@@ -47,11 +47,15 @@ RUN curl -sSLO https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip \
   && unzip WpdPack_4_1_2.zip -d /libpcap/win \
   && rm WpdPack_4_1_2.zip \
   && cd /libpcap/win/WpdPack \
+  && curl -sSLO https://raw.githubusercontent.com/elastic/beats/master/packetbeat/lib/windows-64/wpcap.dll \
+  && echo "0948518b229fb502b9c063966fc3afafbb749241a1c184f6eb7d532e00bce1d8  wpcap.dll" | sha256sum -c - \
+  && gendef wpcap.dll \
   && x86_64-w64-mingw32-dlltool \
     --as-flags=--64 \
     -m i386:x86-64 \
     -k \
-    --output-lib /libpcap/win/WpdPack/Lib/x64/libwpcap.a
+    --output-lib /libpcap/win/WpdPack/Lib/x64/libwpcap.a \
+    --input-def /libpcap/win/WpdPack/wpcap.def
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
