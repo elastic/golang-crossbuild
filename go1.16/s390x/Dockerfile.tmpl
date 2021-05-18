@@ -58,7 +58,7 @@ RUN cd / \
   && rm helloWorld.c helloWorld
 
 RUN cd /libpcap/libpcap-1.8.1 \
-	&& ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=s390x-ibm-linux-gnu --with-pcap=linux \
+	&& CC=s390x-linux-gnu-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=s390x-ibm-linux-gnu --with-pcap=linux \
 	&& make
 
 # Build-time metadata as defined at http://label-schema.org.
