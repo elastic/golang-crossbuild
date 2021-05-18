@@ -102,7 +102,7 @@ Then re-run  `./tools/gen_sdk_package_pbzx.sh <xcode>.xip`.
 Go to the tmp dir created in the build dir: `cd osxcross/build/tmp_<X>`.
 
 Then run:
-``
+```
 ../../target/SDK/tools/bin/pbzx -n Content | cpio -i
 cd ../..
 XCODEDIR=osxcross/build/tmp_<X> ./tools/gen_sdk_package.sh
