@@ -110,3 +110,6 @@ XCODEDIR=osxcross/build/tmp_<X> ./tools/gen_sdk_package.sh
 
 The SDK should be in the working directory.
 The tmp dir can be safely deleted after this.
+
+The SDKs should be uploaded into the `gs://obs-ci-cache` bucket on GCP (Google Cloud Platform).
+This is accessible to authorized users in the `elastic-observability` project [here](https://console.cloud.google.com/storage/browser/obs-ci-cache).
