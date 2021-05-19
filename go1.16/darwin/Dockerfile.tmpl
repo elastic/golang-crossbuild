@@ -13,7 +13,9 @@ RUN \
         python \
         libssl-dev \
         libxml2-dev \
-        libz-dev \
+        lzma-dev \
+        llvm-dev \
+        uuid-dev \
     && rm -rf /var/lib/apt/lists/*
 
 {{if eq .DEBIAN_VERSION "10"}}
@@ -42,6 +44,8 @@ RUN \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
 
 ENV PATH $OSXCROSS_PATH/bin:$PATH
+# Add osxcross libraries to the library PATH
+ENV LD_LIBRARY_PATH /usr/osxcross/lib:$LD_LIBRARY_PATH
 
 COPY rootfs /
 
@@ -51,11 +55,14 @@ RUN cd / \
   && file helloWorld \
   && file helloWorld | grep -c 'Mach-O 64-bit x86_64'
 
+# MacOSX10.14 SDK does not have 32bits compiler
+{{if ne .DEBIAN_VERSION "10"}}
 RUN cd / \
-  && o32-clang helloWorld.c -o helloWorld \
+  && o32-clang++ helloWorld.c -o helloWorld \
   && file helloWorld \
   && file helloWorld | grep -c 'Mach-O i386' \
   && rm helloWorld.c helloWorld
+{{ end }}
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
