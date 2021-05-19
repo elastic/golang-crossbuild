@@ -16,12 +16,21 @@ RUN \
         libz-dev \
     && rm -rf /var/lib/apt/lists/*
 
-ARG OSXCROSS_SDK_URL=https://s3.amazonaws.com/beats-files/deps/MacOSX10.13.sdk.tar.xz
+{{if lt .DEBIAN_VERSION "10"}}
+ARG OSXCROSS_SDK_URL=https://s3.amazonaws.com/beats-files/deps/MacOSX10.11.sdk.tar.xz
+ARG OSXCROSS_PATH=/usr/osxcross
+ARG OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa
+ARG SDK_VERSION=10.11
+ARG DARWIN_VERSION=15
+ARG OSX_VERSION_MIN=10.10
+{{ else }}
+ARG OSXCROSS_SDK_URL=https://drive.google.com/u/0/uc?id=1-0Oj9nhZap7a-op9AR4MQrppavPJldA2&export=download
 ARG OSXCROSS_PATH=/usr/osxcross
 ARG OSXCROSS_REV=8a716a43a72dab1db9630d7824ee0af3730cb8f9
-ARG SDK_VERSION=10.13
+ARG SDK_VERSION=10.14
 ARG DARWIN_VERSION=17
-ARG OSX_VERSION_MIN=10.12
+ARG OSX_VERSION_MIN=10.14
+{{ end }}
 
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
