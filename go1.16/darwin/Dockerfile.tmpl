@@ -58,7 +58,7 @@ RUN cd / \
 # MacOSX10.14 SDK does not have 32bits compiler
 {{if ne .DEBIAN_VERSION "10"}}
 RUN cd / \
-  && o32-clang++ helloWorld.c -o helloWorld \
+  && o32-clang helloWorld.c -o helloWorld \
   && file helloWorld \
   && file helloWorld | grep -c 'Mach-O i386' \
   && rm helloWorld.c helloWorld
