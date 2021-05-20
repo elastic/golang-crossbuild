@@ -18,9 +18,11 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             file \
             flex \
             bison \
+{{if eq .DEBIAN_VERSION "10"}}
             python3-venv \
             python3-pip \
             python3 \
+{{ end }}
         && rm -rf /var/lib/apt/lists/*
 
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
