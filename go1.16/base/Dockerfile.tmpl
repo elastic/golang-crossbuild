@@ -18,6 +18,8 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             file \
             flex \
             bison \
+            python3-venv \
+            python3-pip \
         && rm -rf /var/lib/apt/lists/*
 
 ARG GOLANG_VERSION=1.16.4
