@@ -25,7 +25,9 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 {{ end }}
         && rm -rf /var/lib/apt/lists/*
 
+{{if eq .DEBIAN_VERSION "10"}}
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
+{{ end }}
 
 ARG GOLANG_VERSION=1.16.4
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
