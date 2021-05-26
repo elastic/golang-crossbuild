@@ -15,7 +15,7 @@ pipeline {
     GO_VERSION = '1.16.4'
   }
   options {
-    timeout(time: 3, unit: 'HOURS')
+    timeout(time: 6, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
@@ -53,16 +53,6 @@ pipeline {
           }
         }
         excludes {
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'GO_FOLDER'
-              values 'go1.14'
-            }
-          }
           exclude {
             axis {
               name 'PLATFORM'
