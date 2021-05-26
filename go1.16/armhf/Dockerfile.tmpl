@@ -58,6 +58,10 @@ RUN cd / \
   && file helloWorld | cut -d "," -f 5 | grep -c 'armhf.so'\
   && rm helloWorld.c helloWorld
 
+RUN cd /libpcap/libpcap-1.8.1 \
+	&& ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=arm-linux-gnueabihf --with-pcap=linux \
+	&& make
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE

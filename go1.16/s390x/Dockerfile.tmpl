@@ -57,6 +57,10 @@ RUN cd / \
   && readelf -h helloWorld | grep -c "big endian" \
   && rm helloWorld.c helloWorld
 
+RUN cd /libpcap/libpcap-1.8.1 \
+	&& CC=s390x-linux-gnu-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=s390x-ibm-linux-gnu --with-pcap=linux \
+	&& make
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE
