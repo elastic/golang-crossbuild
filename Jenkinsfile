@@ -144,6 +144,7 @@ def buildImages(){
     dir("${env.BASE_DIR}"){
       def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
       sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
+      sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"')
     }
   }
 }
