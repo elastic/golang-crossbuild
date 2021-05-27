@@ -143,7 +143,9 @@ def buildImages(){
   withGoEnv(){
     dir("${env.BASE_DIR}"){
       def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
-      sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
+      retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+        sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
+      }
       sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"')
     }
   }
@@ -154,6 +156,8 @@ def publishImages(){
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
     def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
-    sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
+    retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+      sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
+    }
   }
 }
