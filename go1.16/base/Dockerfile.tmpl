@@ -55,7 +55,7 @@ RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-RUN curl -sSLO https://s3.amazonaws.com/beats-files/deps/libpcap-1.8.1.tar.gz \
+RUN curl -sSLO https://storage.googleapis.com/obs-ci-cache/beats/libpcap-1.8.1.tar.gz \
   && echo "673dbc69fdc3f5a86fb5759ab19899039a8e5e6c631749e48dcd9c6f0c83541e  libpcap-1.8.1.tar.gz" | sha256sum -c - \
   && mkdir /libpcap \
 	&& tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
