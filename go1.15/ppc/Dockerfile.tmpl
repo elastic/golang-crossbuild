@@ -5,31 +5,49 @@ FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
     dpkg --add-architecture ppc64el \
-    && apt-get -o Acquire::Check-Valid-Until=false update -qq \
-    && apt-get install -qq -y \
+    && apt update -y --no-install-recommends \
+    && apt upgrade -y --no-install-recommends \
+    && apt full-upgrade -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
       --no-install-recommends \
       --allow-unauthenticated \
         g++-6-powerpc64-linux-gnu \
         gcc-6-powerpc64-linux-gnu \
-        crossbuild-essential-ppc64el \
-        librpm-dev:ppc64el \
+        crossbuild-essential-ppc64el
+
+RUN apt install -qq -y \
         libc-dev:ppc64el \
         libpopt-dev:ppc64el \
-        linux-libc-dev:ppc64el \
+        linux-libc-dev:ppc64el
+
+{{ if eq .DEBIAN_VERSION "9" }}
+RUN apt install -qq -y \
+        librpm-dev:ppc64el \
         libxml2-dev:ppc64el \
         libxml2:ppc64el \
-        libicu-dev:ppc64el \
-        libicu57:ppc64el \
-        icu-devtools:ppc64el \
-        libsystemd-dev:ppc64el \
         librpm3:ppc64el \
         librpmio3:ppc64el \
         librpmbuild3:ppc64el \
         librpmsign3:ppc64el \
         libsqlite3-dev:ppc64el \
         libnss3:ppc64el \
-        libsqlite3-0:ppc64el \
-    && rm -rf /var/lib/apt/lists/*
+        libsqlite3-0:ppc64el
+
+# RUN apt install -y \
+#         libsystemd-dev:ppc64el libsystemd0:ppc64el liblz4-1:ppc64el
+{{ end }}
+
+{{if eq .DEBIAN_VERSION "10"}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev:ppc64el
+
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev:ppc64el
+{{ end }}
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
 
@@ -42,6 +60,16 @@ RUN cd / \
   && readelf -h helloWorld | grep -c 'ELF64' \
   && readelf -h helloWorld | grep -c "little endian" \
   && rm helloWorld.c helloWorld
+
+RUN cd /libpcap/libpcap-1.8.1 \
+  && cp -R /libpcap/libpcap-1.8.1 /libpcap/libpcap-1.8.1-ppc64 \
+  && cp -R /libpcap/libpcap-1.8.1 /libpcap/libpcap-1.8.1-ppc64el \
+  && cd /libpcap/libpcap-1.8.1-ppc64 \
+	&& CC=powerpc64-linux-gnu-gcc-6 ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=ppc64-unknown-linux-gnu --with-pcap=linux \
+	&& make \
+  && cd /libpcap/libpcap-1.8.1-ppc64el \
+	&& CC=powerpc64le-linux-gnu-gcc-6 ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=ppc64el-unknown-linux-gnu --with-pcap=linux \
+	&& make
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
