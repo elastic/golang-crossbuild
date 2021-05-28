@@ -61,6 +61,16 @@ RUN cd / \
   && readelf -h helloWorld | grep -c "little endian" \
   && rm helloWorld.c helloWorld
 
+RUN cd /libpcap/libpcap-1.8.1 \
+  && cp -R /libpcap/libpcap-1.8.1 /libpcap/libpcap-1.8.1-ppc64 \
+  && cp -R /libpcap/libpcap-1.8.1 /libpcap/libpcap-1.8.1-ppc64el \
+  && cd /libpcap/libpcap-1.8.1-ppc64 \
+	&& CC=powerpc64-linux-gnu-gcc-6 ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=ppc64-unknown-linux-gnu --with-pcap=linux \
+	&& make \
+  && cd /libpcap/libpcap-1.8.1-ppc64el \
+	&& CC=powerpc64le-linux-gnu-gcc-6 ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=ppc64el-unknown-linux-gnu --with-pcap=linux \
+	&& make
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE
