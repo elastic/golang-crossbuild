@@ -25,12 +25,20 @@ ARG OSX_VERSION_MIN=11.3
 RUN echo "This Docker image will work only with Debian 10" && exit 1
 {{ end }}
 
+RUN mkdir -p /tmp/llvm-project && cd /tmp/llvm-project \
+    && curl -sSL "https://github.com/apple/llvm-project/archive/refs/tags/swift-5.4.1-RELEASE.tar.gz" \
+      | tar -C /tmp/llvm-project --strip=1 -xzf - \
+    && mkdir build && cd build \
+    && cmake -DLLVM_ENABLE_PROJECTS=clang -G "Unix Makefiles" ../llvm \
+    && make \
+    && make install \
+    && rm -rf /tmp/llvm-project
+
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
     && curl -sSLo "tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz" "${OSXCROSS_SDK_URL}" \
-    && UNATTENDED=yes ENABLE_CLANG_INSTALL=yes ./build_clang.sh >/dev/null \
     && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
