@@ -43,7 +43,7 @@ docker run -it --rm \
   -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
   -w /go/src/github.com/user/go-project \
   -e CGO_ENABLED=1 \
-  docker.elastic.co/beats-dev/golang-crossbuild:1.10.8-arm \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.16.4-armhf \
   --build-cmd "make build" \
   -p "linux/armv7"
 ```
