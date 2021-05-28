@@ -8,14 +8,6 @@ windows:
     CC:  x86_64-w64-mingw32-gcc
     CXX: x86_64-w64-mingw32-g++
 
-darwin:
-  386:
-    CC:  o32-clang
-    CXX: o32-clang++
-  amd64:
-    CC:  o64-clang
-    CXX: o64-clang++
-
 linux:
   386:
     CC:  gcc
