@@ -15,7 +15,7 @@ pipeline {
     GO_VERSION = '1.16.4'
   }
   options {
-    timeout(time: 6, unit: 'HOURS')
+    timeout(time: 12, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
