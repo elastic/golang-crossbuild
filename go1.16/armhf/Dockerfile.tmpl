@@ -59,7 +59,7 @@ RUN cd / \
   && rm helloWorld.c helloWorld
 
 RUN cd /libpcap/libpcap-1.8.1 \
-	&& ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=arm-linux-gnueabihf --with-pcap=linux \
+	&& CC=arm-linux-gnueabihf-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=arm-linux-gnueabihf --with-pcap=linux \
 	&& make
 
 # Build-time metadata as defined at http://label-schema.org.
