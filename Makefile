@@ -1,4 +1,4 @@
-TARGETS=go1.10 go1.11 go1.12 go1.13 go1.14 go1.15 go1.16
+TARGETS=go1.15 go1.16
 ARM_TARGETS=go1.15 go1.16
 
 build: status=".status.build"
