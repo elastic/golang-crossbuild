@@ -29,7 +29,7 @@ RUN mkdir -p /tmp/llvm-project && cd /tmp/llvm-project \
     && curl -sSL "https://github.com/apple/llvm-project/archive/refs/tags/swift-5.4.1-RELEASE.tar.gz" \
       | tar -C /tmp/llvm-project --strip=1 -xzf - \
     && mkdir build && cd build \
-    && cmake -DLLVM_ENABLE_PROJECTS=clang;clang-tools-extra /tmp/llvm-project/llvm \
+    && cmake -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" /tmp/llvm-project/llvm \
     && cmake --build . \
     && cmake --build . --target install \
     && rm -rf /tmp/llvm-project
