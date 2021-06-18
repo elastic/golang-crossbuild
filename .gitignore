@@ -6,3 +6,4 @@
 _obj
 Dockerfile
 .status.*
+*.bck
