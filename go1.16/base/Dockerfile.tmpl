@@ -31,7 +31,7 @@ RUN ln -s /usr/bin/pip3 /usr/bin/pip
 
 ARG GOLANG_VERSION=1.16.5
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=b12c23023b68de22f74c0524f10b753e7b08b1504cb7e417eccebdd3fae49061
+ARG GOLANG_DOWNLOAD_SHA256=d5446b46ef6f36fdffa852f73dfbbe78c1ddf010b99fa4964944b9ae8b4d6799
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
