@@ -33,8 +33,13 @@ if [ -d "${GO_FOLDER}" ] ; then
     find "${GO_FOLDER}" -type f -name Dockerfile.tmpl -print0 |
         while IFS= read -r -d '' line; do
             ${SED} -E -e "s#(ARG GOLANG_VERSION)=[0-9]+\.[0-9]+\.[0-9]+#\1=${GO_RELEASE_VERSION}#g" "$line"
-            GOLANG_DOWNLOAD_SHA256=$(curl -s https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-arm64.tar.gz\")) | .sha256")
-            ${SED} -E -e "s#(ARG GOLANG_DOWNLOAD_SHA256)=.+#\1=${GOLANG_DOWNLOAD_SHA256}#g" "$line"
+            GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-arm64.tar.gz\")) | .sha256")
+            GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-amd64.tar.gz\")) | .sha256")
+            if echo "$line" | grep -q 'arm' ; then
+                ${SED} -E -e "s#(ARG GOLANG_DOWNLOAD_SHA256)=.+#\1=${GOLANG_DOWNLOAD_SHA256_ARM}#g" "$line"
+            else
+                ${SED} -E -e "s#(ARG GOLANG_DOWNLOAD_SHA256)=.+#\1=${GOLANG_DOWNLOAD_SHA256_AMD}#g" "$line"
+            fi
             git add "${line}"
         done
 
