@@ -18,8 +18,21 @@ RUN \
         mingw-w64-tools \
         patch \
         xz-utils \
-        unzip \
-    && rm -rf /var/lib/apt/lists/*
+        unzip
+
+{{ if or (eq .DEBIAN_VERSION "8") (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") }}
+# librpm-dev
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+        librpm-dev \
+        libxml2-dev \
+        libsqlite3-dev
+
+# libsystemd-dev
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+         libsystemd-dev
+{{ end }}
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
 
