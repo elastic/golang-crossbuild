@@ -1,0 +1,6 @@
+---
+
+darwin:
+  amd64:
+    CC:  o64-clang
+    CXX: o64-clang++
