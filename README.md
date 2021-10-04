@@ -31,7 +31,7 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 | linux/{amd64,386} and windows/{amd64,386} (Debian 7 (see **below**)) |`1.10.8-main-debian7` | `1.11.13-main-debian7` | `1.12.12-main-debian7` | `1.13.12-main-debian7` | `1.14.15-main-debian7` | `1.15.14-main-debian7` | `1.16.7-main-debian7` | `1.17.1-main-debian7` |
 | linux/{amd64,386} and windows/{amd64,386} (Debian 8 (see **below**)) | `1.10.8-main-debian8` | `1.11.13-main-debian8` | `1.12.12-main-debian8` | `1.13.12-debian8` | `1.14.15-main-debian8` | `1.15.14-main-debian8` | `1.16.7-main-debian8` | `1.17.1-main-debian8` |
 | linux/{amd64,386} and windows/{amd64,386} (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian9` | `1.16.7-main-debian9` | `1.17.1-main-debian9` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` | `1.16.7-main-debian10` | ` ` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` | `1.16.7-main-debian10` | `1.17.1-main-debian10` |
 | linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` | `1.16.7-base-arm-debian9` | `1.17.1-base-arm-debian` |
 
 **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
