@@ -14,27 +14,30 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 ## Build Tags
 
-- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.15-main`, `1.15.10-main`, `1.16.4-main` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.15-arm`, `1.15.10-arm`
-- linux/{armv5,armv6,armv7,arm64}
-- `1.16.4-arm` - linux/{arm64}
-- `1.16.4-armel` - linux/{armv5,armv6}
-- `1.16.4-armhf` - linux/{armv7}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin`, `1.16.4-darwin` - darwin/{386}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin`, `1.15.10-darwin`, `1.16.4-darwin` - darwin/{amd64}
-- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.15-ppc`, `1.15.10-ppc`, `1.16.4-ppc` - linux/{ppc64,ppc64le}
-- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.15-mips`, `1.15.10-mips` - linux/{mips,mipsle,mips64,mips64le}
-- `1.16.4-mips` - linux/{mips64,mips64le}
-- `1.16.4-mips32` - linux/{mips,mipsle}
-- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.15-s390`, `1.15.10-s390`, `1.16.4-s390` - linux/s390x
-- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.15-debian7`, `1.15.10-debian7`, `1.16.4-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
-  uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
-  compatibility.)
-- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.15-debian8`, `1.15.10-debian8`, `1.16.4-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
-  uses glibc 2.19)
-- `1.15.10-debian9`, `1.16.4-debian9` - linux/{amd64,386} and windows/{amd64,386} (Debian 9 uses glibc 2.24)
-- `1.15.10-base-arm-debian9`, `1.16.4-base-arm-debian9` - linux/arm64 (Debian 9 uses glibc 2.24)
-- `1.15.10-debian10`, `1.16.4-debian10` - linux/{amd64,386} and windows/{amd64,386} (Debian 10 uses glibc 2.28)
+| Description | Tags for 1.10 | Tags for 1.11 | Tags for 1.12 | Tags for 1.13 | Tags for 1.14 | Tags for 1.15 | Tags for 1.16 | Tags for 1.17 |
+| ------------- | -----| ------- | ----- |  ------ |  ------ |  ------ |  ------ |  ------ |
+| linux/{amd64,386} and windows/{amd64,386} | `1.10.8-main` | `1.11.13-main` | `1.12.12-main` |  `1.13.12-main` | `1.14.15-main` | `1.15.10-main` | `1.16.4-main` | `` |
+| linux/{armv5,armv6,armv7} | `1.10.8-arm` | `1.11.13-arm` | `1.12.12-arm` | `1.13.12-arm` | `1.14.15-arm` | `1.15.10-arm` | **See below** | **See below** |
+| linux/arm64 | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.4-arm` | ` ` |
+| linux/{armv5,armv6} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.4-armel` | ` ` |
+| linux/{armv7} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.4-armhf` | ` ` |
+| darwin/{386} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.16.4-darwin` | ` ` |
+| darwin/{amd64} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.16.4-darwin` | ` ` |
+| linux/{ppc64,ppc64le} | `1.10.8-ppc` | `1.11.13-ppc` | `1.12.12-ppc` | `1.13.12-ppc` | `1.14.15-ppc` | `1.15.10-ppc` | `1.16.4-ppc` | ` ` |
+| linux/{mips,mipsle,mips64,mips64le} | `1.10.8-mips` | `1.11.13-mips` | `1.12.12-mips` | `1.13.12-mips` | `1.14.15-mips` | `1.15.10-mips` | **See below** | **See below** |
+| linux/{mips64,mips64le} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.4-mips` | ` ` |
+| linux/{mips,mipsle} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.4-mips32` | ` ` |
+| linux/s390x | `1.10.8-s390x` | `1.11.13-s390x` | `1.12.12-s390` | `1.13.12-s390` | `1.14.15-s390` | `1.15.10-s390` | `1.16.4-s390` | ` ` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 7 (see **below**)) |`1.10.8-main-debian7` | `1.11.13-main-debian7` | `1.12.12-debian7` | `1.13.12-debian7` | `1.14.15-debian7` | `1.15.10-debian7` | `1.16.4-debian7` | ` ` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 8 (see **below**)) | `1.10.8-main-debian8` | `1.11.13-main-debian8` | `1.12.12-main-debian8` | `1.13.12-debian8` | `1.14.15-debian8` | `1.15.10-debian8` | `1.16.4-debian8` | ` ` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.10-debian9` | `1.16.4-debian9` | ` ` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.10-debian10` | `1.16.4-debian10` | ` ` |
+| linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.10-base-arm-debian9` | `1.16.4-base-arm-debian9` | ` ` |
+
+**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+**Debian8** uses `glibc 2.19`.
+**Debian9** uses `glibc 2.24`.
+**Debian10** uses `glibc 2.28`.
 
 ## Usage Example
 
@@ -81,7 +84,7 @@ The osxcross repository used to cross compile for MacOSX has [instructions for p
 The instructions for packaging the SDK on a Linux instance are:
 
 1. Clone the [osxcross](https://github.com/tpoechtrager/osxcross) repo.
-1. Install `clang`, `make`, `libssl-dev`, `lzma-dev`, `libxml2-dev`, `libbz2-dev`.
+1. Install `clang` | `make` | `libssl-dev` | `lzma-dev` | `libxml2-dev` | `libbz2-dev`.
 1. Download [Xcode from Apple](Download Xcode: https://developer.apple.com/download/more]).
 1. Run `./tools/gen_sdk_package_pbzx.sh <xcode>.xip`.
 
