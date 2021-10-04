@@ -84,7 +84,7 @@ The osxcross repository used to cross compile for MacOSX has [instructions for p
 The instructions for packaging the SDK on a Linux instance are:
 
 1. Clone the [osxcross](https://github.com/tpoechtrager/osxcross) repo.
-1. Install `clang` | `make` | `libssl-dev` | `lzma-dev` | `libxml2-dev` | `libbz2-dev`.
+1. Install `clang`, `make`, `libssl-dev`, `lzma-dev`, `libxml2-dev`, `libbz2-dev`.
 1. Download [Xcode from Apple](Download Xcode: https://developer.apple.com/download/more]).
 1. Run `./tools/gen_sdk_package_pbzx.sh <xcode>.xip`.
 
