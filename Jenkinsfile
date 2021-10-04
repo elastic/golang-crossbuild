@@ -45,7 +45,7 @@ pipeline {
           }
           axis {
             name 'GO_FOLDER'
-            values 'go1.17', 'go1.16', 'go1.15'
+            values 'go1.16', 'go1.17'
           }
           axis {
             name 'PLATFORM'
