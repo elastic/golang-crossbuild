@@ -97,10 +97,12 @@ pipeline {
         stages {
           stage('Build') {
             steps {
-              withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                deleteDir()
-                unstash 'source'
-                buildImages()
+              stageStatusCache(id: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                  deleteDir()
+                  unstash 'source'
+                  buildImages()
+                }
               }
             }
           }
@@ -109,11 +111,13 @@ pipeline {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
             steps {
-              withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                // It will use the already cached docker images that were created in the
-                // Build stage. But it's required to retag them with the staging repo.
-                buildImages()
-                publishImages()
+              stageStatusCache(id: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                  // It will use the already cached docker images that were created in the
+                  // Build stage. But it's required to retag them with the staging repo.
+                  buildImages()
+                  publishImages()
+                }
               }
             }
           }
