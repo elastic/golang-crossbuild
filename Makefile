@@ -1,5 +1,5 @@
-TARGETS=go1.15 go1.16
-ARM_TARGETS=go1.15 go1.16
+TARGETS=go1.16 go1.17
+ARM_TARGETS=go1.16 go1.17
 
 build: status=".status.build"
 build:
