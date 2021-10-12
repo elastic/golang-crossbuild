@@ -12,27 +12,55 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 `docker.elastic.co/beats-dev/golang-crossbuild:[TAG]`
 
-## Build Tags
+## Build tags
 
-| Description | Tags for 1.10 | Tags for 1.11 | Tags for 1.12 | Tags for 1.13 | Tags for 1.14 | Tags for 1.15 | Tags for 1.16 | Tags for 1.17 |
+The tags match with the Golang version, and for each supported version there is a release in https://github.com/elastic/golang-crossbuild/releases.
+
+Replace `<GOLANG_VERSION>` with the version you would like to use, for instance: `1.17.1`
+
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-arm` - linux/arm64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armel` - linux/armv5, linux/armv6
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armhf` - linux/armv7
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-base`
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips` - linux/mips64, linux/mips64el
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc` - linux/ppc64, linux/ppc64le
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x` - linux/s390x
+
+**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+**Debian8** uses `glibc 2.19`.
+**Debian9** uses `glibc 2.24`.
+**Debian10** uses `glibc 2.28`.
+
+## Old Build Tags
+
+Until Golang version 1.15
+
+| Description | Tags for 1.10 | Tags for 1.11 | Tags for 1.12 | Tags for 1.13 | Tags for 1.14 | Tags for 1.15 |
 | ------------- | -----| ------- | ----- |  ------ |  ------ |  ------ |  ------ |  ------ |
-| linux/{amd64,386} and windows/{amd64,386} | `1.10.8-main` | `1.11.13-main` | `1.12.12-main` |  `1.13.12-main` | `1.14.15-main` | `1.15.14-main` | `1.16.7-main` | `1.17.1-main` |
-| linux/{armv5,armv6,armv7} | `1.10.8-arm` | `1.11.13-arm` | `1.12.12-arm` | `1.13.12-arm` | `1.14.15-arm` | `1.15.14-arm` | **See below** | **See below** |
-| linux/arm64 | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.7-arm` | `1.17.1-arm` |
-| linux/{armv5,armv6} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.7-armel` | `1.17.1-armel` |
-| linux/{armv7} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.7-armhf` | `1.17.1-armhf` |
-| darwin/{386} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.16.7-darwin` | `1.17.1-darwin` |
-| darwin/{amd64} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.16.7-darwin` | `1.17.1-darwin` |
-| linux/{ppc64,ppc64le} | `1.10.8-ppc` | `1.11.13-ppc` | `1.12.12-ppc` | `1.13.12-ppc` | `1.14.15-ppc` | `1.15.14-ppc` | `1.16.7-ppc` | `1.17.1-ppc` |
-| linux/{mips,mipsle,mips64,mips64le} | `1.10.8-mips` | `1.11.13-mips` | `1.12.12-mips` | `1.13.12-mips` | `1.14.15-mips` | `1.15.14-mips` | **See below** | **See below** |
-| linux/{mips64,mips64le} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.7-mips` | `1.17.1-mips` |
-| linux/{mips,mipsle} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** | `1.16.7-mips32` | `1.17.1-mips32` |
-| linux/s390x | `1.10.8-s390x` | `1.11.13-s390x` | `1.12.12-s390` | `1.13.12-s390` | `1.14.15-s390` | `1.15.14-s390` | `1.16.7-s390` | `1.17.1-s390` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 7 (see **below**)) |`1.10.8-main-debian7` | `1.11.13-main-debian7` | `1.12.12-main-debian7` | `1.13.12-main-debian7` | `1.14.15-main-debian7` | `1.15.14-main-debian7` | `1.16.7-main-debian7` | `1.17.1-main-debian7` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 8 (see **below**)) | `1.10.8-main-debian8` | `1.11.13-main-debian8` | `1.12.12-main-debian8` | `1.13.12-debian8` | `1.14.15-main-debian8` | `1.15.14-main-debian8` | `1.16.7-main-debian8` | `1.17.1-main-debian8` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian9` | `1.16.7-main-debian9` | `1.17.1-main-debian9` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` | `1.16.7-main-debian10` | `1.17.1-main-debian10` |
-| linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` | `1.16.7-base-arm-debian9` | `1.17.1-base-arm-debian` |
+| linux/{amd64,386} and windows/{amd64,386} | `1.10.8-main` | `1.11.13-main` | `1.12.12-main` |  `1.13.12-main` | `1.14.15-main` | `1.15.14-main` |
+| linux/{armv5,armv6,armv7} | `1.10.8-arm` | `1.11.13-arm` | `1.12.12-arm` | `1.13.12-arm` | `1.14.15-arm` | `1.15.14-arm` |
+| linux/arm64 | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/{armv5,armv6} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/{armv7} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| darwin/{386} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.15.14-darwin` |
+| darwin/{amd64} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.15.14-darwin` |
+| linux/{ppc64,ppc64le} | `1.10.8-ppc` | `1.11.13-ppc` | `1.12.12-ppc` | `1.13.12-ppc` | `1.14.15-ppc` | `1.15.14-ppc` |
+| linux/{mips,mipsle,mips64,mips64le} | `1.10.8-mips` | `1.11.13-mips` | `1.12.12-mips` | `1.13.12-mips` | `1.14.15-mips` |
+| linux/{mips64,mips64le} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/{mips,mipsle} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/s390x | `1.10.8-s390x` | `1.11.13-s390x` | `1.12.12-s390` | `1.13.12-s390` | `1.14.15-s390` | `1.15.14-s390` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 7 (see **below**)) |`1.10.8-main-debian7` | `1.11.13-main-debian7` | `1.12.12-main-debian7` | `1.13.12-main-debian7` | `1.14.15-main-debian7` | `1.15.14-main-debian7` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 8 (see **below**)) | `1.10.8-main-debian8` | `1.11.13-main-debian8` | `1.12.12-main-debian8` | `1.13.12-debian8` | `1.14.15-main-debian8` | `1.15.14-main-debian8` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian9` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` |
+| linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` |
 
 **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
 **Debian8** uses `glibc 2.19`.
