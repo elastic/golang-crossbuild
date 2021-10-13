@@ -19,6 +19,8 @@ RUN apt install -qq -y \
 
 {{ if eq .DEBIAN_VERSION "9" }}
 RUN apt install -qq -y \
+        libicu-dev:ppc64el \
+        libicu57:ppc64el \
         librpm-dev:ppc64el \
         libxml2-dev:ppc64el \
         libxml2:ppc64el \

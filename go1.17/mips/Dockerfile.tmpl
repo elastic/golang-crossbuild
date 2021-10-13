@@ -23,6 +23,8 @@ RUN apt install -qq -y \
 {{ if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
 RUN apt install -y \
+        libicu-dev:mips64el \
+        libicu57:mips64el \
         librpm-dev:mips64el \
         librpm3:mips64el \
         librpmio3:mips64el \
