@@ -195,7 +195,7 @@ def postRelease(){
     """)
     gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
     withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
-      sh(label: 'Creating Release Notes', script: 'release-notes.sh')
+      sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
     }
   }
 }
