@@ -181,8 +181,12 @@ def publishImages(){
 }
 
 def isNewRelease() {
-  // look for the GO_VERSION if matches any tag release in the project!
-  return true;
+  def releases = githubReleases()
+  if (env.GO_VERSION?.trim()) {
+    // look for the GO_VERSION if matches any tag release in the project!
+    return !releases.containsKey(env.GO_VERSION)
+  }
+  return false
 }
 
 def postRelease(){
