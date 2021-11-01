@@ -131,6 +131,20 @@ pipeline {
               }
             }
           }
+          stage('Post-Release') {
+            when {
+              branch 'master'
+            }
+            environment {
+              HOME = "${env.WORKSPACE}"
+              PATH = "${env.HOME}/bin:${env.WORKSPACE}/src/.ci/scripts:${env.PATH}"
+            }
+            steps {
+              whenTrue(isNewRelease()) {
+                postRelease()
+              }
+            }
+          }
         }
       }
     }
@@ -162,6 +176,30 @@ def publishImages(){
     def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
     retryWithSleep(retries: 3, seconds: 15, backoff: true) {
       sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
+    }
+  }
+}
+
+def isNewRelease() {
+  def releases = githubReleases()
+  if (env.GO_VERSION?.trim()) {
+    // look for the GO_VERSION if matches any tag release in the project!
+    return !releases.containsKey(env.GO_VERSION)
+  }
+  return false
+}
+
+def postRelease(){
+  deleteDir()
+  unstash 'source'
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  dir("${env.BASE_DIR}"){
+    sh(label: 'Set branch', script: """#!/bin/bash
+      git checkout -b ${BRANCH_NAME}
+    """)
+    gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
+    withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
+      sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
     }
   }
 }
