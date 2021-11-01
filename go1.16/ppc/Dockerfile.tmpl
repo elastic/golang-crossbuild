@@ -19,6 +19,7 @@ RUN apt install -qq -y \
 
 {{ if eq .DEBIAN_VERSION "9" }}
 RUN apt install -qq -y \
+        libelf1:ppc64el \
         libicu-dev:ppc64el \
         libicu57:ppc64el \
         librpm-dev:ppc64el \
