@@ -131,20 +131,20 @@ pipeline {
               }
             }
           }
-          stage('Post-Release') {
-            when {
-              branch 'master'
-            }
-            environment {
-              HOME = "${env.WORKSPACE}"
-              PATH = "${env.HOME}/bin:${env.WORKSPACE}/src/.ci/scripts:${env.PATH}"
-            }
-            steps {
-              whenTrue(isNewRelease()) {
-                postRelease()
-              }
-            }
-          }
+        }
+      }
+    }
+    stage('Post-Release') {
+      when {
+        branch 'master'
+      }
+      environment {
+        HOME = "${env.WORKSPACE}"
+        PATH = "${env.HOME}/bin:${env.WORKSPACE}/src/.ci/scripts:${env.PATH}"
+      }
+      steps {
+        whenTrue(isNewRelease()) {
+          postRelease()
         }
       }
     }
