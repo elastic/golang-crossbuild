@@ -181,7 +181,7 @@ def publishImages(){
 }
 
 def isNewRelease() {
-  def releases = githubReleases()
+  def releases = listGithubReleases()
   if (env.GO_VERSION?.trim()) {
     // look for the GO_VERSION if matches any tag release in the project!
     return !releases.containsKey(env.GO_VERSION)
