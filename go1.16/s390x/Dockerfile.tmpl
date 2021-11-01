@@ -18,6 +18,7 @@ RUN apt install -qq -y \
 
 {{ if eq .DEBIAN_VERSION "9" }}
 RUN apt install -qq -y \
+        libelf1:s390x \
         libicu-dev:s390x \
         libicu57:s390x \
         librpm-dev:s390x \
