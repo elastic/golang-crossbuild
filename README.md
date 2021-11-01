@@ -43,7 +43,7 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 Until Golang version 1.15
 
 | Description | Tags for 1.10 | Tags for 1.11 | Tags for 1.12 | Tags for 1.13 | Tags for 1.14 | Tags for 1.15 |
-| ------------- | -----| ------- | ----- |  ------ |  ------ |  ------ |  ------ |  ------ |
+| ------------- | -----| ------- | ----- |  ------ |  ------ |  ------ |
 | linux/{amd64,386} and windows/{amd64,386} | `1.10.8-main` | `1.11.13-main` | `1.12.12-main` |  `1.13.12-main` | `1.14.15-main` | `1.15.14-main` |
 | linux/{armv5,armv6,armv7} | `1.10.8-arm` | `1.11.13-arm` | `1.12.12-arm` | `1.13.12-arm` | `1.14.15-arm` | `1.15.14-arm` |
 | linux/arm64 | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
