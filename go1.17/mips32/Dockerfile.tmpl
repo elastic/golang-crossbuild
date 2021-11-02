@@ -21,6 +21,7 @@ RUN apt install -qq -y \
 {{ if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
 RUN apt install -y \
+        libelf1:mips \
         libicu-dev:mips \
         libicu57:mips \
         librpm-dev:mips \

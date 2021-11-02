@@ -131,20 +131,20 @@ pipeline {
               }
             }
           }
-          stage('Post-Release') {
-            when {
-              branch 'master'
-            }
-            environment {
-              HOME = "${env.WORKSPACE}"
-              PATH = "${env.HOME}/bin:${env.WORKSPACE}/src/.ci/scripts:${env.PATH}"
-            }
-            steps {
-              whenTrue(isNewRelease()) {
-                postRelease()
-              }
-            }
-          }
+        }
+      }
+    }
+    stage('Post-Release') {
+      when {
+        branch 'master'
+      }
+      environment {
+        HOME = "${env.WORKSPACE}"
+        PATH = "${env.HOME}/bin:${env.WORKSPACE}/src/.ci/scripts:${env.PATH}"
+      }
+      steps {
+        whenTrue(isNewRelease()) {
+          postRelease()
         }
       }
     }
@@ -181,7 +181,7 @@ def publishImages(){
 }
 
 def isNewRelease() {
-  def releases = githubReleases()
+  def releases = listGithubReleases()
   if (env.GO_VERSION?.trim()) {
     // look for the GO_VERSION if matches any tag release in the project!
     return !releases.containsKey(env.GO_VERSION)
