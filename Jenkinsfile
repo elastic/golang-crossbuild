@@ -182,9 +182,11 @@ def publishImages(){
 
 def isNewRelease() {
   def releases = listGithubReleases()
+  log(level: 'INFO', text: "isNewRelease: ${releases}")
   if (env.GO_VERSION?.trim()) {
-    // look for the GO_VERSION if matches any tag release in the project!
-    return !releases.containsKey(env.GO_VERSION)
+    def existsRelease = releases.containsKey(env.GO_VERSION)
+    log(level: 'INFO', text: "isNewRelease: look for the GO_VERSION if matches any tag release in the project = ${existsRelease}")
+    return !existsRelease
   }
   return false
 }
@@ -197,9 +199,14 @@ def postRelease(){
     sh(label: 'Set branch', script: """#!/bin/bash
       git checkout -b ${BRANCH_NAME}
     """)
-    gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
-    withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
-      sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
+    try {
+      gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
+      withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
+        sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
+      }
+    } catch (e) {
+      // Probably the tag already exists
+      log(level: 'WARN', text: "postRelease failed with message : ${e?.message}")
     }
   }
 }
