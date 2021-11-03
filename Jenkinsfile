@@ -206,7 +206,7 @@ def postRelease(){
       }
     } catch (e) {
       // Probably the tag already exists
-      log(level: 'INFO', text: "postRelease failed with message : ${e?.message}")
+      log(level: 'WARN', text: "postRelease failed with message : ${e?.message}")
     }
   }
 }
