@@ -12,7 +12,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.16.9'
+    GO_VERSION = '1.17.2'
   }
   options {
     timeout(time: 3, unit: 'HOURS')
@@ -140,7 +140,7 @@ pipeline {
       }
       environment {
         HOME = "${env.WORKSPACE}"
-        PATH = "${env.HOME}/bin:${env.WORKSPACE}/src/.ci/scripts:${env.PATH}"
+        PATH = "${env.HOME}/bin:${env.WORKSPACE}/${env.BASE_DIR}/.ci/scripts:${env.PATH}"
       }
       steps {
         whenTrue(isNewRelease()) {
