@@ -204,7 +204,7 @@ def postRelease(){
       withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
         sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
       }
-      gh(command: "release create ${env.GO_VERSION}", flags: [ notes-file: ['CHANGELOG.md'], title: "${env.GO_VERSION}" ])
+      gh(command: "release create ${env.GO_VERSION}", flags: [ "notes-file": ['CHANGELOG.md'], title: "${env.GO_VERSION}" ])
     } catch (e) {
       // Probably the tag already exists
       log(level: 'WARN', text: "postRelease failed with message : ${e?.message}")
