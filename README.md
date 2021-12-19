@@ -1,4 +1,4 @@
-[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmaster)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/master/)
+[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmain)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/main/)
 
 # golang-crossbuild
 
@@ -86,11 +86,11 @@ GOARM, PLATFORM_ID, CC, and CXX.
 ## Releasing images for a new Go version
 
 1. Update the Docker tag in
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.11/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.12/Makefile.common#L5).
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/Makefile.common#L5) and/or
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.11/Makefile.common#L5) and/or
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.12/Makefile.common#L5).
 1. Update the Go version and SHA256 in the
-   [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/base/Dockerfile#L19-L21).
+   [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/base/Dockerfile#L19-L21).
    The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.

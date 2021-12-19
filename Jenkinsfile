@@ -123,7 +123,7 @@ pipeline {
           }
           stage('Release') {
             when {
-              branch 'master'
+              branch 'main'
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
@@ -136,7 +136,7 @@ pipeline {
     }
     stage('Post-Release') {
       when {
-        branch 'master'
+        branch 'main'
       }
       environment {
         HOME = "${env.WORKSPACE}"
