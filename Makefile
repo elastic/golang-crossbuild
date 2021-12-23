@@ -15,11 +15,11 @@ build:
 
 build-arm: status=".status.build.arm"
 build-arm:
-	@echo '0' > ${status}
-	@$(foreach var,$(ARM_TARGETS), \
+	echo '0' > ${status}
+	$(foreach var,$(ARM_TARGETS), \
 		$(MAKE) -C $(var) $@; || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@; || echo '1' > ${status}; \
-	@make -C fpm $@ || echo '1' > ${status}
+	make -C fpm $@ || echo '1' > ${status})
 	exit $$(cat ${status})
 
 # Requires login at https://docker.elastic.co:7000/.

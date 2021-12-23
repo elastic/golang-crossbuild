@@ -7,3 +7,6 @@ darwin:
   arm64:
     CC:  oa64-clang
     CXX: oa64-clang++
+  universal:
+    CC:  oa64-clang
+    CXX: oa64-clang++
