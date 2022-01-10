@@ -102,7 +102,7 @@ GOARM, PLATFORM_ID, CC, and CXX.
 > This is not required unless the CI service is down.
 
 1. Build the images from the project's root with `make`.
-1. Get a logon token for the container registry by visiting <https://docker.elastic.co:7000>.
+1. Get a logon token for the container registry by visiting <https://docker-auth.elastic.co>.
 1. Publish the images with `make push`.
 
 ## Packaging MacOS SDK
