@@ -6,10 +6,17 @@ VERSION        := 1.17.6
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
+NPCAP_VERSION  ?=
 
-export DEBIAN_VERSION TAG_EXTENSION
+export DEBIAN_VERSION NPCAP_VERSION TAG_EXTENSION
 
 build:
+ifeq ($(NAME),$(NPCAP))
+ifeq ($(NAME),docker.elastic.co/observability-ci)
+	@echo "override suffix with the $(NPCAP): $(SUFFIX_NPCAP_VERSION)"
+	SUFFIX=$(SUFFIX_NPCAP_VERSION)
+endif
+endif
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
 	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
