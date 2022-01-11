@@ -4,8 +4,19 @@ VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 .DEFAULT_GOAL := build
 
-# Requires login at https://docker.elastic.co:7000/.
 push:
+ifeq ($(NAME),npcap)
+ifeq ($(NAME),docker.elastic.co/observability-ci)
+	$(MAKE) atomic-push
+else
+	@echo 'npcap can only be published in an internal docker registry'
+else
+	$(MAKE) atomic-push
+endif
+endif
+
+# Requires login at https://docker.elastic.co:7000/.
+atomic-push:
 	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
