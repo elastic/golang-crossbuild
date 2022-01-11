@@ -163,12 +163,12 @@ def prepareNcap() {
     log(level: 'INFO', text: "prepareNcap is not supported for ${PLATFORM}")
     return
   }
-  log(level: 'INFO', text: "prepareNcap ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
+  log(level: 'INFO', text: "prepareNcap for ${PLATFORM}")
   withGoEnv(){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-          sh "make -C ${GO_FOLDER} -f ${MAKEFILE} copy-npcap"
+          sh "make copy-npcap"
         }
       }
     }
