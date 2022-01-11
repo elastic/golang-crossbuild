@@ -165,7 +165,7 @@ def prepareNcap() {
   }
   log(level: 'INFO', text: "prepareNcap ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
   withGoEnv(){
-    withGoogleBucket() {
+    withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
           sh "make -C ${GO_FOLDER} -f ${MAKEFILE} copy-npcap"
