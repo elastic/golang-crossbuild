@@ -1,5 +1,17 @@
 TARGETS=go1.16 go1.17
 ARM_TARGETS=go1.16 go1.17
+NCAP_FILE=npcap-1.60-oem.exe
+
+# Requires login at google storage.
+copy-npcap: status=".status.copy-npcap"
+copy-npcap:
+ifeq ($(CI),true)
+	@echo '0' > ${status}
+	$(foreach var,$(TARGETS), \
+		gsutil cp gs://obs-ci-cache/private/$(NCAP_FILE) $(var)/libpcap/lib/$(NCAP_FILE) || echo '1' > ${status})
+else
+	@echo 'Only available if running in the CI'
+endif
 
 build: status=".status.build"
 build:

@@ -101,6 +101,7 @@ pipeline {
                 withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                   deleteDir()
                   unstash 'source'
+                  prepareNcap()
                   buildImages()
                 }
               }
@@ -115,6 +116,7 @@ pipeline {
                 withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                   // It will use the already cached docker images that were created in the
                   // Build stage. But it's required to retag them with the staging repo.
+                  prepareNcap()
                   buildImages()
                   publishImages()
                 }
@@ -152,6 +154,23 @@ pipeline {
   post {
     always {
       notifyBuildResult()
+    }
+  }
+}
+
+def prepareNcap() {
+  if (PLATFORM?.trim().equals('arm')) {
+    log(level: 'INFO', text: "prepareNcap is not supported for ${PLATFORM}")
+    return
+  }
+  log(level: 'INFO', text: "prepareNcap ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
+  withGoEnv(){
+    withGoogleBucket() {
+      dir("${env.BASE_DIR}"){
+        retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+          sh "make -C ${GO_FOLDER} -f ${MAKEFILE} copy-npcap"
+        }
+      }
     }
   }
 }
