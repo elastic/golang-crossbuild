@@ -3,27 +3,25 @@ VCS_REF       := $(shell git rev-parse HEAD)
 VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 .DEFAULT_GOAL := build
-SUFFIX_NPCAP_VERSION := npcap-$(NPCAP_VERSION)
+SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
+NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 
 push:
-ifeq ($(NAME),npcap)
-ifeq ($(NAME),docker.elastic.co/observability-ci)
-	@echo "override suffix with the npcap: $(SUFFIX_NPCAP_VERSION)"
-	SUFFIX=$(SUFFIX_NPCAP_VERSION) $(MAKE) atomic-push
-else
-	@echo "npcap can only be published in an internal docker registry"
-endif
-else
-	$(MAKE) atomic-push
-endif
+	@[ "$(SUFFIX)" = "$(SUFFIX_NPCAP_VERSION)" ] \
+	&& ( \
+		[ "$(REPOSITORY)" = "$(NPCAP_REPOSITORY)" ] \
+		&& $(MAKE) atomic-push \
+		|| echo "NOTE: $(SUFFIX) can only be published in $(NPCAP_REPOSITORY)" \
+	   ) \
+	|| $(MAKE) atomic-push
 
 # Requires login at https://docker.elastic.co:7000/.
 atomic-push:
-	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
 push-arm:
-	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
 .PHONY: push push-arm

@@ -4,19 +4,19 @@ include $(SELF_DIR)/../Makefile.common
 NAME           := golang-crossbuild
 VERSION        := 1.16.9
 DEBIAN_VERSION ?= 9
-SUFFIX         := -$(shell basename $(CURDIR))
+FOLDER         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 NPCAP_VERSION  ?=
 
 export DEBIAN_VERSION NPCAP_VERSION TAG_EXTENSION
 
+ifeq ($(FOLDER),-npcap)
+SUFFIX = $(SUFFIX_NPCAP_VERSION)
+else
+SUFFIX = $(FOLDER)
+endif
+
 build:
-ifeq ($(NAME),npcap)
-ifeq ($(NAME),docker.elastic.co/observability-ci)
-	@echo "override suffix with the npcap: $(SUFFIX_NPCAP_VERSION)"
-	SUFFIX=$(SUFFIX_NPCAP_VERSION)
-endif
-endif
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
 	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
