@@ -1,9 +1,8 @@
 IMAGES         := base main darwin arm armhf armel mips mips32 ppc s390x darwin-arm64 npcap
 DEBIAN_VERSION := 10
 TAG_EXTENSION  := -debian10
-NPCAP_VERSION  ?=
 
-export DEBIAN_VERSION NPCAP_VERSION TAG_EXTENSION
+export DEBIAN_VERSION TAG_EXTENSION
 
 build:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)

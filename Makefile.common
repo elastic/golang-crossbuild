@@ -11,21 +11,15 @@ SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 
 push:
-	@[ "$(SUFFIX)" = "$(SUFFIX_NPCAP_VERSION)" ] \
-	&& ( \
-		[ "$(REPOSITORY)" = "$(NPCAP_REPOSITORY)" ] \
-		&& $(MAKE) atomic-push \
-		|| echo "NOTE: $(SUFFIX) can only be published in $(NPCAP_REPOSITORY)" \
-	   ) \
-	|| $(MAKE) atomic-push
-
-# Requires login at https://docker.elastic.co:7000/.
-atomic-push:
-	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
-	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	$(MAKE) atomic-push
 
 push-arm:
 	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
 .PHONY: push push-arm
+
+# Requires login at https://docker.elastic.co:7000/.
+atomic-push:
+	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
