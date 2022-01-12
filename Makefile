@@ -1,12 +1,7 @@
+include Makefile.common
+
 TARGETS=go1.16 go1.17
 ARM_TARGETS=go1.16 go1.17
-# TODO: to be replaced once we validate it works as expected
-# TODO: version to be tagged too.
-NPCAP_VERSION=1.60
-#NPCAP_FILE=npcap-$(NPCAP_VERSION)-oem.exe
-NPCAP_FILE=test.txt
-
-export NPCAP_VERSION
 
 # Requires login at google storage.
 copy-npcap: status=".status.copy-npcap"
