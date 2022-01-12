@@ -1,4 +1,4 @@
-IMAGES := base main darwin arm armhf armel mips mips32 ppc s390x
+IMAGES := base main darwin arm armhf armel mips mips32 ppc s390x npcap
 ARM_IMAGES := base-arm
 
 build:
