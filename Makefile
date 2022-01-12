@@ -14,7 +14,7 @@ copy-npcap:
 ifeq ($(CI),true)
 	@echo '0' > ${status}
 	$(foreach var,$(TARGETS), \
-		gsutil cp gs://obs-ci-cache/private/$(NPCAP_FILE) $(var)/libpcap/lib/$(NPCAP_FILE) || echo '1' > ${status})
+		gsutil cp gs://obs-ci-cache/private/$(NPCAP_FILE) $(var)/npcap/lib/$(NPCAP_FILE) || echo '1' > ${status})
 else
 	@echo 'Only available if running in the CI'
 endif

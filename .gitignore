@@ -8,4 +8,4 @@ Dockerfile
 .status.*
 *.bck
 CHANGELOG.md
-libpcap/lib/*.exe
+npcap/lib/*.exe
