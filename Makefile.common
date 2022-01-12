@@ -3,16 +3,15 @@ VCS_REF       := $(shell git rev-parse HEAD)
 VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 .DEFAULT_GOAL := build
-NPCAP         := npcap
-SUFFIX_NPCAP_VERSION := $(NPCAP)-$(NPCAP_VERSION)
+SUFFIX_NPCAP_VERSION := npcap-$(NPCAP_VERSION)
 
 push:
-ifeq ($(NAME),$(NPCAP))
+ifeq ($(NAME),npcap)
 ifeq ($(NAME),docker.elastic.co/observability-ci)
-	@echo "override suffix with the $(NPCAP): $(SUFFIX_NPCAP_VERSION)"
+	@echo "override suffix with the npcap: $(SUFFIX_NPCAP_VERSION)"
 	SUFFIX=$(SUFFIX_NPCAP_VERSION) $(MAKE) atomic-push
 else
-	@echo "$(NPCAP) can only be published in an internal docker registry"
+	@echo "npcap can only be published in an internal docker registry"
 endif
 else
 	$(MAKE) atomic-push

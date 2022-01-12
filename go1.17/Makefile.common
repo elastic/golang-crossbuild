@@ -11,9 +11,9 @@ NPCAP_VERSION  ?=
 export DEBIAN_VERSION NPCAP_VERSION TAG_EXTENSION
 
 build:
-ifeq ($(NAME),$(NPCAP))
+ifeq ($(NAME),npcap)
 ifeq ($(NAME),docker.elastic.co/observability-ci)
-	@echo "override suffix with the $(NPCAP): $(SUFFIX_NPCAP_VERSION)"
+	@echo "override suffix with the npcap: $(SUFFIX_NPCAP_VERSION)"
 	SUFFIX=$(SUFFIX_NPCAP_VERSION)
 endif
 endif

@@ -1,4 +1,4 @@
-IMAGES         := base main darwin $(NPCAP)
+IMAGES         := base main darwin npcap
 DEBIAN_VERSION := 8
 TAG_EXTENSION  := -debian8
 NPCAP_VERSION  ?=
