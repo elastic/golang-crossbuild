@@ -1,4 +1,4 @@
-IMAGES         := base main darwin arm armhf armel mips mips32 ppc s390x darwin-arm64
+IMAGES         := base main arm armhf armel mips mips32 ppc s390x llvm-apple darwin-arm64
 DEBIAN_VERSION := 10
 TAG_EXTENSION  := -debian10
 
@@ -10,5 +10,11 @@ build:
 # Requires login at https://docker.elastic.co:7000/.
 push:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) push || exit 1;)
+
+build-llvm-apple:
+	$(MAKE) -C llvm-apple build
+
+push-llvm-apple:
+	$(MAKE) -C llvm-apple push
 
 .PHONY: build push
