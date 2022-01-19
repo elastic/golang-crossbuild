@@ -1,4 +1,4 @@
-[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmaster)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/master/)
+[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmain)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/main/)
 
 # golang-crossbuild
 
@@ -12,29 +12,60 @@ The base image used is Debian 9 (stretch) unless otherwise specified.
 
 `docker.elastic.co/beats-dev/golang-crossbuild:[TAG]`
 
-## Build Tags
+## Build tags
 
-- `1.10.8-main`, `1.11.13-main`, `1.12.12-main`, `1.13.12-main`, `1.14.15-main`, `1.15.10-main`, `1.16.4-main` - linux/{amd64,386} and windows/{amd64,386}
-- `1.10.8-arm`, `1.11.13-arm`, `1.12.12-arm`, `1.13.12-arm`, `1.14.15-arm`, `1.15.10-arm`
-- linux/{armv5,armv6,armv7,arm64}
-- `1.16.4-arm` - linux/{arm64}
-- `1.16.4-armel` - linux/{armv5,armv6}
-- `1.16.4-armhf` - linux/{armv7}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin`, `1.16.4-darwin` - darwin/{386}
-- `1.10.8-darwin`, `1.11.13-darwin`, `1.12.12-darwin`, `1.13.12-darwin`, `1.14.15-darwin`, `1.15.10-darwin`, `1.16.4-darwin` - darwin/{amd64}
-- `1.10.8-ppc`, `1.11.13-ppc`, `1.12.12-ppc`, `1.13.12-ppc`, `1.14.15-ppc`, `1.15.10-ppc`, `1.16.4-ppc` - linux/{ppc64,ppc64le}
-- `1.10.8-mips`, `1.11.13-mips`, `1.12.12-mips`, `1.13.12-mips`, `1.14.15-mips`, `1.15.10-mips` - linux/{mips,mipsle,mips64,mips64le}
-- `1.16.4-mips` - linux/{mips64,mips64le}
-- `1.16.4-mips32` - linux/{mips,mipsle}
-- `1.10.8-s390x`, `1.11.13-s390x`, `1.12.12-s390`, `1.13.12-s390`, `1.14.15-s390`, `1.15.10-s390`, `1.16.4-s390` - linux/s390x
-- `1.10.8-main-debian7`, `1.11.13-main-debian7`, `1.12.12-debian7`, `1.13.12-debian7`, `1.14.15-debian7`, `1.15.10-debian7`, `1.16.4-debian7` - linux/{amd64,386} and windows/{amd64,386} (Debian 7
-  uses glibc 2.13 so the resulting binaries (if dynamically linked) have greater
-  compatibility.)
-- `1.10.8-main-debian8`, `1.11.13-main-debian8`, `1.12.12-main-debian8`, `1.13.12-debian8`, `1.14.15-debian8`, `1.15.10-debian8`, `1.16.4-debian8` - linux/{amd64,386} and windows/{amd64,386} (Debian 8
-  uses glibc 2.19)
-- `1.15.10-debian9`, `1.16.4-debian9` - linux/{amd64,386} and windows/{amd64,386} (Debian 9 uses glibc 2.24)
-- `1.15.10-base-arm-debian9`, `1.16.4-base-arm-debian9` - linux/arm64 (Debian 9 uses glibc 2.24)
-- `1.15.10-debian10`, `1.16.4-debian10` - linux/{amd64,386} and windows/{amd64,386} (Debian 10 uses glibc 2.28)
+The tags match with the Golang version, and for each supported version there is a release in https://github.com/elastic/golang-crossbuild/releases.
+
+Replace `<GOLANG_VERSION>` with the version you would like to use, for instance: `1.17.1`
+
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-arm` - linux/arm64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armel` - linux/armv5, linux/armv6
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armhf` - linux/armv7
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-base`
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips` - linux/mips64, linux/mips64el
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc` - linux/ppc64, linux/ppc64le
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x` - linux/s390x
+
+**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+**Debian8** uses `glibc 2.19`.
+**Debian9** uses `glibc 2.24`.
+**Debian10** uses `glibc 2.28`.
+
+## Old Build Tags
+
+Until Golang version 1.15
+
+| Description | Tags for 1.10 | Tags for 1.11 | Tags for 1.12 | Tags for 1.13 | Tags for 1.14 | Tags for 1.15 |
+| ------------- | -----| ------- | ----- |  ------ |  ------ |  ------ |
+| linux/{amd64,386} and windows/{amd64,386} | `1.10.8-main` | `1.11.13-main` | `1.12.12-main` |  `1.13.12-main` | `1.14.15-main` | `1.15.14-main` |
+| linux/{armv5,armv6,armv7} | `1.10.8-arm` | `1.11.13-arm` | `1.12.12-arm` | `1.13.12-arm` | `1.14.15-arm` | `1.15.14-arm` |
+| linux/arm64 | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/{armv5,armv6} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/{armv7} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| darwin/{386} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.15.14-darwin` |
+| darwin/{amd64} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.15.14-darwin` |
+| linux/{ppc64,ppc64le} | `1.10.8-ppc` | `1.11.13-ppc` | `1.12.12-ppc` | `1.13.12-ppc` | `1.14.15-ppc` | `1.15.14-ppc` |
+| linux/{mips,mipsle,mips64,mips64le} | `1.10.8-mips` | `1.11.13-mips` | `1.12.12-mips` | `1.13.12-mips` | `1.14.15-mips` |
+| linux/{mips64,mips64le} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/{mips,mipsle} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
+| linux/s390x | `1.10.8-s390x` | `1.11.13-s390x` | `1.12.12-s390` | `1.13.12-s390` | `1.14.15-s390` | `1.15.14-s390` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 7 (see **below**)) |`1.10.8-main-debian7` | `1.11.13-main-debian7` | `1.12.12-main-debian7` | `1.13.12-main-debian7` | `1.14.15-main-debian7` | `1.15.14-main-debian7` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 8 (see **below**)) | `1.10.8-main-debian8` | `1.11.13-main-debian8` | `1.12.12-main-debian8` | `1.13.12-debian8` | `1.14.15-main-debian8` | `1.15.14-main-debian8` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian9` |
+| linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` |
+| linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` |
+
+**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+**Debian8** uses `glibc 2.19`.
+**Debian9** uses `glibc 2.24`.
+**Debian10** uses `glibc 2.28`.
 
 ## Usage Example
 
@@ -43,7 +74,7 @@ docker run -it --rm \
   -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
   -w /go/src/github.com/user/go-project \
   -e CGO_ENABLED=1 \
-  docker.elastic.co/beats-dev/golang-crossbuild:1.16.4-armhf \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.16.7-armhf \
   --build-cmd "make build" \
   -p "linux/armv7"
 ```
@@ -55,11 +86,11 @@ GOARM, PLATFORM_ID, CC, and CXX.
 ## Releasing images for a new Go version
 
 1. Update the Docker tag in
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.11/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/master/go1.12/Makefile.common#L5).
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/Makefile.common#L5) and/or
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.11/Makefile.common#L5) and/or
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.12/Makefile.common#L5).
 1. Update the Go version and SHA256 in the
-   [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/master/go1.10/base/Dockerfile#L19-L21).
+   [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/base/Dockerfile#L19-L21).
    The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
@@ -71,7 +102,7 @@ GOARM, PLATFORM_ID, CC, and CXX.
 > This is not required unless the CI service is down.
 
 1. Build the images from the project's root with `make`.
-1. Get a logon token for the container registry by visiting <https://docker.elastic.co:7000>.
+1. Get a logon token for the container registry by visiting <https://docker-auth.elastic.co>.
 1. Publish the images with `make push`.
 
 ## Packaging MacOS SDK

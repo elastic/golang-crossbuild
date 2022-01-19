@@ -1,0 +1,12 @@
+pull_request_rules:
+  - name: delete upstream branch after merging changes on Jenkinsfile or it's closed
+    conditions:
+      - or:
+        - merged
+        - closed
+      - and:
+        - label=automation
+        - head~=^update-go-version
+        - files~=^Jenkinsfile$
+    actions:
+      delete_head_branch:

@@ -12,7 +12,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.16.4'
+    GO_VERSION = '1.17.6'
   }
   options {
     timeout(time: 12, unit: 'HOURS')
@@ -25,7 +25,7 @@ pipeline {
     quietPeriod(10)
   }
   triggers {
-    issueCommentTrigger('(?i)(.*jenkins\\W+run\\W+(?:the\\W+)?tests(?:\\W+please)?.*|/test)')
+    issueCommentTrigger("${obltGitHubComments()}")
   }
   stages {
     stage('Checkout') {
@@ -45,7 +45,7 @@ pipeline {
           }
           axis {
             name 'GO_FOLDER'
-            values 'go1.16', 'go1.15'
+            values 'go1.16', 'go1.17'
           }
           axis {
             name 'PLATFORM'
@@ -97,10 +97,13 @@ pipeline {
         stages {
           stage('Build') {
             steps {
-              withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                deleteDir()
-                unstash 'source'
-                buildImages()
+              stageStatusCache(id: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                  deleteDir()
+                  unstash 'source'
+                  prepareNcap()
+                  buildImages()
+                }
               }
             }
           }
@@ -109,17 +112,20 @@ pipeline {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
             steps {
-              withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                // It will use the already cached docker images that were created in the
-                // Build stage. But it's required to retag them with the staging repo.
-                buildImages()
-                publishImages()
+              stageStatusCache(id: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                  // It will use the already cached docker images that were created in the
+                  // Build stage. But it's required to retag them with the staging repo.
+                  prepareNcap()
+                  buildImages()
+                  publishImages()
+                }
               }
             }
           }
           stage('Release') {
             when {
-              branch 'master'
+              branch 'main'
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
@@ -130,10 +136,41 @@ pipeline {
         }
       }
     }
+    stage('Post-Release') {
+      when {
+        branch 'main'
+      }
+      environment {
+        HOME = "${env.WORKSPACE}"
+        PATH = "${env.HOME}/bin:${env.WORKSPACE}/${env.BASE_DIR}/.ci/scripts:${env.PATH}"
+      }
+      steps {
+        whenTrue(isNewRelease()) {
+          postRelease()
+        }
+      }
+    }
   }
   post {
     always {
       notifyBuildResult()
+    }
+  }
+}
+
+def prepareNcap() {
+  if (PLATFORM?.trim().equals('arm')) {
+    log(level: 'INFO', text: "prepareNcap is not supported for ${PLATFORM}")
+    return
+  }
+  log(level: 'INFO', text: "prepareNcap for ${PLATFORM}")
+  withGoEnv(){
+    withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
+      dir("${env.BASE_DIR}"){
+        retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+          sh "make copy-npcap"
+        }
+      }
     }
   }
 }
@@ -158,6 +195,38 @@ def publishImages(){
     def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
     retryWithSleep(retries: 3, seconds: 15, backoff: true) {
       sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
+    }
+  }
+}
+
+def isNewRelease() {
+  def releases = listGithubReleases()
+  log(level: 'INFO', text: "isNewRelease: ${releases}")
+  if (env.GO_VERSION?.trim()) {
+    def existsRelease = releases.containsKey(env.GO_VERSION)
+    log(level: 'INFO', text: "isNewRelease: look for the GO_VERSION if matches any tag release in the project = ${existsRelease}")
+    return !existsRelease
+  }
+  return false
+}
+
+def postRelease(){
+  deleteDir()
+  unstash 'source'
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  dir("${env.BASE_DIR}"){
+    sh(label: 'Set branch', script: """#!/bin/bash
+      git checkout -b ${BRANCH_NAME}
+    """)
+    try {
+      gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
+      withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
+        sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
+      }
+      gh(command: "release create ${env.GO_VERSION}", flags: [ "notes-file": ['CHANGELOG.md'], title: "${env.GO_VERSION}" ])
+    } catch (e) {
+      // Probably the tag already exists
+      log(level: 'WARN', text: "postRelease failed with message : ${e?.message}")
     }
   }
 }

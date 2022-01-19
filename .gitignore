@@ -6,3 +6,6 @@
 _obj
 Dockerfile
 .status.*
+*.bck
+CHANGELOG.md
+npcap/lib/*.exe

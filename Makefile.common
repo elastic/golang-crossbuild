@@ -3,14 +3,21 @@ VCS_REF       := $(shell git rev-parse HEAD)
 VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 .DEFAULT_GOAL := build
+NPCAP_VERSION := 1.60
+NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
+SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
+NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 
-# Requires login at https://docker.elastic.co:7000/.
 push:
-	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
-	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	$(MAKE) atomic-push
 
 push-arm:
-	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 
 .PHONY: push push-arm
+
+# Requires login at https://docker.elastic.co:7000/.
+atomic-push:
+	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
