@@ -3,16 +3,6 @@ include Makefile.common
 TARGETS=go1.16 go1.17
 ARM_TARGETS=go1.16 go1.17
 
-# Requires login at google storage.
-copy-npcap: status=".status.copy-npcap"
-copy-npcap:
-ifeq ($(CI),true)
-	@echo '0' > ${status}
-	$(foreach var,$(TARGETS), \
-		gsutil cp gs://obs-ci-cache/private/$(NPCAP_FILE) $(var)/npcap/lib/$(NPCAP_FILE) || echo '1' > ${status})
-else
-	@echo 'Only available if running in the CI'
-endif
 
 build: status=".status.build"
 build:
