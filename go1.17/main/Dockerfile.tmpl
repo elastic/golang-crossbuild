@@ -32,6 +32,12 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
          libsystemd-dev
 {{ end }}
 
+{{ if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") }}
+# msitools
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+         msitools
+{{ end }}
+
 RUN rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
