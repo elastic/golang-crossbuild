@@ -18,24 +18,31 @@ RUN \
             file \
             flex \
             bison \
-            librpm-dev \
             libc-dev \
             libpopt-dev \
             linux-libc-dev \
-            libxml2-dev \
-            libxml2 \
+            icu-devtools \
+            librpm-dev \
+            libsystemd-dev
+
+{{ if eq .DEBIAN_VERSION "9" }}
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+            libelf1 \
             libicu-dev \
             libicu57 \
-            icu-devtools \
-            libsystemd-dev \
-            librpm3  \
+            librpm3 \
             librpmio3 \
             librpmbuild3 \
             librpmsign3 \
+            libxml2-dev \
             libsqlite3-dev \
             libnss3 \
             libsqlite3-0 \
-        && rm -rf /var/lib/apt/lists/*
+            libxml2 \
+            libsqlite3-0
+{{ end }}
+
+RUN rm -rf /var/lib/apt/lists/*
 
 ARG GOLANG_VERSION=1.17.7
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
