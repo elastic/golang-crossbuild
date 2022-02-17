@@ -6,8 +6,9 @@ VERSION        := 1.17.7
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
+TAG_ARCH  ?=
 
-export DEBIAN_VERSION TAG_EXTENSION
+export DEBIAN_VERSION TAG_EXTENSION TAG_ARCH
 
 build: copy-npcap
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
@@ -32,6 +33,7 @@ build-arm:
 	--build-arg VERSION=$(VERSION) \
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
 	--build-arg TAG_EXTENSION=$(TAG_EXTENSION) \
+	--build-arg TAG_ARCH=$(TAG_ARCH) \
 	--build-arg IMAGE="$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
 	--build-arg VCS_REF="$(VCS_REF)" \
 	--build-arg VCS_URL="$(VCS_URL)" \
