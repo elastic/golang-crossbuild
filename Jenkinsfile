@@ -73,6 +73,20 @@ pipeline {
               values 'Makefile.debian8'
             }
           }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'arm'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile.debian9'
+            }
+            axis {
+              name 'GO_FOLDER'
+              values 'go1.16'
+            }
+          }
         }
         stages {
           stage('Build') {
