@@ -26,7 +26,7 @@ RUN \
             libsystemd-dev
 
 {{ if eq .DEBIAN_VERSION "9" }}
-RUN apt install -y --no-install-recommends --allow-unauthenticated\
+RUN apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
             libelf1 \
             libicu-dev \
             libicu57 \
@@ -40,6 +40,14 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
             libsqlite3-0 \
             libxml2 \
             libsqlite3-0
+{{ end }}
+
+{{if eq .DEBIAN_VERSION "10"}}
+RUN apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
+            python3-venv \
+            python3-pip \
+            python3
+RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{ end }}
 
 RUN rm -rf /var/lib/apt/lists/*
