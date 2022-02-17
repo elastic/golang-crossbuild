@@ -60,16 +60,6 @@ pipeline {
             }
             axis {
               name 'MAKEFILE'
-              values 'Makefile'
-            }
-          }
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'MAKEFILE'
               values 'Makefile.debian7'
             }
           }
@@ -81,16 +71,6 @@ pipeline {
             axis {
               name 'MAKEFILE'
               values 'Makefile.debian8'
-            }
-          }
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'MAKEFILE'
-              values 'Makefile.debian10'
             }
           }
         }
