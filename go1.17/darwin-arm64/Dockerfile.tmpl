@@ -32,7 +32,7 @@ RUN \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
     && curl -sSLo "tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz" "${OSXCROSS_SDK_URL}" \
 {{ if eq .TAG_ARCH "-arm" }}
-    && UNATTENDED=yes ENABLE_CLANG_INSTALL=yes PORTABLE="" CFLAGS=-mcpu=apple-a14 CXXFLAGS=-mcpu=apple-a14 ./build_clang.sh >/dev/null \
+    && CLANG_VERSION=13.0.0 UNATTENDED=yes ENABLE_CLANG_INSTALL=yes PORTABLE="" CFLAGS="-mcpu=apple-m1" CXXFLAGS="-mcpu=apple-m1" ./build_clang.sh >/dev/null \
 {{ else }}
     && UNATTENDED=yes ENABLE_CLANG_INSTALL=yes ./build_clang.sh >/dev/null \
 {{ end }}
