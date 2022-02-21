@@ -41,15 +41,18 @@ pipeline {
         axes {
           axis {
             name 'MAKEFILE'
-            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
+            //values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
+            values 'Makefile', 'Makefile.debian10'
           }
           axis {
             name 'GO_FOLDER'
-            values 'go1.16', 'go1.17'
+            //values 'go1.16', 'go1.17'
+            values 'go1.17'
           }
           axis {
             name 'PLATFORM'
-            values 'ubuntu-20 && immutable', 'arm'
+            //values 'ubuntu-20 && immutable', 'arm'
+            values 'arm'
           }
         }
         excludes {
