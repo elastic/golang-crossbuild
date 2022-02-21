@@ -28,7 +28,7 @@ RUN echo "This Docker image will work only with Debian 10" && exit 1
 
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
-    && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/035cc170338b7b252e3f13b0e3ccbf4411bffc41" \
+    && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
     && curl -sSLo "tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz" "${OSXCROSS_SDK_URL}" \
 {{ if eq .TAG_ARCH "-arm" }}
