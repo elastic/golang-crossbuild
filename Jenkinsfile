@@ -170,7 +170,6 @@ pipeline {
           stage('Staging') {
             environment {
               REPOSITORY = "${env.STAGING_IMAGE}"
-
             }
             steps {
               stageStatusCache(id: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
@@ -220,6 +219,7 @@ pipeline {
 
 def buildImages(String goal){
   log(level: 'INFO', text: "buildImages ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   withGoEnv(){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
