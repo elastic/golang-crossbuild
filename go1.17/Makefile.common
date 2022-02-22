@@ -2,14 +2,14 @@ SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)/../Makefile.common
 
 NAME           := golang-crossbuild
-VERSION        := 1.17.6
+VERSION        := 1.17.7
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 
 export DEBIAN_VERSION TAG_EXTENSION
 
-build:
+build: copy-npcap
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
 	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
