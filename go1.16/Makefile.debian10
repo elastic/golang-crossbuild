@@ -18,4 +18,4 @@ build-llvm-apple:
 push-llvm-apple:
 	$(MAKE) -C llvm-apple push
 
-.PHONY: build push
+.PHONY: build push build-llvm-apple push-llvm-apple
