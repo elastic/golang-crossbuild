@@ -29,6 +29,7 @@ pipeline {
   }
   stages {
     stage('Checkout') {
+      options { skipDefaultCheckout() }
       steps {
         deleteDir()
         gitCheckout(basedir: BASE_DIR)
@@ -36,6 +37,7 @@ pipeline {
       }
     }
     stage('Package'){
+      options { skipDefaultCheckout() }
       matrix {
         agent { label "${PLATFORM}"  }
         axes {
@@ -139,6 +141,7 @@ pipeline {
         HOME = "${env.WORKSPACE}"
         PATH = "${env.HOME}/bin:${env.WORKSPACE}/${env.BASE_DIR}/.ci/scripts:${env.PATH}"
       }
+      options { skipDefaultCheckout() }
       steps {
         whenTrue(isNewRelease()) {
           postRelease()
