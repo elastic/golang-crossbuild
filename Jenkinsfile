@@ -152,9 +152,6 @@ pipeline {
             }
           }
         }
-        environment {
-          platform = "${(PLATFORM?.trim().equals('arm')) ? '-arm' : ''}"
-        }
         stages {
           stage('Build') {
             steps {
@@ -162,7 +159,7 @@ pipeline {
                 withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                   deleteDir()
                   unstash 'source'
-                  buildImages("build" + env.platform)
+                  buildImages("build" + getPlatform(PLATFORM))
                 }
               }
             }
@@ -176,8 +173,8 @@ pipeline {
                 withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                   // It will use the already cached docker images that were created in the
                   // Build stage. But it's required to retag them with the staging repo.
-                  buildImages("build" + env.platform)
-                  publishImages("push" + env.platform)
+                  buildImages("build" + getPlatform(PLATFORM))
+                  publishImages("push" + getPlatform(PLATFORM))
                 }
               }
             }
@@ -188,7 +185,7 @@ pipeline {
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                publishImages("push" + env.platform)
+                publishImages("push" + getPlatform(PLATFORM))
               }
             }
           }
@@ -215,6 +212,10 @@ pipeline {
       notifyBuildResult()
     }
   }
+}
+
+def getPlatform(platform) {
+  return (platform?.trim().equals('arm')) ? '-arm' : ''
 }
 
 def buildImages(String goal){
