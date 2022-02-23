@@ -121,6 +121,8 @@ pipeline {
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                deleteDir()
+                unstash 'source'
                 buildImages()
                 publishImages()
               }
