@@ -29,6 +29,7 @@ pipeline {
   }
   stages {
     stage('Checkout') {
+      options { skipDefaultCheckout() }
       steps {
         deleteDir()
         gitCheckout(basedir: BASE_DIR)
@@ -36,6 +37,7 @@ pipeline {
       }
     }
     stage('Package'){
+      options { skipDefaultCheckout() }
       matrix {
         agent { label "${PLATFORM}"  }
         axes {
@@ -95,7 +97,13 @@ pipeline {
           }
         }
         stages {
-          stage('Build') {
+          stage('Staging') {
+            when {
+              not { branch 'main' }
+            }
+            environment {
+              REPOSITORY = "${env.STAGING_IMAGE}"
+            }
             steps {
               stageStatusCache(id: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
@@ -103,19 +111,7 @@ pipeline {
                   unstash 'source'
                   buildImages()
                 }
-              }
-            }
-          }
-          stage('Staging') {
-            environment {
-              REPOSITORY = "${env.STAGING_IMAGE}"
-            }
-            steps {
-              stageStatusCache(id: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                  // It will use the already cached docker images that were created in the
-                  // Build stage. But it's required to retag them with the staging repo.
-                  buildImages()
                   publishImages()
                 }
               }
@@ -127,6 +123,9 @@ pipeline {
             }
             steps {
               withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                deleteDir()
+                unstash 'source'
+                buildImages()
                 publishImages()
               }
             }
@@ -142,6 +141,7 @@ pipeline {
         HOME = "${env.WORKSPACE}"
         PATH = "${env.HOME}/bin:${env.WORKSPACE}/${env.BASE_DIR}/.ci/scripts:${env.PATH}"
       }
+      options { skipDefaultCheckout() }
       steps {
         whenTrue(isNewRelease()) {
           postRelease()
