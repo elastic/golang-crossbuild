@@ -7,12 +7,14 @@ DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 
+DOCKER_BUILD ?= docker build
+
 export DEBIAN_VERSION TAG_EXTENSION
 
 build: copy-npcap
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
-	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
+	@$(DOCKER_BUILD) -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
 	--build-arg REPOSITORY=$(REPOSITORY) \
 	--build-arg VERSION=$(VERSION) \
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \

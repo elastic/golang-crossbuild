@@ -13,6 +13,7 @@ pipeline {
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
     GO_VERSION = '1.17.7'
+    DOCKER_BUILD = 'docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --push'
   }
   options {
     timeout(time: 3, unit: 'HOURS')
@@ -105,14 +106,11 @@ pipeline {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
             steps {
-              stageStatusCache(id: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+              stageStatusCache(id: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                   deleteDir()
                   unstash 'source'
                   buildImages()
-                }
-                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                  publishImages()
                 }
               }
             }
@@ -126,7 +124,6 @@ pipeline {
                 deleteDir()
                 unstash 'source'
                 buildImages()
-                publishImages()
               }
             }
           }
@@ -158,6 +155,7 @@ pipeline {
 
 def buildImages(){
   log(level: 'INFO', text: "buildImages ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   withGoEnv(){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
@@ -167,17 +165,6 @@ def buildImages(){
         }
         sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"')
       }
-    }
-  }
-}
-
-def publishImages(){
-  log(level: 'INFO', text: "publish ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
-  dir("${env.BASE_DIR}"){
-    def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
-    retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-      sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
     }
   }
 }
