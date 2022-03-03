@@ -1,9 +1,0 @@
----
-
-linux:
-  ppc64:
-    CC:  powerpc64-linux-gnu-gcc
-    CXX: powerpc64-linux-gnu-g++
-  ppc64le:
-    CC:  powerpc64le-linux-gnu-gcc
-    CXX: powerpc64le-linux-gnu-g++
