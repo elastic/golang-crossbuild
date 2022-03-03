@@ -48,53 +48,11 @@ pipeline {
           }
           axis {
             name 'GO_FOLDER'
-            values 'go1.16', 'go1.17'
+            values 'go1.17'
           }
           axis {
             name 'PLATFORM'
-            values 'ubuntu-20 && immutable', 'arm'
-          }
-        }
-        excludes {
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'MAKEFILE'
-              values 'Makefile'
-            }
-          }
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'MAKEFILE'
-              values 'Makefile.debian7'
-            }
-          }
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'MAKEFILE'
-              values 'Makefile.debian8'
-            }
-          }
-          exclude {
-            axis {
-              name 'PLATFORM'
-              values 'arm'
-            }
-            axis {
-              name 'MAKEFILE'
-              values 'Makefile.debian10'
-            }
+            values 'ubuntu-20 && immutable'
           }
         }
         stages {
