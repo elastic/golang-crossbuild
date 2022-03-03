@@ -3,6 +3,14 @@ include Makefile.common
 TARGETS=go1.16 go1.17
 ARM_TARGETS=go1.16 go1.17
 
+prepare-buildx: status=".status.prepare.buildx"
+prepare-buildx:
+	@echo '0' > ${status}
+	@docker buildx ls || echo '1' > ${status}
+	@docker buildx rm golangcrossbuild || true
+	@docker buildx create --name golangcrossbuild --use || echo '1' > ${status}
+	@docker buildx inspect --bootstrap || echo '1' > ${status}
+	exit $$(cat ${status})
 
 build: status=".status.build"
 build:
@@ -47,4 +55,4 @@ push-arm:
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})
 
-.PHONY: build build-arm push push-arm
+.PHONY: build build-arm push push-arm prepare-buildx

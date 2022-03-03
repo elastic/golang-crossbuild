@@ -118,6 +118,7 @@ def buildImages(){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
+        sh(label: 'make prepare-buildx', script: 'make prepare-buildx')
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
           sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
         }
