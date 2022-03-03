@@ -8,7 +8,7 @@ prepare-buildx:
 	@echo '0' > ${status}
 	@docker buildx ls || echo '1' > ${status}
 	@docker buildx rm golangcrossbuild || true
-	@docker buildx create --name golangcrossbuild --use || echo '1' > ${status}
+	@docker buildx create --name golangcrossbuild --platform linux/amd64,linux/arm64 --use || echo '1' > ${status}
 	@docker buildx inspect --bootstrap || echo '1' > ${status}
 	exit $$(cat ${status})
 
