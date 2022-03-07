@@ -107,7 +107,7 @@ pipeline {
                   unstash 'source'
                   buildImages()
                 }
-                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Staging ${MAKEFILE} ${PLATFORM}") {
                   publishImages()
                 }
               }
@@ -118,7 +118,7 @@ pipeline {
               branch 'main'
             }
             steps {
-              withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+              withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
                 deleteDir()
                 unstash 'source'
                 buildImages()
