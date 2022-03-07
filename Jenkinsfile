@@ -46,10 +46,6 @@ pipeline {
             values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
           }
           axis {
-            name 'GO_FOLDER'
-            values 'go1.16', 'go1.17'
-          }
-          axis {
             name 'PLATFORM'
             values 'ubuntu-20 && immutable', 'arm'
           }
@@ -105,13 +101,13 @@ pipeline {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
             steps {
-              stageStatusCache(id: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
-                withGithubNotify(context: "Build ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+              stageStatusCache(id: "Build ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Build ${MAKEFILE} ${PLATFORM}") {
                   deleteDir()
                   unstash 'source'
                   buildImages()
                 }
-                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                withGithubNotify(context: "Staging ${MAKEFILE} ${PLATFORM}") {
                   publishImages()
                 }
               }
@@ -122,7 +118,7 @@ pipeline {
               branch 'main'
             }
             steps {
-              withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+              withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
                 deleteDir()
                 unstash 'source'
                 buildImages()
@@ -157,13 +153,13 @@ pipeline {
 }
 
 def buildImages(){
-  log(level: 'INFO', text: "buildImages ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
+  log(level: 'INFO', text: "buildImages with ${MAKEFILE} for ${PLATFORM}")
   withGoEnv(){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-          sh "make -C ${GO_FOLDER} -f ${MAKEFILE} build${platform}"
+          sh "make -C go -f ${MAKEFILE} build${platform}"
         }
         sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"')
       }
@@ -172,12 +168,12 @@ def buildImages(){
 }
 
 def publishImages(){
-  log(level: 'INFO', text: "publish ${GO_FOLDER} with ${MAKEFILE} for ${PLATFORM}")
+  log(level: 'INFO', text: "publish with ${MAKEFILE} for ${PLATFORM}")
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   dir("${env.BASE_DIR}"){
     def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
     retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-      sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${GO_FOLDER} -f ${MAKEFILE} push${platform}")
+      sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C go -f ${MAKEFILE} push${platform}")
     }
   }
 }

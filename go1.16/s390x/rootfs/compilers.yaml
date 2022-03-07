@@ -1,6 +1,0 @@
----
-
-linux:
-  s390x:
-    CC:  s390x-linux-gnu-gcc
-    CXX: s390x-linux-gnu-g++
