@@ -12,7 +12,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.17.7'
+    GO_VERSION = '1.17.8'
   }
   options {
     timeout(time: 3, unit: 'HOURS')
@@ -29,6 +29,7 @@ pipeline {
   }
   stages {
     stage('Checkout') {
+      options { skipDefaultCheckout() }
       steps {
         deleteDir()
         gitCheckout(basedir: BASE_DIR)
@@ -36,6 +37,7 @@ pipeline {
       }
     }
     stage('Package'){
+      options { skipDefaultCheckout() }
       matrix {
         agent { label "${PLATFORM}"  }
         axes {
@@ -91,7 +93,13 @@ pipeline {
           }
         }
         stages {
-          stage('Build') {
+          stage('Staging') {
+            when {
+              not { branch 'main' }
+            }
+            environment {
+              REPOSITORY = "${env.STAGING_IMAGE}"
+            }
             steps {
               stageStatusCache(id: "Build ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Build ${MAKEFILE} ${PLATFORM}") {
@@ -99,19 +107,7 @@ pipeline {
                   unstash 'source'
                   buildImages()
                 }
-              }
-            }
-          }
-          stage('Staging') {
-            environment {
-              REPOSITORY = "${env.STAGING_IMAGE}"
-            }
-            steps {
-              stageStatusCache(id: "Staging ${MAKEFILE} ${PLATFORM}") {
-                withGithubNotify(context: "Staging ${MAKEFILE} ${PLATFORM}") {
-                  // It will use the already cached docker images that were created in the
-                  // Build stage. But it's required to retag them with the staging repo.
-                  buildImages()
+                withGithubNotify(context: "Staging ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
                   publishImages()
                 }
               }
@@ -122,7 +118,10 @@ pipeline {
               branch 'main'
             }
             steps {
-              withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
+              withGithubNotify(context: "Release ${GO_FOLDER} ${MAKEFILE} ${PLATFORM}") {
+                deleteDir()
+                unstash 'source'
+                buildImages()
                 publishImages()
               }
             }
@@ -138,6 +137,7 @@ pipeline {
         HOME = "${env.WORKSPACE}"
         PATH = "${env.HOME}/bin:${env.WORKSPACE}/${env.BASE_DIR}/.ci/scripts:${env.PATH}"
       }
+      options { skipDefaultCheckout() }
       steps {
         whenTrue(isNewRelease()) {
           postRelease()
