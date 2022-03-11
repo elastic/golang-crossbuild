@@ -120,6 +120,9 @@ pipeline {
             }
             steps {
               withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
+                deleteDir()
+                unstash 'source'
+                buildImages()
                 publishImages()
               }
             }
