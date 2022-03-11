@@ -91,9 +91,6 @@ pipeline {
           }
         }
         stages {
-<<<<<<< HEAD
-          stage('Build') {
-=======
           stage('Staging') {
             when {
               changeRequest()
@@ -101,7 +98,6 @@ pipeline {
             environment {
               REPOSITORY = "${env.STAGING_IMAGE}"
             }
->>>>>>> 154df01 (ci: release for 1.x branches (#162))
             steps {
               stageStatusCache(id: "Build ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Build ${MAKEFILE} ${PLATFORM}") {
@@ -109,19 +105,7 @@ pipeline {
                   unstash 'source'
                   buildImages()
                 }
-              }
-            }
-          }
-          stage('Staging') {
-            environment {
-              REPOSITORY = "${env.STAGING_IMAGE}"
-            }
-            steps {
-              stageStatusCache(id: "Staging ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Staging ${MAKEFILE} ${PLATFORM}") {
-                  // It will use the already cached docker images that were created in the
-                  // Build stage. But it's required to retag them with the staging repo.
-                  buildImages()
                   publishImages()
                 }
               }
