@@ -95,7 +95,7 @@ pipeline {
         stages {
           stage('Staging') {
             when {
-              not { branch 'main' }
+              changeRequest()
             }
             environment {
               REPOSITORY = "${env.STAGING_IMAGE}"
@@ -115,7 +115,10 @@ pipeline {
           }
           stage('Release') {
             when {
-              branch 'main'
+              anyOf {
+                branch 'main'
+                branch pattern: "\\d+\\.\\d+", comparator: 'REGEXP'
+              }
             }
             steps {
               withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
@@ -131,7 +134,10 @@ pipeline {
     }
     stage('Post-Release') {
       when {
-        branch 'main'
+        anyOf {
+          branch 'main'
+          branch pattern: "\\d+\\.\\d+", comparator: 'REGEXP'
+        }
       }
       environment {
         HOME = "${env.WORKSPACE}"
