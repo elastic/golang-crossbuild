@@ -91,7 +91,17 @@ pipeline {
           }
         }
         stages {
+<<<<<<< HEAD
           stage('Build') {
+=======
+          stage('Staging') {
+            when {
+              changeRequest()
+            }
+            environment {
+              REPOSITORY = "${env.STAGING_IMAGE}"
+            }
+>>>>>>> 154df01 (ci: release for 1.x branches (#162))
             steps {
               stageStatusCache(id: "Build ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Build ${MAKEFILE} ${PLATFORM}") {
@@ -119,7 +129,10 @@ pipeline {
           }
           stage('Release') {
             when {
-              branch 'main'
+              anyOf {
+                branch 'main'
+                branch pattern: "\\d+\\.\\d+", comparator: 'REGEXP'
+              }
             }
             steps {
               withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
@@ -132,7 +145,10 @@ pipeline {
     }
     stage('Post-Release') {
       when {
-        branch 'main'
+        anyOf {
+          branch 'main'
+          branch pattern: "\\d+\\.\\d+", comparator: 'REGEXP'
+        }
       }
       environment {
         HOME = "${env.WORKSPACE}"
