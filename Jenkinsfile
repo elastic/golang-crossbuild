@@ -91,7 +91,13 @@ pipeline {
           }
         }
         stages {
-          stage('Build') {
+          stage('Staging') {
+            when {
+              changeRequest()
+            }
+            environment {
+              REPOSITORY = "${env.STAGING_IMAGE}"
+            }
             steps {
               stageStatusCache(id: "Build ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Build ${MAKEFILE} ${PLATFORM}") {
@@ -99,19 +105,7 @@ pipeline {
                   unstash 'source'
                   buildImages()
                 }
-              }
-            }
-          }
-          stage('Staging') {
-            environment {
-              REPOSITORY = "${env.STAGING_IMAGE}"
-            }
-            steps {
-              stageStatusCache(id: "Staging ${MAKEFILE} ${PLATFORM}") {
                 withGithubNotify(context: "Staging ${MAKEFILE} ${PLATFORM}") {
-                  // It will use the already cached docker images that were created in the
-                  // Build stage. But it's required to retag them with the staging repo.
-                  buildImages()
                   publishImages()
                 }
               }
@@ -119,10 +113,16 @@ pipeline {
           }
           stage('Release') {
             when {
-              branch 'main'
+              anyOf {
+                branch 'main'
+                branch pattern: "\\d+\\.\\d+", comparator: 'REGEXP'
+              }
             }
             steps {
               withGithubNotify(context: "Release ${MAKEFILE} ${PLATFORM}") {
+                deleteDir()
+                unstash 'source'
+                buildImages()
                 publishImages()
               }
             }
@@ -132,7 +132,10 @@ pipeline {
     }
     stage('Post-Release') {
       when {
-        branch 'main'
+        anyOf {
+          branch 'main'
+          branch pattern: "\\d+\\.\\d+", comparator: 'REGEXP'
+        }
       }
       environment {
         HOME = "${env.WORKSPACE}"
