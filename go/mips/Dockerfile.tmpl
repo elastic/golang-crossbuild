@@ -22,7 +22,7 @@ RUN apt install -qq -y \
 
 {{ if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
-RUN apt install -y \
+RUN apt install -y --allow-downgrades \
         libelf1:mips64el \
         libicu-dev:mips64el \
         libicu57:mips64el \
@@ -36,7 +36,9 @@ RUN apt install -y \
         libnss3:mips64el \
         libsqlite3-0:mips64el \
         libxml2:mips64el \
-        libsqlite3-0:mips64el
+        libsqlite3-0:mips64el \
+        liblzma5:amd64=5.2.2-1.2+b1 \
+        zlib1g:amd64=1:1.2.8.dfsg-5
 
 # libsystemd-dev
 # RUN apt install -y \

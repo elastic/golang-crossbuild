@@ -18,7 +18,7 @@ RUN apt install -qq -y \
         linux-libc-dev:ppc64el
 
 {{ if eq .DEBIAN_VERSION "9" }}
-RUN apt install -qq -y \
+RUN apt install -qq -y --allow-downgrades \
         libelf1:ppc64el \
         libicu-dev:ppc64el \
         libicu57:ppc64el \
@@ -31,7 +31,9 @@ RUN apt install -qq -y \
         librpmsign3:ppc64el \
         libsqlite3-dev:ppc64el \
         libnss3:ppc64el \
-        libsqlite3-0:ppc64el
+        libsqlite3-0:ppc64el \
+        liblzma5:amd64=5.2.2-1.2+b1 \
+        zlib1g:amd64=1:1.2.8.dfsg-5
 
 # RUN apt install -y \
 #         libsystemd-dev:ppc64el libsystemd0:ppc64el liblz4-1:ppc64el

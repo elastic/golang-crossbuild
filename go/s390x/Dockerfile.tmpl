@@ -17,7 +17,7 @@ RUN apt install -qq -y \
         linux-libc-dev:s390x
 
 {{ if eq .DEBIAN_VERSION "9" }}
-RUN apt install -qq -y \
+RUN apt install -qq -y --allow-downgrades \
         libelf1:s390x \
         libicu-dev:s390x \
         libicu57:s390x \
@@ -30,7 +30,9 @@ RUN apt install -qq -y \
         librpmsign3:s390x \
         libsqlite3-dev:s390x \
         libnss3:s390x \
-        libsqlite3-0:s390x
+        libsqlite3-0:s390x \
+        liblzma5:amd64=5.2.2-1.2+b1 \
+        zlib1g:amd64=1:1.2.8.dfsg-5
 
 # RUN apt install -y \
 #         libsystemd-dev:s390x libsystemd0:s390x liblz4-1:s390x
