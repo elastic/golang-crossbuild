@@ -20,7 +20,7 @@ RUN \
         xz-utils \
         unzip
 
-{{ if neq .DEBIAN_VERSION "7" }}
+{{ if ne .DEBIAN_VERSION "7" }}
 # librpm-dev
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
         librpm-dev \
