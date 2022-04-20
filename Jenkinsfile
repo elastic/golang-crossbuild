@@ -43,7 +43,7 @@ pipeline {
         axes {
           axis {
             name 'MAKEFILE'
-            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10'
+            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10', 'Makefile.debian11'
           }
           axis {
             name 'PLATFORM'
@@ -89,6 +89,16 @@ pipeline {
             axis {
               name 'MAKEFILE'
               values 'Makefile.debian10'
+            }
+          }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'arm'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile.debian11'
             }
           }
         }

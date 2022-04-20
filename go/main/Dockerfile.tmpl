@@ -20,7 +20,7 @@ RUN \
         xz-utils \
         unzip
 
-{{ if or (eq .DEBIAN_VERSION "8") (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") }}
+{{ if neq .DEBIAN_VERSION "7" }}
 # librpm-dev
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
         librpm-dev \
@@ -32,7 +32,7 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
          libsystemd-dev
 {{ end }}
 
-{{ if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") }}
+{{ if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") }}
 # msitools
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
          msitools
