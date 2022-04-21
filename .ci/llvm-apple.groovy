@@ -31,7 +31,7 @@ pipeline {
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
   }
   options {
-    timeout(time: 3, unit: 'HOURS')
+    timeout(time: 5, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '7', artifactNumToKeepStr: '7', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
@@ -43,7 +43,7 @@ pipeline {
   stages {
     stage('Check changes'){
         when {
-            expression { return isGitRegionMatch(patterns: [ '^/go/llvm-apple' ], shouldMatchAll: false).toString() }
+            expression { return isGitRegionMatch(patterns: [ '^/go/llvm-apple', '^.ci/llvm-apple.groovy' ], shouldMatchAll: false).toString() || isUserTrigger()}
         }
         stages {
             stage('Checkout') {

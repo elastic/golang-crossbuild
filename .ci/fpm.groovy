@@ -43,7 +43,7 @@ pipeline {
   stages {
     stage('Check changes'){
         when {
-            expression { return isGitRegionMatch(patterns: [ '^/fpm' ], shouldMatchAll: false).toString() }
+            expression { return isGitRegionMatch(patterns: [ '^/fpm', '^.ci/fpm.groovy' ], shouldMatchAll: false).toString() || isUserTrigger() }
         }
         stages {
             stage('Checkout') {
