@@ -1,6 +1,6 @@
 ---
 - job:
-    name: Beats/golang-crossbuild-mbp
+    name: golang-crossbuild/golang-crossbuild-mbp
     display-name: Pipeline for golang-crossbuild
     description: Jenkins pipeline for the golang-crossbuild project.
     view: Beats
