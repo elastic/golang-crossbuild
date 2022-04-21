@@ -8,6 +8,8 @@ needed when the application uses [cgo](https://golang.org/cmd/cgo/).
 
 The base image used is Debian 9 (stretch) unless otherwise specified.
 
+`mips`, `mips32`, `ppc`, `s390x` and `darwin-arm64` are only based on `Debian 10`.
+
 ## Docker Repo
 
 `docker.elastic.co/beats-dev/golang-crossbuild:[TAG]`

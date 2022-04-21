@@ -4,3 +4,8 @@
     name: Beats
     description: Beats
     project-type: folder
+
+- job:
+    name: golang-crossbuild
+    description: golang Cross build related jobs
+    project-type: folder
