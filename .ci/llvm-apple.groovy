@@ -58,6 +58,7 @@ pipeline {
                 environment {
                     DEBIAN_VERSION = "10"
                     MAKEFILE = "go/llvm-apple"
+                    TAG_EXTENSION = "-debian10"
                 }
                 options { skipDefaultCheckout() }
                 steps {
