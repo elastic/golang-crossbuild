@@ -184,7 +184,8 @@ def buildImages(){
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
           sh "make -C go -f ${MAKEFILE} build${platform}"
         }
-        sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"')
+        sh(label: 'list Docker images staging', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild" """)
+        sh(label: 'list Docker images production', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${env.REGISTRY}/beats-dev/golang-crossbuild" """)
       }
     }
   }
