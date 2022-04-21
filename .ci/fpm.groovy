@@ -55,7 +55,7 @@ pipeline {
                 }
             }
             stage('Build') {
-                environments {
+                environment {
                     MAKEFILE = "fpm"
                 }
                 options { skipDefaultCheckout() }
@@ -77,9 +77,9 @@ pipeline {
   }
 }
 
-def buildImages(){
-  withGoEnv(){
-    dir("${env.BASE_DIR}"){
+def buildImages() {
+  withGoEnv {
+    dir("${env.BASE_DIR}") {
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
             sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
         }
@@ -88,9 +88,9 @@ def buildImages(){
   }
 }
 
-def publishImages(){
+def publishImages() {
   dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
-  dir("${env.BASE_DIR}"){
+  dir("${env.BASE_DIR}") {
     retryWithSleep(retries: 3, seconds: 15, backoff: true) {
       sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${MAKEFILE} push")
     }
