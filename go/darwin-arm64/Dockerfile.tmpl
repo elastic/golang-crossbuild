@@ -1,7 +1,7 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-llvm-apple${TAG_EXTENSION} AS BUILD_LLVM_APPLE
+FROM docker.elastic.co/beats-dev/golang-crossbuild:${VERSION}-llvm-apple${TAG_EXTENSION} AS BUILD_LLVM_APPLE
 
 ARG REPOSITORY
 ARG VERSION
@@ -18,7 +18,7 @@ RUN \
         lzma-dev \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
-    
+
 {{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 COPY --from=BUILD_LLVM_APPLE /llvm-apple-Linux.tar.gz /tmp/llvm-apple-Linux.tar.gz
 RUN tar -xzf /tmp/llvm-apple-Linux.tar.gz --strip 1 -C /usr/local \
