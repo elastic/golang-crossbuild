@@ -1,11 +1,11 @@
 ---
 - job:
-    name: golang-crossbuild/golang-crossbuild-mbp
-    display-name: Pipeline for golang-crossbuild
-    description: Jenkins pipeline for the golang-crossbuild project.
+    name: golang-crossbuild/llvm-apple-mbp
+    display-name: LLVM Apple version
+    description: Jenkins pipeline for compile the LLVM Apple version.
     view: Beats
     project-type: multibranch
-    script-path: Jenkinsfile
+    script-path: .ci/llvm-apple.groovy
     scm:
       - github:
           branch-discovery: no-pr
@@ -14,7 +14,8 @@
           discover-pr-origin: merge-current
           discover-tags: false
           head-filter-regex: '(main|\d+\.\d+.\d+|PR-.*|v\d+\.\d+\.\d+)'
-          notification-context: 'beats-ci'
+          disable-pr-notifications: true
+          notification-context: 'llvm-apple'
           repo: golang-crossbuild
           repo-owner: elastic
           credentials-id: 2a9602aa-ab9f-4e52-baf3-b71ca88469c7-UserAndToken

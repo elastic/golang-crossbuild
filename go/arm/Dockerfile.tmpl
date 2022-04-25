@@ -36,7 +36,7 @@ RUN apt install -y \
         libsystemd-dev:arm64 libsystemd0:arm64 liblz4-1:arm64
 {{ end }}
 
-{{if eq .DEBIAN_VERSION "10"}}
+{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:arm64

@@ -18,10 +18,14 @@ RUN \
         lzma-dev \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
-
+    
+{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 COPY --from=BUILD_LLVM_APPLE /llvm-apple-Linux.tar.gz /tmp/llvm-apple-Linux.tar.gz
 RUN tar -xzf /tmp/llvm-apple-Linux.tar.gz --strip 1 -C /usr/local \
   && rm /tmp/llvm-apple-Linux.tar.gz
+{{ else }}
+RUN echo "This Docker image will work only with Debian >10" && exit 1
+{{ end }}
 
 ARG OSXCROSS_PATH=/usr/local/osxcross
 COPY --from=BUILD_LLVM_APPLE /osxcross.tar.gz /tmp/osxcross.tar.gz
