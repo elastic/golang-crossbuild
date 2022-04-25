@@ -40,20 +40,24 @@ COPY rootfs /
 
 # Basic test
 RUN cd / \
-  && o64-clang helloWorld.c -o helloWorld \
-  && file helloWorld \
-  && file helloWorld | grep -c 'Mach-O 64-bit x86_64'
+  && o64-clang helloWorld.c -o helloWorld.x86_64 \
+  && file helloWorld.x86_64 \
+  && file helloWorld.x86_64 | grep -c 'Mach-O 64-bit x86_64'
 
 RUN cd / \
-  && oa64-clang helloWorld.c -o helloWorld \
-  && file helloWorld \
-  && file helloWorld | grep -c 'Mach-O 64-bit arm64'
+  && oa64-clang helloWorld.c -o helloWorld.arm64 \
+  && file helloWorld.arm64 \
+  && file helloWorld.arm64 | grep -c 'Mach-O 64-bit arm64'
 
 RUN cd / \
-  && oa64e-clang helloWorld.c -o helloWorld \
-  && file helloWorld \
-  && file helloWorld | grep -c 'Mach-O 64-bit arm64' \
-  && rm helloWorld helloWorld.c
+  && oa64e-clang helloWorld.c -o helloWorld.arm64e \
+  && file helloWorld.arm64e \
+  && file helloWorld.arm64e | grep -c 'Mach-O 64-bit arm64'
+
+RUN cd / \
+  && lipo -create -output helloWorld.universal helloWorld.x86_64 helloWorld.arm64e \
+  && file helloWorld.universal | grep 'Mach-O universal binary' \
+  && rm helloWorld.*
 
 
 # Build-time metadata as defined at http://label-schema.org.
