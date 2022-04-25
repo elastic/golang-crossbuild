@@ -36,7 +36,7 @@ RUN apt install -qq -y \
 #         libsystemd-dev:s390x libsystemd0:s390x liblz4-1:s390x
 {{ end }}
 
-{{if eq .DEBIAN_VERSION "10"}}
+{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:s390x

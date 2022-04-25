@@ -41,7 +41,7 @@ RUN apt install -y \
 #         libsystemd-dev:mips libsystemd0:mips liblz4-1:mips
 {{ end }}
 
-{{if eq .DEBIAN_VERSION "10"}}
+{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:mips
