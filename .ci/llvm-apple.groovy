@@ -55,31 +55,30 @@ pipeline {
             }
         }
         stage('Build Matrix') {
-            matrix {
-              agent { label "${PLATFORM}"  }
-              axes {
-                axis {
-                  name 'DEBIAN_VERSION'
-                  values '10', '11'
-                }
+          matrix {
+            agent { label 'ubuntu-20 && immutable' }
+            axes {
+              axis {
+                name 'DEBIAN_VERSION'
+                values '10', '11'
               }
-              stages {
-                stage('Build'){
-                  environment {
-                      MAKEFILE = "go/llvm-apple"
-                      TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
-                  }
-                  options { skipDefaultCheckout() }
-                  steps {
-                    stageStatusCache(id: "Build ${MAKEFILE}") {
-                      withGithubNotify(context: "Build ${MAKEFILE}") {
-                        deleteDir()
-                        unstash 'source'
-                        buildImages()
-                      }
-                      withGithubNotify(context: "Staging ${MAKEFILE}") {
-                        publishImages()
-                      }
+            }
+            stages {
+              stage('Build'){
+                environment {
+                    MAKEFILE = "go/llvm-apple"
+                    TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
+                }
+                options { skipDefaultCheckout() }
+                steps {
+                  stageStatusCache(id: "Build ${MAKEFILE}") {
+                    withGithubNotify(context: "Build ${MAKEFILE}") {
+                      deleteDir()
+                      unstash 'source'
+                      buildImages()
+                    }
+                    withGithubNotify(context: "Staging ${MAKEFILE}") {
+                      publishImages()
                     }
                   }
                 }
