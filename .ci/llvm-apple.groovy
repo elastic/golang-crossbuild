@@ -42,45 +42,43 @@ pipeline {
   }
   stages {
     stage('Check changes'){
-        when {
-            expression { return isGitRegionMatch(patterns: [ '^/go/llvm-apple', '^.ci/llvm-apple.groovy' ], shouldMatchAll: false) || isUserTrigger()}
-        }
-        stages {
-            stage('Checkout') {
-                options { skipDefaultCheckout() }
-                steps {
-                    deleteDir()
-                    gitCheckout(basedir: BASE_DIR)
-                    stash name: 'source', useDefaultExcludes: false
-                }
+      when {
+          expression { return isGitRegionMatch(patterns: [ '^/go/llvm-apple', '^.ci/llvm-apple.groovy' ], shouldMatchAll: false) || isUserTrigger()}
+      }
+      stages {
+        stage('Checkout') {
+            options { skipDefaultCheckout() }
+            steps {
+                deleteDir()
+                gitCheckout(basedir: BASE_DIR)
+                stash name: 'source', useDefaultExcludes: false
             }
-            stage('Build Matrix') {
-                matrix {
-                  agent { label "${PLATFORM}"  }
-                  axes {
-                    axis {
-                      name 'DEBIAN_VERSION'
-                      values '10', '11'
-                    }
+        }
+        stage('Build Matrix') {
+            matrix {
+              agent { label "${PLATFORM}"  }
+              axes {
+                axis {
+                  name 'DEBIAN_VERSION'
+                  values '10', '11'
+                }
+              }
+              stages {
+                stage('Build'){
+                  environment {
+                      MAKEFILE = "go/llvm-apple"
+                      TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
                   }
-                  stages {
-                    stage('Build'){
-                      environment {
-                          MAKEFILE = "go/llvm-apple"
-                          TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
+                  options { skipDefaultCheckout() }
+                  steps {
+                    stageStatusCache(id: "Build ${MAKEFILE}") {
+                      withGithubNotify(context: "Build ${MAKEFILE}") {
+                        deleteDir()
+                        unstash 'source'
+                        buildImages()
                       }
-                      options { skipDefaultCheckout() }
-                      steps {
-                        stageStatusCache(id: "Build ${MAKEFILE}") {
-                          withGithubNotify(context: "Build ${MAKEFILE}") {
-                            deleteDir()
-                            unstash 'source'
-                            buildImages()
-                          }
-                          withGithubNotify(context: "Staging ${MAKEFILE}") {
-                            publishImages()
-                          }
-                        }
+                      withGithubNotify(context: "Staging ${MAKEFILE}") {
+                        publishImages()
                       }
                     }
                   }
@@ -89,6 +87,7 @@ pipeline {
             }
           }
         }
+      }
     }
   }
 }
