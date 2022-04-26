@@ -42,39 +42,55 @@ pipeline {
   }
   stages {
     stage('Check changes'){
-        when {
-            expression { return isGitRegionMatch(patterns: [ '^/go/llvm-apple', '^.ci/llvm-apple.groovy' ], shouldMatchAll: false).toString() || isUserTrigger()}
+      when {
+        anyOf {
+          changeset pattern: '^/go/llvm-apple', comparator: "REGEXP"
+          changeset pattern: '^.ci/llvm-apple.groovy', comparator: "REGEXP"
+          expression { return isUserTrigger() }
         }
-        stages {
-            stage('Checkout') {
-                options { skipDefaultCheckout() }
-                steps {
-                    deleteDir()
-                    gitCheckout(basedir: BASE_DIR)
-                    stash name: 'source', useDefaultExcludes: false
-                }
+      }
+      stages {
+        stage('Checkout') {
+            options { skipDefaultCheckout() }
+            steps {
+                deleteDir()
+                gitCheckout(basedir: BASE_DIR)
+                stash name: 'source', useDefaultExcludes: false
             }
-            stage('Build') {
+        }
+        stage('Build Matrix') {
+          matrix {
+            agent { label 'ubuntu-20 && immutable' }
+            axes {
+              axis {
+                name 'DEBIAN_VERSION'
+                values '10', '11'
+              }
+            }
+            stages {
+              stage('Build'){
                 environment {
-                    DEBIAN_VERSION = "10"
                     MAKEFILE = "go/llvm-apple"
-                    TAG_EXTENSION = "-debian10"
+                    TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
                 }
                 options { skipDefaultCheckout() }
                 steps {
-                    stageStatusCache(id: "Build ${MAKEFILE}") {
-                        withGithubNotify(context: "Build ${MAKEFILE}") {
-                            deleteDir()
-                            unstash 'source'
-                            buildImages()
-                        }
-                        withGithubNotify(context: "Staging ${MAKEFILE}") {
-                            publishImages()
-                        }
+                  stageStatusCache(id: "Build ${MAKEFILE}") {
+                    withGithubNotify(context: "Build ${MAKEFILE}") {
+                      deleteDir()
+                      unstash 'source'
+                      buildImages()
                     }
+                    withGithubNotify(context: "Staging ${MAKEFILE}") {
+                      publishImages()
+                    }
+                  }
                 }
+              }
             }
+          }
         }
+      }
     }
   }
 }
