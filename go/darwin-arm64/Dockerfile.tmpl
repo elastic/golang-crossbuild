@@ -1,7 +1,7 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \

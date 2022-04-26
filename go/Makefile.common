@@ -27,7 +27,9 @@ build-arm:
 	@echo $(SELF_DIR)
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
-	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
+	docker build \
+	--platform linux/arm64 \
+	-t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
 	--build-arg REPOSITORY=$(REPOSITORY) \
 	--build-arg VERSION=$(VERSION) \
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
