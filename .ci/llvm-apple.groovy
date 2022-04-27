@@ -76,6 +76,9 @@ pipeline {
                 options { skipDefaultCheckout() }
                 steps {
                   stageStatusCache(id: "Build ${MAKEFILE}") {
+                    whenTrue(isPR()){
+                      setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
+                    }
                     withGithubNotify(context: "Build ${MAKEFILE}") {
                       deleteDir()
                       unstash 'source'
