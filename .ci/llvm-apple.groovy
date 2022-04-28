@@ -41,6 +41,62 @@ pipeline {
     quietPeriod(10)
   }
   stages {
+    stage('before checkout when changelog'){
+      when {
+        changelog '.ci/llvm-apple.groovy'
+      }
+      steps {
+        echo 'before checkout when changelog'
+      }
+    }
+    stage('before checkout when changeset'){
+      when {
+        changeset '.ci/llvm-apple.groovy'
+      }
+      steps {
+        echo 'before checkout when changeset'
+      }
+    }
+    stage('before checkout when isGitRegionMatch'){
+      when {
+        expression {  return isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
+      }
+      steps {
+        echo 'before checkout when isGitRegionMatch'
+      }
+    }
+    stage('Checkout') {
+      options { skipDefaultCheckout() }
+      steps {
+          deleteDir()
+          gitCheckout(basedir: BASE_DIR)
+          stash name: 'source', useDefaultExcludes: false
+      }
+    }
+    stage('when changelog'){
+      when {
+        changelog '.ci/llvm-apple.groovy'
+      }
+      steps {
+        echo 'when changelog'
+      }
+    }
+    stage('when changeset'){
+      when {
+        changeset '.ci/llvm-apple.groovy'
+      }
+      steps {
+        echo 'when changeset'
+      }
+    }
+    stage('when isGitRegionMatch'){
+      when {
+        expression {  return isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
+      }
+      steps {
+        echo 'when isGitRegionMatch'
+      }
+    }
     stage('Check changes'){
       when {
         anyOf {
@@ -53,14 +109,6 @@ pipeline {
         }
       }
       stages {
-        stage('Checkout') {
-            options { skipDefaultCheckout() }
-            steps {
-                deleteDir()
-                gitCheckout(basedir: BASE_DIR)
-                stash name: 'source', useDefaultExcludes: false
-            }
-        }
         stage('Build Matrix') {
           matrix {
             agent { label 'ubuntu-20 && immutable' }
