@@ -44,11 +44,9 @@ pipeline {
     stage('Checkout') {
       options { skipDefaultCheckout() }
       steps {
-          printChangelog()
           deleteDir()
           gitCheckout(basedir: BASE_DIR)
           stash name: 'source', useDefaultExcludes: false
-          printChangelog()
       }
     }
     stage('Build Matrix') {
@@ -98,10 +96,11 @@ pipeline {
 }
 
 def buildImages() {
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   withGoEnv {
     dir("${env.BASE_DIR}") {
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-            sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
+          sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
         }
         sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
     }
@@ -115,18 +114,4 @@ def publishImages() {
       sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${MAKEFILE} push")
     }
   }
-}
-
-def printChangelog(){
-  echo "printChangelog"
-  currentBuild.changeSets.each { changeLogSet ->
-    changeLogSet.items.each { entry ->
-      echo "${entry?.commitId} by ${entry?.author} on ${new Date(entry?.timestamp)}: ${entry?.msg}"
-      def files = new ArrayList(entry.affectedFiles)
-      files.each { file ->
-        echo "  ${file?.editType.name} ${file?.path}"
-      }
-    }
-  }
-  echo "printChangelog"
 }
