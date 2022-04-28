@@ -48,7 +48,7 @@ pipeline {
           // changelog '.ci/llvm-apple.groovy'
           // changeset '/go/llvm-apple/**'
           // changeset '.ci/llvm-apple.groovy'
-          expresion {  isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
+          expresion {  return isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
           expression { return isUserTrigger() }
         }
       }
