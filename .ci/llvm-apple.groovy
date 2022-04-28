@@ -44,7 +44,7 @@ pipeline {
     stage('Check changes'){
       when {
         anyOf {
-          changelog '/go/llvm-apple/**'
+          changelog '/go/llvm-apple/*'
           changelog '.ci/llvm-apple.groovy'
           changeset '/go/llvm-apple/**'
           changeset '.ci/llvm-apple.groovy'
