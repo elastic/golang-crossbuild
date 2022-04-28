@@ -68,9 +68,11 @@ pipeline {
     stage('Checkout') {
       options { skipDefaultCheckout() }
       steps {
+          printChangelog()
           deleteDir()
           gitCheckout(basedir: BASE_DIR)
           stash name: 'source', useDefaultExcludes: false
+          printChangelog()
       }
     }
     stage('when changelog'){
@@ -90,11 +92,22 @@ pipeline {
       }
     }
     stage('when isGitRegionMatch'){
+      steps {
+        dir(BASE_DIR){
+          echo 'when isGitRegionMatch: ' + isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)
+        }
+      }
+    }
+    stage('when isGitRegionMatch'){
       when {
-        expression {  return isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
+        expression {
+          return  dir(BASE_DIR){isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)}
+        }
       }
       steps {
-        echo 'when isGitRegionMatch'
+        dir(BASE_DIR){
+          echo 'when isGitRegionMatch'
+        }
       }
     }
     stage('Check changes'){
@@ -169,3 +182,14 @@ def publishImages() {
   }
 }
 
+def printChangelog(){
+  currentBuild.changeSets.each { changeLogSet ->
+    changeLogSet.items.each { entry ->
+      echo "${entry?.commitId} by ${entry?.author} on ${new Date(entry?.timestamp)}: ${entry?.msg}"
+      def files = new ArrayList(entry.affectedFiles)
+      files.each { file ->
+        echo "  ${file?.editType.name} ${file?.path}"
+      }
+    }
+  }
+}
