@@ -44,8 +44,8 @@ pipeline {
     stage('Check changes'){
       when {
         anyOf {
-          changeset pattern: '^/go/llvm-apple', comparator: "REGEXP"
-          changeset pattern: '^.ci/llvm-apple.groovy', comparator: "REGEXP"
+          changelog pattern: '/go/llvm-apple/*', comparator: "GLOB"
+          changelog pattern: '.ci/llvm-apple.groovy', comparator: "EQUALS"
           expression { return isUserTrigger() }
         }
       }
