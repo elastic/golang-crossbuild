@@ -44,8 +44,8 @@ pipeline {
     stage('Check changes'){
       when {
         anyOf {
-          changelog pattern: '/go/llvm-apple/*', comparator: "GLOB"
-          changelog pattern: '.ci/llvm-apple.groovy', comparator: "EQUALS"
+          changelog pattern: '/go/llvm-apple/*'
+          changelog pattern: '.ci/llvm-apple.groovy'
           expression { return isUserTrigger() }
         }
       }
