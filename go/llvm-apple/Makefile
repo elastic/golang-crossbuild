@@ -17,3 +17,4 @@ build:
 	--build-arg VCS_REF="$(VCS_REF)" \
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
+	.
