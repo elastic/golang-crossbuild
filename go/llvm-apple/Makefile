@@ -1,5 +1,10 @@
 include ../Makefile.common
 
+SUFFIX         := $(shell basename $(CURDIR))
+
+copy-npcap:
+	@echo "NOOP"
+
 build:
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
