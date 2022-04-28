@@ -41,30 +41,6 @@ pipeline {
     quietPeriod(10)
   }
   stages {
-    stage('before checkout when changelog'){
-      when {
-        changelog '.ci/llvm-apple.groovy'
-      }
-      steps {
-        echo 'before checkout when changelog'
-      }
-    }
-    stage('before checkout when changeset'){
-      when {
-        changeset '.ci/llvm-apple.groovy'
-      }
-      steps {
-        echo 'before checkout when changeset'
-      }
-    }
-    stage('before checkout when isGitRegionMatch'){
-      when {
-        expression {  return isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
-      }
-      steps {
-        echo 'before checkout when isGitRegionMatch'
-      }
-    }
     stage('Checkout') {
       options { skipDefaultCheckout() }
       steps {
@@ -75,83 +51,42 @@ pipeline {
           printChangelog()
       }
     }
-    stage('when changelog'){
+    stage('Build Matrix') {
       when {
-        changelog '.ci/llvm-apple.groovy'
-      }
-      steps {
-        echo 'when changelog'
-      }
-    }
-    stage('when changeset'){
-      when {
-        changeset '.ci/llvm-apple.groovy'
-      }
-      steps {
-        echo 'when changeset'
-      }
-    }
-    stage('when isGitRegionMatch'){
-      steps {
-        dir(BASE_DIR){
-          echo 'when isGitRegionMatch: ' + isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)
-        }
-      }
-    }
-    stage('when isGitRegionMatch 2'){
-      when {
+        anyOf {
         expression {
           return  dir(BASE_DIR){isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)}
         }
-      }
-      steps {
-        dir(BASE_DIR){
-          echo 'when isGitRegionMatch'
-        }
-      }
-    }
-    stage('Check changes'){
-      when {
-        anyOf {
-          // changelog '/go/llvm-apple/*'
-          // changelog '.ci/llvm-apple.groovy'
-          // changeset '/go/llvm-apple/**'
-          // changeset '.ci/llvm-apple.groovy'
-          expression {  return isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false) }
           expression { return isUserTrigger() }
         }
       }
-      stages {
-        stage('Build Matrix') {
-          matrix {
-            agent { label 'ubuntu-20 && immutable' }
-            axes {
-              axis {
-                name 'DEBIAN_VERSION'
-                values '10', '11'
-              }
+      matrix {
+        agent { label 'ubuntu-20 && immutable' }
+        axes {
+          axis {
+            name 'DEBIAN_VERSION'
+            values '10', '11'
+          }
+        }
+        stages {
+          stage('Build'){
+            environment {
+                MAKEFILE = "go/llvm-apple"
+                TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
             }
-            stages {
-              stage('Build'){
-                environment {
-                    MAKEFILE = "go/llvm-apple"
-                    TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
+            options { skipDefaultCheckout() }
+            steps {
+              stageStatusCache(id: "Build ${MAKEFILE}") {
+                whenTrue(isPR()){
+                  setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
                 }
-                options { skipDefaultCheckout() }
-                steps {
-                  stageStatusCache(id: "Build ${MAKEFILE}") {
-                    whenTrue(isPR()){
-                      setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
-                    }
-                    withGithubNotify(context: "Build ${MAKEFILE}") {
-                      deleteDir()
-                      unstash 'source'
-                      buildImages()
-                    }
-                    withGithubNotify(context: "Staging ${MAKEFILE}") {
-                      publishImages()
-                    }
-                  }
+                withGithubNotify(context: "Build ${MAKEFILE}") {
+                  deleteDir()
+                  unstash 'source'
+                  buildImages()
+                }
+                withGithubNotify(context: "Staging ${MAKEFILE}") {
+                  publishImages()
                 }
               }
             }
@@ -183,6 +118,7 @@ def publishImages() {
 }
 
 def printChangelog(){
+  echo "printChangelog"
   currentBuild.changeSets.each { changeLogSet ->
     changeLogSet.items.each { entry ->
       echo "${entry?.commitId} by ${entry?.author} on ${new Date(entry?.timestamp)}: ${entry?.msg}"
@@ -192,4 +128,5 @@ def printChangelog(){
       }
     }
   }
+  echo "printChangelog"
 }
