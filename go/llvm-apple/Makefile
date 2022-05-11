@@ -21,5 +21,5 @@ build:
 	.
 
 atomic-push:
-	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(TAG)"
-	@docker push "$(REPOSITORY)/$(NAME):$(TAG)"
+	@echo ">> Pushing $(TAG)"
+	@echo docker push "$(TAG)"
