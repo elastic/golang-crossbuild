@@ -1,7 +1,7 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
-FROM docker.elastic.co/beats-dev/golang-crossbuild:${VERSION}-llvm-apple${TAG_EXTENSION} AS BUILD_LLVM_APPLE
+FROM docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple${TAG_EXTENSION} AS BUILD_LLVM_APPLE
 
 ARG REPOSITORY
 ARG VERSION
