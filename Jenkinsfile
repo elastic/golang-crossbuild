@@ -193,7 +193,9 @@ def buildImages(){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-          sh "make -C go -f ${MAKEFILE} build${platform}"
+          withDockerEnv(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}") {
+            sh "make -C go -f ${MAKEFILE} build${platform}"
+          }
         }
         sh(label: 'list Docker images staging', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild" """)
         sh(label: 'list Docker images production', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${env.REGISTRY}/beats-dev/golang-crossbuild" """)
