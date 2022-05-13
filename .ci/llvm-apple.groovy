@@ -27,8 +27,9 @@ pipeline {
     HOME = "${env.WORKSPACE}"
     PIPELINE_LOG_LEVEL = 'INFO'
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
-    REGISTRY = 'docker.elastic.co'
-    STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
+    DOCKER_REGISTRY = 'docker.elastic.co'
+    STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
+    BUILDX = "1"
   }
   options {
     timeout(time: 5, unit: 'HOURS')
@@ -83,9 +84,6 @@ pipeline {
                   unstash 'source'
                   buildImages()
                 }
-                withGithubNotify(context: "Staging ${MAKEFILE}") {
-                  publishImages()
-                }
               }
             }
           }
@@ -96,22 +94,14 @@ pipeline {
 }
 
 def buildImages() {
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
-  withGoEnv {
-    dir("${env.BASE_DIR}") {
-        retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-          sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
-        }
-        sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
-    }
-  }
-}
-
-def publishImages() {
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
-  dir("${env.BASE_DIR}") {
-    retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-      sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${MAKEFILE} push")
+  withDockerEnv(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}") {
+    withGoEnv {
+      dir("${env.BASE_DIR}") {
+          retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+            sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
+          }
+          sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
+      }
     }
   }
 }
