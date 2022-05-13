@@ -18,16 +18,16 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             file \
             flex \
             bison \
-{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
             python3-venv \
             python3-pip \
             python3 \
-{{ end }}
+{{- end }}
         && rm -rf /var/lib/apt/lists/*
 
-{{if eq .DEBIAN_VERSION "10"}}
+{{- if eq .DEBIAN_VERSION "10"}}
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
-{{ end }}
+{{- end }}
 
 ARG GOLANG_VERSION=1.18.1
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
