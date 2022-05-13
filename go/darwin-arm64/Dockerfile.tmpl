@@ -34,7 +34,7 @@ RUN tar -xzf /tmp/osxcross.tar.gz -C / \
 
 ENV PATH $PATH:$OSXCROSS_PATH/bin
 # Add osxcross libraries to the library PATH
-ENV LD_LIBRARY_PATH ${OSXCROSS_PATH}/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH $OSXCROSS_PATH/lib:/lib:/usr/lib:/usr/local/lib:$LD_LIBRARY_PATH
 
 COPY rootfs /
 
