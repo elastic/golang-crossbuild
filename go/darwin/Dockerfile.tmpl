@@ -1,3 +1,10 @@
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple${TAG_EXTENSION} AS BUILD_LLVM_APPLE
+{{- end }}
+
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
@@ -10,9 +17,9 @@ RUN \
         llvm \
         cmake \
         patch \
-{{if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
+{{- if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
         python \
-{{ end }}
+{{- end }}
         libssl-dev \
         libxml2-dev \
         lzma-dev \
@@ -20,22 +27,18 @@ RUN \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
 
-{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
-ARG OSXCROSS_SDK_URL=https://storage.googleapis.com/obs-ci-cache/beats/MacOSX10.14.sdk.tar.xz
-ARG OSXCROSS_PATH=/usr/osxcross
-ARG OSXCROSS_REV=8a716a43a72dab1db9630d7824ee0af3730cb8f9
-ARG SDK_VERSION=10.14
-ARG DARWIN_VERSION=17
-ARG OSX_VERSION_MIN=10.10
-{{ else }}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+ARG OSXCROSS_PATH=/usr/local/osxcross
+COPY --from=BUILD_LLVM_APPLE /osxcross.tar.gz /tmp/osxcross.tar.gz
+RUN tar -xzf /tmp/osxcross.tar.gz -C / \
+  && rm /tmp/osxcross.tar.gz
+{{- else }}
 ARG OSXCROSS_SDK_URL=https://storage.googleapis.com/obs-ci-cache/beats/MacOSX10.11.sdk.tar.xz
 ARG OSXCROSS_PATH=/usr/osxcross
 ARG OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa
 ARG SDK_VERSION=10.11
 ARG DARWIN_VERSION=15
 ARG OSX_VERSION_MIN=10.10
-{{ end }}
-
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
@@ -44,10 +47,11 @@ RUN \
     && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
+{{- end }}
 
-ENV PATH $OSXCROSS_PATH/bin:$PATH
+ENV PATH $PATH:$OSXCROSS_PATH/bin
 # Add osxcross libraries to the library PATH
-ENV LD_LIBRARY_PATH /usr/osxcross/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH ${OSXCROSS_PATH}/lib:$LD_LIBRARY_PATH
 
 COPY rootfs /
 
@@ -58,13 +62,13 @@ RUN cd / \
   && file helloWorld | grep -c 'Mach-O 64-bit x86_64'
 
 # MacOSX10.14 SDK does not have 32bits compiler
-{{if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
+{{- if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
 RUN cd / \
   && o32-clang helloWorld.c -o helloWorld \
   && file helloWorld \
   && file helloWorld | grep -c 'Mach-O i386' \
   && rm helloWorld.c helloWorld
-{{ end }}
+{{- end }}
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

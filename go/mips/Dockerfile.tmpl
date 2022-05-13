@@ -20,7 +20,7 @@ RUN apt install -qq -y \
         libpopt-dev:mips64el \
         linux-libc-dev:mips64el
 
-{{ if eq .DEBIAN_VERSION "9" }}
+{{- if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
 RUN apt install -y \
         libelf1:mips64el \
@@ -41,9 +41,9 @@ RUN apt install -y \
 # libsystemd-dev
 # RUN apt install -y \
 #         libsystemd-dev:mips64el libsystemd0:mips64el liblz4-1:mips64el
-{{ end }}
+{{- end }}
 
-{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:mips64el
@@ -51,7 +51,7 @@ RUN apt install -y \
 # libsystemd-dev
 RUN apt install -y \
         libsystemd-dev:mips64el
-{{ end }}
+{{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
 
