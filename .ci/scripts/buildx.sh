@@ -6,6 +6,8 @@ DOCKER_USER=${DOCKER_USER:?-"Missing environment variable"}
 DOCKER_PASSWORD=${DOCKER_PASSWORD:?-"Missing environment variable"}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-"docker.elastic.co"}
 
+docker pull moby/buildkit:buildx-stable-1
+
 docker run --rm -t \
     -e DOCKER_USER=${DOCKER_USER} -e DOCKER_PASSWORD=${DOCKER_PASSWORD} -e DOCKER_REGISTRY=${DOCKER_REGISTRY} \
     -v /var/run/docker.sock:/var/run/docker.sock \
