@@ -6,6 +6,7 @@ DOCKER_USER=${DOCKER_USER:?-"Missing environment variable"}
 DOCKER_PASSWORD=${DOCKER_PASSWORD:?-"Missing environment variable"}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-"docker.elastic.co"}
 
+docker run --privileged --rm tonistiigi/binfmt --install all
 docker pull --platform=linux/arm64 --platform=linux/amd64  moby/buildkit:buildx-stable-1
 
 docker run --rm -t \
