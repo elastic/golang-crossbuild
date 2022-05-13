@@ -22,4 +22,4 @@ build:
 
 atomic-push:
 	@echo ">> Pushing $(TAG)"
-	@echo docker push "$(TAG)"
+	@docker push "$(TAG)"
