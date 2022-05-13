@@ -16,7 +16,7 @@ RUN apt install -qq -y \
         libpopt-dev:armhf \
         linux-libc-dev:armhf
 
-{{if eq .DEBIAN_VERSION "9"}}
+{{- if eq .DEBIAN_VERSION "9"}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:armhf \
@@ -34,9 +34,9 @@ RUN apt install -y \
 # libsystemd-dev
 RUN apt install -y \
         libsystemd-dev:armhf libsystemd0:armhf liblz4-1:armhf
-{{ end }}
+{{- end }}
 
-{{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:armhf
@@ -44,7 +44,7 @@ RUN apt install -y \
 # libsystemd-dev
 RUN apt install -y \
         libsystemd-dev:armhf
-{{ end }}
+{{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
 

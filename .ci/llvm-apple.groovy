@@ -41,49 +41,66 @@ pipeline {
     quietPeriod(10)
   }
   stages {
-    stage('Check changes'){
-        when {
-            expression { return isGitRegionMatch(patterns: [ '^/go/llvm-apple', '^.ci/llvm-apple.groovy' ], shouldMatchAll: false).toString() || isUserTrigger()}
+    stage('Checkout') {
+      options { skipDefaultCheckout() }
+      steps {
+          deleteDir()
+          gitCheckout(basedir: BASE_DIR)
+          stash name: 'source', useDefaultExcludes: false
+      }
+    }
+    stage('Build Matrix') {
+      when {
+        anyOf {
+        expression {
+          return  dir(BASE_DIR){isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)}
+        }
+          expression { return isUserTrigger() }
+        }
+      }
+      matrix {
+        agent { label 'ubuntu-20 && immutable' }
+        axes {
+          axis {
+            name 'DEBIAN_VERSION'
+            values '10', '11'
+          }
         }
         stages {
-            stage('Checkout') {
-                options { skipDefaultCheckout() }
-                steps {
-                    deleteDir()
-                    gitCheckout(basedir: BASE_DIR)
-                    stash name: 'source', useDefaultExcludes: false
-                }
+          stage('Build'){
+            environment {
+                MAKEFILE = "go/llvm-apple"
+                TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
             }
-            stage('Build') {
-                environment {
-                    DEBIAN_VERSION = "10"
-                    MAKEFILE = "go/llvm-apple"
-                    TAG_EXTENSION = "-debian10"
+            options { skipDefaultCheckout() }
+            steps {
+              stageStatusCache(id: "Build ${MAKEFILE}") {
+                whenTrue(isPR()){
+                  setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
                 }
-                options { skipDefaultCheckout() }
-                steps {
-                    stageStatusCache(id: "Build ${MAKEFILE}") {
-                        withGithubNotify(context: "Build ${MAKEFILE}") {
-                            deleteDir()
-                            unstash 'source'
-                            buildImages()
-                        }
-                        withGithubNotify(context: "Staging ${MAKEFILE}") {
-                            publishImages()
-                        }
-                    }
+                withGithubNotify(context: "Build ${MAKEFILE}") {
+                  deleteDir()
+                  unstash 'source'
+                  buildImages()
                 }
+                withGithubNotify(context: "Staging ${MAKEFILE}") {
+                  publishImages()
+                }
+              }
             }
+          }
         }
+      }
     }
   }
 }
 
 def buildImages() {
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
   withGoEnv {
     dir("${env.BASE_DIR}") {
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-            sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
+          sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
         }
         sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
     }
@@ -98,4 +115,3 @@ def publishImages() {
     }
   }
 }
-

@@ -42,37 +42,41 @@ pipeline {
   }
   stages {
     stage('Check changes'){
-        when {
-            expression { return isGitRegionMatch(patterns: [ '^/fpm', '^.ci/fpm.groovy' ], shouldMatchAll: false).toString() || isUserTrigger() }
+      when {
+        anyOf {
+          changeset pattern: '^/go/fpm', comparator: "REGEXP"
+          changeset pattern: '^\\.ci/fpm.groovy', comparator: "REGEXP"
+          expression { return isUserTrigger() }
         }
-        stages {
-            stage('Checkout') {
-                options { skipDefaultCheckout() }
-                steps {
-                    deleteDir()
-                    gitCheckout(basedir: BASE_DIR)
-                    stash name: 'source', useDefaultExcludes: false
-                }
-            }
-            stage('Build') {
-                environment {
-                    MAKEFILE = "fpm"
-                }
-                options { skipDefaultCheckout() }
-                steps {
-                    stageStatusCache(id: "Build ${MAKEFILE}") {
-                        withGithubNotify(context: "Build ${MAKEFILE}") {
-                            deleteDir()
-                            unstash 'source'
-                            buildImages()
-                        }
-                        withGithubNotify(context: "Staging ${MAKEFILE}") {
-                            publishImages()
-                        }
-                    }
-                }
-            }
+      }
+      stages {
+        stage('Checkout') {
+          options { skipDefaultCheckout() }
+          steps {
+            deleteDir()
+            gitCheckout(basedir: BASE_DIR)
+            stash name: 'source', useDefaultExcludes: false
+          }
         }
+        stage('Build') {
+          environment {
+            MAKEFILE = "fpm"
+          }
+          options { skipDefaultCheckout() }
+          steps {
+            stageStatusCache(id: "Build ${MAKEFILE}") {
+              withGithubNotify(context: "Build ${MAKEFILE}") {
+                deleteDir()
+                unstash 'source'
+                buildImages()
+              }
+              withGithubNotify(context: "Staging ${MAKEFILE}") {
+                publishImages()
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
