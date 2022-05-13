@@ -8,7 +8,7 @@ docker run --rm -t \
     -e DOCKER_USER -e DOCKER_PASSWORD -e DOCKER_REGISTRY \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v $(pwd):/app -w /app \
-    docker.elastic.co/observability-ci/dind-buildx:20.10.14 """
+    docker.elastic.co/observability-ci/dind-buildx:latest """
 docker buildx ls
 echo 'Create builder'
 docker buildx create --name multibuilder
