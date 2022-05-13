@@ -4,7 +4,7 @@ export DOCKER_USER=${DOCKER_USER:?-"Missing environment variable"}
 export DOCKER_PASSWORD=${DOCKER_PASSWORD:?-"Missing environment variable"}
 export DOCKER_REGISTRY=${DOCKER_REGISTRY:-"docker.elastic.co"}
 
-docker run -it \
+docker run --rm -t \
     -e DOCKER_USER -e DOCKER_PASSWORD -e DOCKER_REGISTRY \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v $(pwd):/app -w /app \
