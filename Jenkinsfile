@@ -29,7 +29,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
-    GO_VERSION = '1.18.1'
+    GO_VERSION = '1.18.2'
   }
   options {
     timeout(time: 3, unit: 'HOURS')
