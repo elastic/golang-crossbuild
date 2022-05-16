@@ -19,6 +19,8 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             flex \
             bison \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+            binutils-multiarch \
+            binutils-multiarch-dev \
             python3-venv \
             python3-pip \
             python3 \
@@ -29,14 +31,10 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
-ARG GOLANG_VERSION=1.18.1
-ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=b3b815f47ababac13810fc6021eb73d65478e0b2db4b09d348eefad9581a2334
-
-RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
-	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
-	&& tar -C /usr/local -xzf golang.tar.gz \
-	&& rm golang.tar.gz
+COPY install-go.sh /tmp/install-go.sh
+RUN chmod ugo+rx /tmp/install-go.sh \
+  && /tmp/install-go.sh \
+  && rm /tmp/install-go.sh
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH

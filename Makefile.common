@@ -8,6 +8,13 @@ NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 
+
+ifeq ($(BUILDX),1)
+ifeq ($(shell test $(DEBIAN_VERSION) -ge 10; echo $$?),0)
+DOCKER_MULTIARCH := 1
+endif
+endif
+
 # Requires login at google storage.
 copy-npcap: status=".status.copy-npcap"
 copy-npcap:
