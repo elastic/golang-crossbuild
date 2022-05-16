@@ -9,6 +9,7 @@ DOCKER_REGISTRY=${DOCKER_REGISTRY:-"docker.elastic.co"}
 docker run --privileged --rm tonistiigi/binfmt --install all
 docker pull --platform=linux/arm64 --platform=linux/amd64  moby/buildkit:buildx-stable-1
 
+# TODO review the buildx process
 # docker run --rm -t \
 #     -e DOCKER_USER=${DOCKER_USER} -e DOCKER_PASSWORD=${DOCKER_PASSWORD} -e DOCKER_REGISTRY=${DOCKER_REGISTRY} \
 #     -v /var/run/docker.sock:/var/run/docker.sock \
