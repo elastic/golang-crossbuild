@@ -97,10 +97,10 @@ def buildImages() {
   withDockerEnv(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}") {
     withGoEnv {
       dir("${env.BASE_DIR}") {
-          retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-            sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
-          }
-          sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
+        retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+          sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
+        }
+      sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
       }
     }
   }
