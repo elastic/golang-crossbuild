@@ -16,8 +16,8 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 #     -v $(pwd):/app -w /app \
 #     docker.elastic.co/observability-ci/dind-buildx:latest """
 docker buildx ls
-#echo 'Create builder'
-#docker buildx create --name multibuilder --use
+echo 'Create builder'
+docker buildx create --name "multibuilder${RANDOM}" --use
 #docker buildx use multibuilder
 docker buildx use default
 docker buildx inspect --bootstrap
