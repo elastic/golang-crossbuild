@@ -68,7 +68,7 @@ RUN \
     && curl -sSLo "tarballs/${OSX_SDK}.tar.xz" "${OSXCROSS_SDK_URL}" \
     && patch -p1 < lcxx.patch \
     && UNATTENDED=1 ENABLE_COMPILER_RT_INSTALL=1 OSX_VERSION_MIN=${OSX_VERSION_MIN} TARGET_DIR=${OSXCROSS_PATH} ./build.sh >/dev/null \
-    && rm -rf /tmp/osxcross "/usr/osxcross/SDK/${OSX_SDK}/usr/share/man" \
+    && rm -rf "/usr/osxcross/SDK/${OSX_SDK}/usr/share/man" \
     && tar -czf osxcross.tar.gz ${OSXCROSS_PATH}
 
 FROM debian:stable-slim
