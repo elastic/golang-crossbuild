@@ -2,12 +2,12 @@
 set -e
 set +x
 
-DOCKER_USER=${DOCKER_USER:?-"Missing environment variable"}
-DOCKER_PASSWORD=${DOCKER_PASSWORD:?-"Missing environment variable"}
-DOCKER_REGISTRY=${DOCKER_REGISTRY:-"docker.elastic.co"}
+#DOCKER_USER=${DOCKER_USER:?-"Missing environment variable"}
+#DOCKER_PASSWORD=${DOCKER_PASSWORD:?-"Missing environment variable"}
+#DOCKER_REGISTRY=${DOCKER_REGISTRY:-"docker.elastic.co"}
 
 docker run --privileged --rm tonistiigi/binfmt --install all
-docker pull --platform=linux/arm64 --platform=linux/amd64  moby/buildkit:buildx-stable-1
+#docker pull --platform=linux/arm64 --platform=linux/amd64  moby/buildkit:buildx-stable-1
 
 # TODO review the buildx process
 # docker run --rm -t \
@@ -16,9 +16,10 @@ docker pull --platform=linux/arm64 --platform=linux/amd64  moby/buildkit:buildx-
 #     -v $(pwd):/app -w /app \
 #     docker.elastic.co/observability-ci/dind-buildx:latest """
 docker buildx ls
-echo 'Create builder'
-docker buildx create --name multibuilder
-docker buildx use multibuilder
+#echo 'Create builder'
+#docker buildx create --name multibuilder --use
+#docker buildx use multibuilder
+docker buildx use default
 docker buildx inspect --bootstrap
 # echo 'Docker login ${DOCKER_REGISTRY}'
 # docker login ${DOCKER_REGISTRY}
