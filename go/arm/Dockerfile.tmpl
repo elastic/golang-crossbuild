@@ -64,7 +64,7 @@ RUN dpkg --add-architecture arm64 \
     && apt upgrade -y --no-install-recommends \
     && apt full-upgrade -y --no-install-recommends \
     && apt install -qq -y --no-install-recommends \
-        crossbuild-essential \
+        build-essential \
         libc-dev \
         libpopt-dev \
         linux-libc-dev
