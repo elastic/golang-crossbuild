@@ -9,7 +9,7 @@ atomic-push:
 	@echo "Already done by buildx (.ci/scripts/buildx.sh)."
 endif
 
-ifeq ($(DOCKER_MULTIARCH)$(DEBIAN_VERSION),19)
+ifeq ($(BUILDX)$(DEBIAN_VERSION),19)
 DOCKER_CMD := $(SELF_DIR)/../.ci/scripts/buildx.sh
 
 push:
