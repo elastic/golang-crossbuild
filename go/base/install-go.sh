@@ -14,7 +14,7 @@ if [ "$(uname -m)" == "x86_64" ]; then
 fi
 
 GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
-GOLANG_DOWNLOAD_SHA256=56a91851c97fb4697077abbca38860f735c32b38993ff79b088dac46e4735633
+GOLANG_DOWNLOAD_SHA256=fc4ad28d0501eaa9c9d6190de3888c9d44d8b5fb02183ce4ae93713f67b8a35b
 
 if [ "$(uname -m)" != "x86_64" ]; then
     curl -fsSL "$GOLANG_DOWNLOAD_URL" -o "${GO_TAR_FILE}"
