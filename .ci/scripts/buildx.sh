@@ -3,9 +3,8 @@ set -e
 set +x
 
 BUILDER_NAME="multibuilder${RANDOM}"
-
+echo "Add support for multiarch"
 docker run --privileged --rm tonistiigi/binfmt --install all
-#docker pull --platform=linux/arm64 --platform=linux/amd64  moby/buildkit:buildx-stable-1
 
 docker buildx ls
 echo 'Create builder'
