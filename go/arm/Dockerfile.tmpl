@@ -3,10 +3,6 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-amd64
 
-ARG TARGETOS
-ARG TARGETARCH
-RUN echo "I'm building for $TARGETOS/$TARGETARCH"
-
 RUN dpkg --add-architecture arm64 \
     && apt update -y --no-install-recommends \
     && apt upgrade -y --no-install-recommends \
@@ -54,10 +50,6 @@ ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
 FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-arm64
-
-ARG TARGETOS
-ARG TARGETARCH
-RUN echo "I'm building for $TARGETOS/$TARGETARCH"
 
 RUN dpkg --add-architecture arm64 \
     && apt update -y --no-install-recommends \
