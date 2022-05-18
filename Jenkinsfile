@@ -27,9 +27,10 @@ pipeline {
     HOME = "${env.WORKSPACE}"
     PIPELINE_LOG_LEVEL = 'INFO'
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
-    REGISTRY = 'docker.elastic.co'
-    STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
+    DOCKER_REGISTRY = 'docker.elastic.co'
+    STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
     GO_VERSION = '1.18.2'
+    BUILDX = "1"
   }
   options {
     timeout(time: 3, unit: 'HOURS')
@@ -192,10 +193,12 @@ def buildImages(){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-          sh "make -C go -f ${MAKEFILE} build${platform}"
+          withDockerEnv(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}") {
+            sh "make -C go -f ${MAKEFILE} build${platform}"
+          }
         }
         sh(label: 'list Docker images staging', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild" """)
-        sh(label: 'list Docker images production', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${env.REGISTRY}/beats-dev/golang-crossbuild" """)
+        sh(label: 'list Docker images production', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${env.DOCKER_REGISTRY}/beats-dev/golang-crossbuild" """)
       }
     }
   }
@@ -203,7 +206,7 @@ def buildImages(){
 
 def publishImages(){
   log(level: 'INFO', text: "publish with ${MAKEFILE} for ${PLATFORM}")
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}")
   dir("${env.BASE_DIR}"){
     def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
     retryWithSleep(retries: 3, seconds: 15, backoff: true) {
@@ -226,7 +229,7 @@ def isNewRelease() {
 def postRelease(){
   deleteDir()
   unstash 'source'
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}")
   dir("${env.BASE_DIR}"){
     sh(label: 'Set branch', script: """#!/bin/bash
       git checkout -b ${BRANCH_NAME}
