@@ -32,7 +32,7 @@ pipeline {
     BUILDX = "1"
   }
   options {
-    timeout(time: 5, unit: 'HOURS')
+    //timeout(time: 5, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '7', artifactNumToKeepStr: '7', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
