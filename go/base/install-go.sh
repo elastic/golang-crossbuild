@@ -18,8 +18,6 @@ fi
 
 GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
 
-GOLANG_DOWNLOAD_SHA256_ARM
-
 if [ "$(uname -m)" != "x86_64" ]; then
     curl -fsSL "$GOLANG_DOWNLOAD_URL" -o "${GO_TAR_FILE}"
     echo "$GOLANG_DOWNLOAD_SHA256_ARM  ${GO_TAR_FILE}" | sha256sum -c -
