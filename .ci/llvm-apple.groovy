@@ -60,7 +60,7 @@ pipeline {
         }
       }
       matrix {
-        agent { label 'ubuntu-20 && immutable && && gobld/machineType:n1-highcpu-16' }
+        agent { label 'ubuntu-20 && immutable && gobld/machineType:n1-highcpu-16' }
         axes {
           axis {
             name 'DEBIAN_VERSION'
