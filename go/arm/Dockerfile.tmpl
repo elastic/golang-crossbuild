@@ -1,7 +1,7 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-amd64
 
 RUN dpkg --add-architecture arm64 \
     && apt update -y --no-install-recommends \
@@ -45,6 +45,58 @@ RUN apt install -y \
 RUN apt install -y \
         libsystemd-dev:arm64
 {{- end }}
+
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-arm64
+
+RUN dpkg --add-architecture arm64 \
+    && apt update -y --no-install-recommends \
+    && apt upgrade -y --no-install-recommends \
+    && apt full-upgrade -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
+        build-essential \
+        libc-dev \
+        libpopt-dev \
+        linux-libc-dev
+
+{{- if eq .DEBIAN_VERSION "9"}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev \
+        librpm3 \
+        librpmio3 \
+        librpmbuild3 \
+        librpmsign3 \
+        libxml2-dev \
+        libsqlite3-dev \
+        libnss3 \
+        libsqlite3-0 \
+        libxml2 \
+        libsqlite3-0
+
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev libsystemd0 liblz4-1
+{{- end }}
+
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev
+
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev
+{{- end }}
+
+
+
+# Declare TARGETARCH to make it available
+ARG TARGETARCH
+# Select final stage based on TARGETARCH ARG
+FROM stage-${TARGETARCH} as final
 
 RUN rm -rf /var/lib/apt/lists/*
 
