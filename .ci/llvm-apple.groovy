@@ -50,7 +50,7 @@ pipeline {
           stash name: 'source', useDefaultExcludes: false
       }
     }
-    stage('Build Matrix') {
+    stage('Build Matrix amd64') {
       when {
         anyOf {
         expression {
@@ -60,7 +60,7 @@ pipeline {
         }
       }
       matrix {
-        agent { label 'ubuntu-20 && immutable && gobld/machineType:c2d-highcpu-32' }
+        agent { label 'ubuntu-22 && immutable' }
         axes {
           axis {
             name 'DEBIAN_VERSION'
@@ -72,6 +72,48 @@ pipeline {
             environment {
                 MAKEFILE = "go/llvm-apple"
                 TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
+                BUILDPLATFORM ='linux/amd64'
+            }
+            options { skipDefaultCheckout() }
+            steps {
+              stageStatusCache(id: "Build ${MAKEFILE}") {
+                whenTrue(isPR()){
+                  setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
+                }
+                withGithubNotify(context: "Build ${MAKEFILE}") {
+                  deleteDir()
+                  unstash 'source'
+                  buildImages()
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Build Matrix arm64') {
+      when {
+        anyOf {
+        expression {
+          return  dir(BASE_DIR){isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)}
+        }
+          expression { return isUserTrigger() }
+        }
+      }
+      matrix {
+        agent { label 'ubuntu-2204-aarch64' }
+        axes {
+          axis {
+            name 'DEBIAN_VERSION'
+            values '10', '11'
+          }
+        }
+        stages {
+          stage('Build'){
+            environment {
+                MAKEFILE = "go/llvm-apple"
+                TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
+                BUILDPLATFORM ='linux/arm64'
             }
             options { skipDefaultCheckout() }
             steps {
