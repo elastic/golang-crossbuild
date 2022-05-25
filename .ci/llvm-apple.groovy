@@ -50,7 +50,7 @@ pipeline {
           stash name: 'source', useDefaultExcludes: false
       }
     }
-    stage('Build Matrix amd64') {
+    stage('Build amd64') {
       when {
         anyOf {
         expression {
@@ -76,14 +76,14 @@ pipeline {
             }
             options { skipDefaultCheckout() }
             steps {
-              stageStatusCache(id: "Build ${MAKEFILE}") {
+              stageStatusCache(id: "Build amd64 ${MAKEFILE}") {
                 whenTrue(isPR()){
                   setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
                 }
                 withGithubNotify(context: "Build ${MAKEFILE}") {
                   deleteDir()
                   unstash 'source'
-                  buildImages()
+                  //FIXME disable to test ARM64 only buildImages()
                 }
               }
             }
@@ -91,7 +91,7 @@ pipeline {
         }
       }
     }
-    stage('Build Matrix arm64') {
+    stage('Build arm64') {
       when {
         anyOf {
         expression {
@@ -117,7 +117,7 @@ pipeline {
             }
             options { skipDefaultCheckout() }
             steps {
-              stageStatusCache(id: "Build ${MAKEFILE}") {
+              stageStatusCache(id: "Build arm64 ${MAKEFILE}") {
                 whenTrue(isPR()){
                   setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
                 }
