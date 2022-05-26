@@ -1,12 +1,20 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
-FROM docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple${TAG_EXTENSION} AS BUILD_LLVM_APPLE
-
-ARG REPOSITORY
-ARG VERSION
-ARG TAG_EXTENSION=''
+ARG TARGETARCH
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+#FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple${TAG_EXTENSION}-amd64 AS build-llvm-apple-amd64
+FROM --platform=linux/amd64  docker.elastic.co/observability-ci/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple-amd64
+#FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple${TAG_EXTENSION}-arm64 AS build-llvm-apple-arm64
+FROM --platform=linux/arm64  docker.elastic.co/observability-ci/golang-crossbuild:llvm-apple$-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
+# workaround to https://github.com/moby/moby/issues/34482
+FROM build-llvm-apple-${TARGETARCH} as build-llvm-apple
+{{- end }}
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+{{- if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
+RUN echo "This Docker image will work only with Debian >10" && exit 1
+{{- end }}
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
@@ -19,13 +27,9 @@ RUN \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
 
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 COPY --from=BUILD_LLVM_APPLE /llvm-apple-Linux.tar.gz /tmp/llvm-apple-Linux.tar.gz
 RUN tar -xzf /tmp/llvm-apple-Linux.tar.gz --strip 1 -C /usr/local \
   && rm /tmp/llvm-apple-Linux.tar.gz
-{{- else }}
-RUN echo "This Docker image will work only with Debian >10" && exit 1
-{{- end }}
 
 ARG OSXCROSS_PATH=/usr/local/osxcross
 COPY --from=BUILD_LLVM_APPLE /osxcross.tar.gz /tmp/osxcross.tar.gz
