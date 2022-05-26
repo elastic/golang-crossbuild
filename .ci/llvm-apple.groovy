@@ -68,7 +68,7 @@ pipeline {
           }
           axis {
             name 'AGENT_LABELS'
-            values 'ubuntu-22 && immutable' 'ubuntu-2204-aarch64'
+            values 'ubuntu-22 && immutable', 'ubuntu-2204-aarch64'
           }
         }
         stages {
@@ -76,7 +76,7 @@ pipeline {
             environment {
                 MAKEFILE = "go/llvm-apple"
                 TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
-                BUILDPLATFORM ='linux/amd64'
+                BUILDPLATFORM = 'linux/amd64'
             }
             options { skipDefaultCheckout() }
             steps {
