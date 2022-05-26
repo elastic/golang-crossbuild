@@ -32,7 +32,7 @@ pipeline {
     BUILDX = "0"
   }
   options {
-    //timeout(time: 5, unit: 'HOURS')
+    timeout(time: 5, unit: 'HOURS')
     buildDiscarder(logRotator(numToKeepStr: '7', artifactNumToKeepStr: '7', daysToKeepStr: '30'))
     timestamps()
     ansiColor('xterm')
@@ -50,7 +50,7 @@ pipeline {
           stash name: 'source', useDefaultExcludes: false
       }
     }
-    stage('Build amd64') {
+    stage('Build Matrix') {
       when {
         anyOf {
           expression {
@@ -87,6 +87,7 @@ pipeline {
                   deleteDir()
                   unstash 'source'
                   buildImages()
+                  publishImages()
                 }
               }
             }
