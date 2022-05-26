@@ -60,11 +60,15 @@ pipeline {
         }
       }
       matrix {
-        agent { label 'ubuntu-22 && immutable' }
+        agent { label "${AGENT_LABELS}" }
         axes {
           axis {
             name 'DEBIAN_VERSION'
             values '10', '11'
+          }
+          axis {
+            name 'AGENT_LABELS'
+            values 'ubuntu-22 && immutable' 'ubuntu-2204-aarch64'
           }
         }
         stages {
@@ -91,6 +95,7 @@ pipeline {
         }
       }
     }
+    /*
     stage('Build arm64') {
       when {
         anyOf {
@@ -132,6 +137,7 @@ pipeline {
         }
       }
     }
+    */
   }
 }
 
@@ -142,7 +148,7 @@ def buildImages() {
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
           sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
         }
-      sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${REPOSITORY}"')
+      sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="*/*/golang-crossbuild:llvm-apple*"')
       }
     }
   }
