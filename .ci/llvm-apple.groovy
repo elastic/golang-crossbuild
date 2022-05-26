@@ -87,6 +87,7 @@ pipeline {
                   deleteDir()
                   unstash 'source'
                   buildImages()
+                  publishImages()
                 }
               }
             }
