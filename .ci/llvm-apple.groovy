@@ -27,8 +27,9 @@ pipeline {
     HOME = "${env.WORKSPACE}"
     PIPELINE_LOG_LEVEL = 'INFO'
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
-    REGISTRY = 'docker.elastic.co'
-    STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
+    DOCKER_REGISTRY = 'docker.elastic.co'
+    STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
+    BUILDX = "0"
   }
   options {
     timeout(time: 5, unit: 'HOURS')
@@ -52,29 +53,33 @@ pipeline {
     stage('Build Matrix') {
       when {
         anyOf {
-        expression {
-          return  dir(BASE_DIR){isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)}
-        }
+          expression {
+            return  dir(BASE_DIR){isGitRegionMatch(patterns: ['^\\.ci/llvm-apple.groovy', '^/go/llvm-apple'], shouldMatchAll: false)}
+          }
           expression { return isUserTrigger() }
         }
       }
       matrix {
-        agent { label 'ubuntu-20 && immutable' }
+        agent { label "${AGENT_LABELS}" }
         axes {
           axis {
             name 'DEBIAN_VERSION'
             values '10', '11'
+          }
+          axis {
+            name 'AGENT_LABELS'
+            values 'ubuntu-22 && immutable', 'ubuntu-2204-aarch64'
           }
         }
         stages {
           stage('Build'){
             environment {
                 MAKEFILE = "go/llvm-apple"
-                TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}"
+                TAG_EXTENSION = "-debian${env.DEBIAN_VERSION}-${AGENT_LABELS == 'ubuntu-2204-aarch64' ? 'arm64' : 'amd64' }"
             }
             options { skipDefaultCheckout() }
             steps {
-              stageStatusCache(id: "Build ${MAKEFILE}") {
+              stageStatusCache(id: "Build amd64 ${MAKEFILE}") {
                 whenTrue(isPR()){
                   setEnvVar("REPOSITORY", "${env.STAGING_IMAGE}")
                 }
@@ -82,8 +87,6 @@ pipeline {
                   deleteDir()
                   unstash 'source'
                   buildImages()
-                }
-                withGithubNotify(context: "Staging ${MAKEFILE}") {
                   publishImages()
                 }
               }
@@ -96,13 +99,14 @@ pipeline {
 }
 
 def buildImages() {
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
-  withGoEnv {
-    dir("${env.BASE_DIR}") {
+  withDockerEnv(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}") {
+    withGoEnv {
+      dir("${env.BASE_DIR}") {
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
           sh(label: 'Build Docker image', script: "make -C ${MAKEFILE} build")
         }
-        sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev"')
+      sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="*/*/golang-crossbuild:llvm-apple*"')
+      }
     }
   }
 }
