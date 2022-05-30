@@ -4,9 +4,14 @@ ARG TAG_EXTENSION=''
 ARG TARGETARCH
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple-amd64
-FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple$-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
+FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
 # workaround to https://github.com/moby/moby/issues/34482
+ARG TARGETARCH
+ARG BUILDARCH
 FROM build-llvm-apple-${TARGETARCH} as build-llvm-apple
+ARG TARGETARCH
+ARG BUILDARCH
+RUN echo "Building ${TARGETARCH} on a ${BUILDARCH}"
 {{- end }}
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
@@ -25,12 +30,12 @@ RUN \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=BUILD_LLVM_APPLE /llvm-apple-Linux.tar.gz /tmp/llvm-apple-Linux.tar.gz
+COPY --from=build-llvm-apple /llvm-apple-Linux.tar.gz /tmp/llvm-apple-Linux.tar.gz
 RUN tar -xzf /tmp/llvm-apple-Linux.tar.gz --strip 1 -C /usr/local \
   && rm /tmp/llvm-apple-Linux.tar.gz
 
 ARG OSXCROSS_PATH=/usr/local/osxcross
-COPY --from=BUILD_LLVM_APPLE /osxcross.tar.gz /tmp/osxcross.tar.gz
+COPY --from=build-llvm-apple /osxcross.tar.gz /tmp/osxcross.tar.gz
 RUN tar -xzf /tmp/osxcross.tar.gz -C / \
   && rm /tmp/osxcross.tar.gz
 
