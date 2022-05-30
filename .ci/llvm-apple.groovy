@@ -112,10 +112,10 @@ def buildImages() {
 }
 
 def publishImages() {
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}")
+  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}")
   dir("${env.BASE_DIR}") {
     retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-      sh(label: "push docker image to ${env.REPOSITORY}", script: "make -C ${MAKEFILE} push")
+      sh(label: "push docker image to ${env.DOCKER_REGISTRY}", script: "make -C ${MAKEFILE} push")
     }
   }
 }
