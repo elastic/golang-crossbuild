@@ -1,6 +1,21 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
+<<<<<<< HEAD
+=======
+
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple-amd64
+FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
+# workaround to https://github.com/moby/moby/issues/34482
+ARG TARGETARCH
+ARG BUILDARCH
+FROM build-llvm-apple-${TARGETARCH} as build-llvm-apple
+ARG TARGETARCH
+ARG BUILDARCH
+RUN echo "Building ${TARGETARCH} on a ${BUILDARCH}"
+{{- end }}
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 RUN \
@@ -20,6 +35,7 @@ RUN \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
 
+<<<<<<< HEAD
 {{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 ARG OSXCROSS_SDK_URL=https://storage.googleapis.com/obs-ci-cache/beats/MacOSX10.14.sdk.tar.xz
 ARG OSXCROSS_PATH=/usr/osxcross
@@ -28,6 +44,14 @@ ARG SDK_VERSION=10.14
 ARG DARWIN_VERSION=17
 ARG OSX_VERSION_MIN=10.10
 {{ else }}
+=======
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+ARG OSXCROSS_PATH=/usr/local/osxcross
+COPY --from=build-llvm-apple /osxcross.tar.gz /tmp/osxcross.tar.gz
+RUN tar -xzf /tmp/osxcross.tar.gz -C / \
+  && rm /tmp/osxcross.tar.gz
+{{- else }}
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 ARG OSXCROSS_SDK_URL=https://storage.googleapis.com/obs-ci-cache/beats/MacOSX10.11.sdk.tar.xz
 ARG OSXCROSS_PATH=/usr/osxcross
 ARG OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa
@@ -47,24 +71,48 @@ RUN \
 
 ENV PATH $OSXCROSS_PATH/bin:$PATH
 # Add osxcross libraries to the library PATH
+<<<<<<< HEAD
 ENV LD_LIBRARY_PATH /usr/osxcross/lib:$LD_LIBRARY_PATH
+=======
+ENV LD_LIBRARY_PATH $OSXCROSS_PATH/lib:/lib:/usr/lib:/usr/local/lib:$LD_LIBRARY_PATH
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 
 COPY rootfs /
 
 # Basic test
 RUN cd / \
-  && o64-clang helloWorld.c -o helloWorld \
-  && file helloWorld \
-  && file helloWorld | grep -c 'Mach-O 64-bit x86_64'
+  && o64-clang helloWorld.c -o helloWorld.x86_64 \
+  && file helloWorld.x86_64 \
+  && file helloWorld.x86_64 | grep -c 'Mach-O 64-bit x86_64'
+
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+RUN cd / \
+  && oa64-clang helloWorld.c -o helloWorld.arm64 \
+  && file helloWorld.arm64 \
+  && file helloWorld.arm64 | grep -c 'Mach-O 64-bit arm64'
+
+RUN cd / \
+  && lipo -create -output helloWorld.universal helloWorld.x86_64 helloWorld.arm64 \
+  && file helloWorld.universal | grep 'Mach-O universal binary' \
+  && rm helloWorld.*
+{{- end }}
 
 # MacOSX10.14 SDK does not have 32bits compiler
 {{if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
 RUN cd / \
+<<<<<<< HEAD
   && o32-clang helloWorld.c -o helloWorld \
   && file helloWorld \
   && file helloWorld | grep -c 'Mach-O i386' \
   && rm helloWorld.c helloWorld
 {{ end }}
+=======
+  && o32-clang helloWorld.c -o helloWorld.i368 \
+  && file helloWorld.i368 \
+  && file helloWorld.i368 | grep -c 'Mach-O i386' \
+  && rm helloWorld.*
+{{- end }}
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE

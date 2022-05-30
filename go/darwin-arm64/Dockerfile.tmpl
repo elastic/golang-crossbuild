@@ -1,7 +1,25 @@
 ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
+<<<<<<< HEAD
+=======
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple-amd64
+FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
+# workaround to https://github.com/moby/moby/issues/34482
+ARG TARGETARCH
+ARG BUILDARCH
+FROM build-llvm-apple-${TARGETARCH} as build-llvm-apple
+ARG TARGETARCH
+ARG BUILDARCH
+RUN echo "Building ${TARGETARCH} on a ${BUILDARCH}"
+{{- end }}
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+{{- if and (ne .DEBIAN_VERSION "10") (ne .DEBIAN_VERSION "11")}}
+RUN echo "This Docker image will work only with Debian >10" && exit 1
+{{- end }}
 
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
@@ -14,6 +32,7 @@ RUN \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
 
+<<<<<<< HEAD
 {{if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 ARG OSXCROSS_SDK_URL=https://storage.googleapis.com/obs-ci-cache/beats/MacOSX11.3.sdk.tar.xz
 ARG OSXCROSS_PATH=/usr/osxcross
@@ -34,10 +53,24 @@ RUN \
     && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
+=======
+COPY --from=build-llvm-apple /llvm-apple-Linux.tar.gz /tmp/llvm-apple-Linux.tar.gz
+RUN tar -xzf /tmp/llvm-apple-Linux.tar.gz --strip 1 -C /usr/local \
+  && rm /tmp/llvm-apple-Linux.tar.gz
+
+ARG OSXCROSS_PATH=/usr/local/osxcross
+COPY --from=build-llvm-apple /osxcross.tar.gz /tmp/osxcross.tar.gz
+RUN tar -xzf /tmp/osxcross.tar.gz -C / \
+  && rm /tmp/osxcross.tar.gz
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 
 ENV PATH $OSXCROSS_PATH/bin:$PATH
 # Add osxcross libraries to the library PATH
+<<<<<<< HEAD
 ENV LD_LIBRARY_PATH /usr/osxcross/lib:$LD_LIBRARY_PATH
+=======
+ENV LD_LIBRARY_PATH $OSXCROSS_PATH/lib:/lib:/usr/lib:/usr/local/lib:$LD_LIBRARY_PATH
+>>>>>>> 831fe5e (feat: build darwin amd64/arm64 Docker images (#200))
 
 COPY rootfs /
 
