@@ -13,6 +13,7 @@ pipeline {
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
     GO_VERSION = '1.17.10'
+    BUILDX = "1"
   }
   options {
     timeout(time: 3, unit: 'HOURS')
@@ -175,7 +176,9 @@ def buildImages(){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
         retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-          sh "make -C go -f ${MAKEFILE} build${platform}"
+          withDockerEnv(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.REGISTRY}") {
+            sh "make -C go -f ${MAKEFILE} build${platform}"
+          }
         }
         sh(label: 'list Docker images', script: 'docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"')
       }
