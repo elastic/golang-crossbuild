@@ -13,6 +13,7 @@ pipeline {
     REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.REGISTRY}/observability-ci"
     GO_VERSION = '1.17.10'
+    BUILDX = "1"
   }
   options {
     timeout(time: 3, unit: 'HOURS')
