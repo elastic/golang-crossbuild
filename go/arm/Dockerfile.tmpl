@@ -91,15 +91,10 @@ RUN apt install -y \
         libsystemd-dev
 {{- end }}
 
-
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # Declare TARGETARCH to make it available
-ARG TARGETARCH
+ARG TARGETARCH=amd64
 # Select final stage based on TARGETARCH ARG
 FROM stage-${TARGETARCH} as final
-{{- else }}
-FROM stage-amd64 as final
-{{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
 
