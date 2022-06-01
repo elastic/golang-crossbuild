@@ -18,6 +18,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             file \
             flex \
             bison \
+            xz-utils \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
             binutils-multiarch \
             binutils-multiarch-dev \
