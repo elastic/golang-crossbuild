@@ -5,8 +5,8 @@ ARG TAG_EXTENSION=''
 FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple-amd64
 FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
 # workaround to https://github.com/moby/moby/issues/34482
-ARG TARGETARCH
-ARG BUILDARCH
+ARG TARGETARCH=amd64
+ARG BUILDARCH=amd64
 FROM build-llvm-apple-${TARGETARCH} as build-llvm-apple
 ARG TARGETARCH
 ARG BUILDARCH
