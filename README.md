@@ -1,4 +1,4 @@
-[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=Beats%2Fgolang-crossbuild-mbp%2Fmain)](https://beats-ci.elastic.co/job/Beats/job/golang-crossbuild-mbp/job/main/)
+[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=golang-crossbuild%2Fgolang-crossbuild-mbp%2Fmain)](https://beats-ci.elastic.co/job/golang-crossbuild/job/golang-crossbuild-mbp/job/main/)
 
 # golang-crossbuild
 
