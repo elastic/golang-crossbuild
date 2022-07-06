@@ -1,3 +1,4 @@
+//go:build linux
 // +build linux
 
 package main
@@ -154,7 +155,7 @@ func loadCompilerSettings(goos, arch string, env map[string]string) error {
 }
 
 func execBuildCommand(env map[string]string) error {
-	cmd := exec.Command("sh", "-c", buildCommand)
+	cmd := exec.Command("bash", "-c", "-l", buildCommand)
 	cmd.Env = os.Environ()
 	logEnv := make([]string, 0, len(env))
 	for k, v := range env {
