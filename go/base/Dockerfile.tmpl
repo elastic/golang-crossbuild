@@ -31,6 +31,10 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
+# Disable automatic software updates.
+RUN echo 'APT::Periodic::Enable "0";' > /etc/apt/apt.conf.d/10periodic \
+  && echo 'APT::Periodic::Unattended-Upgrade "0";' > /etc/apt/apt.conf.d/10periodic
+
 COPY install-go.sh /tmp/install-go.sh
 RUN chmod ugo+rx /tmp/install-go.sh \
   && /tmp/install-go.sh \
