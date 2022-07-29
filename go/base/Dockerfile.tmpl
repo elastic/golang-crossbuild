@@ -35,6 +35,10 @@ RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN echo 'APT::Periodic::Enable "0";' > /etc/apt/apt.conf.d/10periodic \
   && echo 'APT::Periodic::Unattended-Upgrade "0";' > /etc/apt/apt.conf.d/10periodic
 
+# Clear the local APT cache.
+RUN apt-get --purge autoremove
+RUN apt-get clean
+
 COPY install-go.sh /tmp/install-go.sh
 RUN chmod ugo+rx /tmp/install-go.sh \
   && /tmp/install-go.sh \
