@@ -39,7 +39,24 @@ RUN apt install -y \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
 # librpm-dev
 RUN apt install -y \
-        librpm-dev:armel
+        librpm-dev:armel \
+        librpm8:armel \
+        librpmio8:armel \
+        librpmbuild8:armel \
+        librpmsign8:armel \
+        libelf1:armel \
+        libdw1:armel \
+        icu-devtools:armel \
+        libicu-dev:armel \
+        libmagic1:armel \
+        libxml2:armel \
+        libxml2-dev:armel \
+        liblzma5:armel \
+        pkg-config:armel \
+        libdpkg-perl:armel \
+        perl:any \
+        zlib1g:armel \
+        zlib1g-dev:armel
 
 # libsystemd-dev
 RUN apt install -y \
