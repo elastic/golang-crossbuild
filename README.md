@@ -8,9 +8,7 @@ needed when the application uses [cgo](https://golang.org/cmd/cgo/).
 
 The base image used is Debian 9 (stretch) unless otherwise specified.
 
-`armel`, `ppc`, `s390x` are only based on `Debian 11`.
-
-`mips`, `mips32` is not generated.
+`armel`, `mips`, `mips32`, `ppc`, `s390x` are only based on `Debian 11`.
 
 ## Docker Repo
 
