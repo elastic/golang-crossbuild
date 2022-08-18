@@ -30,6 +30,7 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/386, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips` - linux/mips64, linux/mips64el
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc` - linux/ppc64, linux/ppc64le
@@ -39,6 +40,7 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 **Debian8** uses `glibc 2.19`.
 **Debian9** uses `glibc 2.24`.
 **Debian10** uses `glibc 2.28`.
+**Debian11** uses `glibc 2.31`.
 
 ## Old Build Tags
 
