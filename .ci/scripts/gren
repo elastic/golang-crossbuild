@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -e
-IMAGE="docker.elastic.co/observability-ci/gren"
-docker pull "${IMAGE}" > /dev/null || true
-docker run --rm -t -v "$(pwd):/app" -u "$(id -u):$(id -g)" "${IMAGE}" "$@"
