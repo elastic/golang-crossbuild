@@ -38,3 +38,6 @@ push-arm:
 atomic-push:
 	@echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+
+
+
