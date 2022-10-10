@@ -33,21 +33,21 @@ version-resolver:
 template: |
   ## Go $RESOLVED_VERSION
 
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-arm` - linux/arm64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-armel` - linux/armv5, linux/armv6
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-armhf` - linux/armv7
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-base`
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-main` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-main-debian11` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-mips` - linux/mips64, linux/mips64el
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-mips32` - linux/mips, linux/mipsle
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-ppc` - linux/ppc64, linux/ppc64le
-  - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-s390x` - linux/s390x
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-arm` - linux/arm64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armel` - linux/armv5, linux/armv6
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armhf` - linux/armv7
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-base`
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian11` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-mips` - linux/mips64, linux/mips64el
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-mips32` - linux/mips, linux/mipsle
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-ppc` - linux/ppc64, linux/ppc64le
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-s390x` - linux/s390x
 
   ### Changes
 
