@@ -32,6 +32,7 @@ version-resolver:
   default: patch
 template: |
   ## Go $RESOLVED_VERSION
+
   - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-arm` - linux/arm64
   - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-armel` - linux/armv5, linux/armv6
   - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-armhf` - linux/armv7
@@ -48,6 +49,8 @@ template: |
   - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-ppc` - linux/ppc64, linux/ppc64le
   - `docker.elastic.co/beats-dev/golang-crossbuild:{{release}}-s390x` - linux/s390x
 
-  ## Changes
+  ### Changes
 
   $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
