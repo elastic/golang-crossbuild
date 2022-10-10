@@ -232,7 +232,7 @@ def postRelease(){
   dir("${env.BASE_DIR}"){
     sh(label: 'Set branch', script: "git checkout -b ${BRANCH_NAME}")
     try {
-      gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
+      gitCreateTag(tag: "v${env.GO_VERSION}", pushArgs: '--force')
     } catch (e) {
       // Probably the tag already exists
       log(level: 'WARN', text: "postRelease failed with message : ${e?.message}")

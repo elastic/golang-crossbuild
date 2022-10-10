@@ -2,12 +2,8 @@ name: Release Drafter
 
 on:
   push:
-    branches:
-      - main
-      - "1.19"
-      - "1.18"
-      - "1.17"
-      - "test/release-drafter"
+    tags:
+      - v*.*
 
 permissions:
   contents: read
