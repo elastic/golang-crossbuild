@@ -7,6 +7,7 @@ on:
       - "1.19"
       - "1.18"
       - "1.17"
+      - "test/release-drafter"
 
 permissions:
   contents: read
