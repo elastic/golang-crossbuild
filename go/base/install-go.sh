@@ -4,10 +4,10 @@ set -e
 
 ## These variables are automatically bumped.
 ## If you change their name please change .ci/bump-go-release-version.sh
-GOLANG_VERSION=1.19.1
+GOLANG_VERSION=1.19.2
 GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-GOLANG_DOWNLOAD_SHA256_AMD=acc512fbab4f716a8f97a8b3fbaa9ddd39606a28be6c2515ef7c6c6311acffde
-GOLANG_DOWNLOAD_SHA256_ARM=49960821948b9c6b14041430890eccee58c76b52e2dbaafce971c3c38d43df9f
+GOLANG_DOWNLOAD_SHA256_AMD=5e8c5a74fe6470dd7e055a461acda8bb4050ead8c2df70f227e3ff7d8eb7eeb6
+GOLANG_DOWNLOAD_SHA256_ARM=b62a8d9654436c67c14a0c91e931d50440541f09eb991a987536cb982903126d
 
 GO_TAR_FILE=/tmp/golang.tar.gz
 
