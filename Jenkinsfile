@@ -229,17 +229,13 @@ def isNewRelease() {
 def postRelease(){
   deleteDir()
   unstash 'source'
-  dockerLogin(secret: "${env.DOCKER_REGISTRY_SECRET}", registry: "${env.DOCKER_REGISTRY}")
   dir("${env.BASE_DIR}"){
-    sh(label: 'Set branch', script: """#!/bin/bash
-      git checkout -b ${BRANCH_NAME}
-    """)
+    sh(label: 'Set branch', script: "git checkout -b ${BRANCH_NAME}")
     try {
-      gitCreateTag(tag: "${env.GO_VERSION}", pushArgs: '--force')
-      withCredentials([string(credentialsId: '2a9602aa-ab9f-4e52-baf3-b71ca88469c7', variable: 'GREN_GITHUB_TOKEN')]) {
-        sh(label: 'Creating Release Notes', script: '.ci/scripts/release-notes.sh')
-      }
-      gh(command: "release create ${env.GO_VERSION}", flags: [ "notes-file": ['CHANGELOG.md'], title: "${env.GO_VERSION}" ])
+      // Tag with v<GO_VERSION>
+      // This will help issues with major.minor branches for the very first
+      // golang release, since patch verison doesn't exist.
+      gitCreateTag(tag: "v${env.GO_VERSION}", pushArgs: '--force')
     } catch (e) {
       // Probably the tag already exists
       log(level: 'WARN', text: "postRelease failed with message : ${e?.message}")
