@@ -25,6 +25,9 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             python3-pip \
             python3 \
 {{- end }}
+{{- if (eq .DEBIAN_VERSION "11")}}
+            libc6=2.31-13+deb11u4 --allow-downgrades \
+{{- end }}
         && rm -rf /var/lib/apt/lists/*
 
 {{- if eq .DEBIAN_VERSION "10"}}
