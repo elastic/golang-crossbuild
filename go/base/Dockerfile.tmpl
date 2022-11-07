@@ -26,6 +26,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             python3 \
 {{- end }}
 {{- if (eq .DEBIAN_VERSION "11")}}
+# FIXME remove when the libc6-dev is updated to the new libc6
             libc6=2.31-13+deb11u4 --allow-downgrades \
 {{- end }}
         && rm -rf /var/lib/apt/lists/*
