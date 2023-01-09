@@ -29,7 +29,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     DOCKER_REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
-    GO_VERSION = '1.19.3'
+    GO_VERSION = '1.19.4'
     BUILDX = "1"
   }
   options {
