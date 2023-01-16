@@ -1,3 +1,4 @@
+//go:build linux
 // +build linux
 
 package main
@@ -61,8 +62,8 @@ func doBuild(_ *cobra.Command, _ []string) error {
 			return fmt.Errorf("failed constructing the build environment for %v: %v", p, err)
 		}
 
-		if err = configureGitCommand(); err != nil {
-			return fmt.Errorf("failed configuring the git context for %v: %v", p, err)
+		if output, err := configureGitCommand(); err != nil {
+			return fmt.Errorf("failed configuring the git context for %v: %v (%v)", p, err, string(output))
 		}
 
 		if err = execBuildCommand(env); err != nil {
@@ -179,7 +180,7 @@ func execBuildCommand(env map[string]string) error {
 }
 
 // See https://github.com/elastic/golang-crossbuild/issues/232
-func configureGitCommand() error {
+func configureGitCommand() ([]byte, error) {
 	cmd := exec.Command("sh", "-c", "git", "config", "--global", "--add", "safe.directory", "*")
 	cmd.Env = os.Environ()
 	cmd.Stdout = os.Stdout
@@ -190,5 +191,5 @@ func configureGitCommand() error {
 	fmt.Fprintf(&b, ">>> Configure Git permissions")
 
 	log.Println(b.String())
-	return cmd.Run()
+	return cmd.CombinedOutput()
 }
