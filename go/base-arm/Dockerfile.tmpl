@@ -37,9 +37,9 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.18.9
+ARG GOLANG_VERSION=1.18.10
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=ae21430756c69c48201c51c3a17ac785613d9616105959a0fb7592e407be8588
+ARG GOLANG_DOWNLOAD_SHA256=160497c583d4c7cbc1661230e68b758d01f741cf4bece67e48edc4fdd40ed92d
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
