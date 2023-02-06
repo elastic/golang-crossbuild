@@ -4,6 +4,9 @@ inputs:
   branch:
     description: 'What branch'
     required: true
+  go-minor:
+    description: 'What Go minor version ([0-9]+.[0.9]+)'
+    required: true
   token:
     description: 'What github token'
     default: ${{ github.token }}
@@ -25,5 +28,6 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
         BRANCH: ${{ inputs.branch }}
+        GO_MINOR: ${{ inputs.go-minor }}
       run: updatecli apply --config ./.ci/bump-golang.yml
       shell: bash

@@ -26,6 +26,16 @@ actions:
       title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
 
 sources:
+  minor:
+    name: Get minor version
+    kind: shell
+    transformers:
+      - findsubmatch:
+          pattern: '^\d+.(\d+)'
+          captureindex: 1
+    spec:
+      command: echo {{ requiredEnv "GO_MINOR" }}
+
   latestGoVersion:
     name: Get Latest Go Release
     kind: githubrelease
@@ -40,7 +50,7 @@ sources:
       username: '{{ requiredEnv "GIT_USER" }}'
       versionfilter:
         kind: regex
-        pattern: go1\.(\d*)(\.(\d*))?$
+        pattern: go1\.{{ source "minor" }}(\.(\d*))?$
 
 conditions:
   dockerTag:
@@ -53,7 +63,9 @@ conditions:
 
 targets:
   update-go-versions:
+    name: "Update go versions"
     kind: shell
     sourceid: latestGoVersion
+    scmid: githubConfig
     spec:
       command: .ci/bump-go-release-version.sh
