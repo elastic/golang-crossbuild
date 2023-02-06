@@ -1,24 +1,21 @@
 ---
-name: Bump golang version
+name: Bump golang version 1.19
 
 on:
   schedule:
-    - cron: '0 20 * * 6'
+    - cron: '0 21 * * 6'
 
 permissions:
   pull-requests: write
   contents: write
 
-env:
-  BRANCH_TO_BE_UPDATED: main
-
 jobs:
-  bump-main:
+  bump-1.19:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: .github/workflows/bump-golang
         with:
-          branch: 'main'
-          go-minor: '1.20'
+          branch: '1.19'
+          go-minor: '1.19'
           token: ${{ github.token }}
