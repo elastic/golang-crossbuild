@@ -1,0 +1,59 @@
+---
+name: Bump golang-version to latest version
+
+scms:
+  githubConfig:
+    kind: github
+    spec:
+      user: '{{ requiredEnv "GIT_USER" }}'
+      email: '{{ requiredEnv "GIT_EMAIL" }}'
+      owner: elastic
+      repository: golang-crossbuild
+      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
+      username: '{{ requiredEnv "GIT_USER" }}'
+      branch: '{{ requiredEnv "BRANCH" }}'
+
+actions:
+  golang-crossbuild:
+    kind: github/pullrequest
+    scmid: githubConfig
+    sourceid: latestGoVersion
+    spec:
+      automerge: false
+      labels:
+        - dependencies
+        - backport-skip
+      title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
+
+sources:
+  latestGoVersion:
+    name: Get Latest Go Release
+    kind: githubrelease
+    dependson:
+      - minor
+    transformers:
+      - trimprefix: go
+    spec:
+      owner: golang
+      repository: go
+      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
+      username: '{{ requiredEnv "GIT_USER" }}'
+      versionfilter:
+        kind: regex
+        pattern: go1\.(\d*)(\.(\d*))?$
+
+conditions:
+  dockerTag:
+    name: Is docker image golang:{{ source "latestGoVersion" }} published
+    kind: dockerimage
+    spec:
+      image: golang
+      tag: '{{ source "latestGoVersion" }}'
+    sourceid: latestGoVersion
+
+targets:
+  update-go-versions:
+    kind: shell
+    sourceid: latestGoVersion
+    spec:
+      command: .ci/bump-go-release-version.sh
