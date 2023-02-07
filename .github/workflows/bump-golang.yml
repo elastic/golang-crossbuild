@@ -1,0 +1,25 @@
+---
+name: Bump golang version
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 20 * * 6'
+
+permissions:
+  pull-requests: write
+  contents: write
+
+env:
+  BRANCH_TO_BE_UPDATED: main
+
+jobs:
+  bump-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: .github/workflows/bump-golang
+        with:
+          branch: 'main'
+          go-minor: '1.20'
+          token: ${{ github.token }}
