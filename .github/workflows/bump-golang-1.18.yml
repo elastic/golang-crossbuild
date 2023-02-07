@@ -2,6 +2,7 @@
 name: Bump golang version 1.18
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 22 * * 6'
 
