@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  bump-main:
+  bump:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
