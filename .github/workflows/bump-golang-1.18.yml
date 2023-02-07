@@ -1,5 +1,5 @@
 ---
-name: Bump golang version 1.18
+name: bump-golang-1.18
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: .github/workflows/bump-golang
+      - uses: ./.github/workflows/bump-golang
         with:
           branch: '1.18'
           go-minor: '1.18'
