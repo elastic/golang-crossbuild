@@ -60,6 +60,12 @@ conditions:
       image: golang
       tag: '{{ source "latestGoVersion" }}'
     sourceid: latestGoVersion
+  is:
+    name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
+    kind: shell
+    spec:
+      command: 'grep -v -q {{ source "latestGoVersion" }} go/Makefile.common #'
+    sourceid: latestGoVersion
 
 targets:
   update-go-versions:
