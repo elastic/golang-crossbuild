@@ -6,7 +6,6 @@ on:
     workflows:
       - bump-golang-main
       - bump-golang-1.19
-      - bump-golang-1.18
     types: [completed]
 
 jobs:
