@@ -7,8 +7,7 @@ on:
     - cron: '0 21 * * 6'
 
 permissions:
-  pull-requests: write
-  contents: write
+  contents: read
 
 jobs:
   bump:
@@ -19,4 +18,6 @@ jobs:
         with:
           branch: '1.19'
           go-minor: '1.19'
-          token: ${{ github.token }}
+          vaultUrl: ${{ secrets.VAULT_ADDR }}
+          vaultRoleId: ${{ secrets.VAULT_ROLE_ID }}
+          vaultSecretId: ${{ secrets.VAULT_SECRET_ID }}
