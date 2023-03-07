@@ -60,8 +60,6 @@ conditions:
       image: golang
       tag: '{{ source "latestGoVersion" }}'
     sourceid: latestGoVersion
-<<<<<<< HEAD
-=======
   is:
     name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
     disablesourceinput: true
@@ -71,7 +69,6 @@ conditions:
       line: 5
       content: VERSION        := {{ source `latestGoVersion` }}
     failwhen: true
->>>>>>> e063eb9 (updatecli: use file for the condition (#269))
 
 targets:
   update-go-versions:
