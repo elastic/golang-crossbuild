@@ -1,5 +1,6 @@
 ---
 name: Bump golang-version to latest version
+pipelineid: 'bump-golang-version-{{ requiredEnv "BRANCH" }}'
 
 scms:
   githubConfig:
@@ -24,6 +25,8 @@ actions:
         - dependencies
         - backport-skip
       title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
+      description: |
+        See [changelog](https://github.com/golang/go/issues?q=milestone%3AGo{{ source "latestGoVersion" }}+label%3ACherryPickApproved) for {{ source "latestGoVersion" }}
 
 sources:
   minor:
