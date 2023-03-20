@@ -23,12 +23,8 @@ actions:
       labels:
         - dependencies
         - backport-skip
-<<<<<<< HEAD
-      title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
-=======
       description: |
         See [changelog](https://github.com/golang/go/issues?q=milestone%3AGo{{ source "latestGoVersion" }}+label%3ACherryPickApproved) for {{ source "latestGoVersion" }}
->>>>>>> 525691f (updatecli: auto-merge and override title (#278))
 
 sources:
   minor:
