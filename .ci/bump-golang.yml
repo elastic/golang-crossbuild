@@ -74,7 +74,7 @@ conditions:
 
 targets:
   update-go-versions:
-    name: "Update go version '{{ source "latestGoVersion" }}'"
+    name: 'Update go version {{ source "latestGoVersion" }}'
     kind: shell
     sourceid: latestGoVersion
     scmid: githubConfig
