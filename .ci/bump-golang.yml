@@ -15,16 +15,15 @@ scms:
       branch: '{{ requiredEnv "BRANCH" }}'
 
 actions:
-  golang-crossbuild:
+  default:
+    title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
     kind: github/pullrequest
     scmid: githubConfig
-    sourceid: latestGoVersion
     spec:
-      automerge: false
+      automerge: true
       labels:
         - dependencies
         - backport-skip
-      title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
       description: |
         See [changelog](https://github.com/golang/go/issues?q=milestone%3AGo{{ source "latestGoVersion" }}+label%3ACherryPickApproved) for {{ source "latestGoVersion" }}
 
@@ -75,7 +74,7 @@ conditions:
 
 targets:
   update-go-versions:
-    name: "Update go versions"
+    name: "Update go version '{{ source "latestGoVersion" }}'"
     kind: shell
     sourceid: latestGoVersion
     scmid: githubConfig
