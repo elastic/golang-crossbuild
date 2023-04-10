@@ -4,7 +4,7 @@
 
 This repository contains Dockerfiles for cross building Go binaries for various platforms.
 The aim is to provide a simple way to build Go binaries for multiple platforms without having to install and configure cross compilers on your host machine.
-To do that the project provide a set of Docker images that can be used to build Go binaries for the following platforms:
+To do that the project provides a set of Docker images that can be used to build Go binaries for the following platforms:
 
 * linux/amd64
 * linux/arm
@@ -22,9 +22,9 @@ To do that the project provide a set of Docker images that can be used to build 
 * darwin/arm64
 
 The Docker images are based on Debian and the cross compilers are installed using the crossbuild-essential package.
-Each architecture have its own folder with the files needed to build the Docker image for that architecture.
-Each architecture has its own Dockerfile to builld a Docker image for that architecture.
-Each architecture Dockerfile install the crossbuild-essential package for that architecture and the libraries needed to build our binaries.
+Each architecture has its own folder with the files needed to build the Docker image for that architecture.
+Each architecture has its own Dockerfile to build a Docker image for that architecture.
+Each architecture Dockerfile installs the crossbuild-essential package for that architecture and the libraries needed to build our binaries.
 These Dockerfiles are generated files from `Dockerfile.tmpl` template file that is in the architectures folder.
 This template is processed using a Makefile that is in the architectures folder.
 Each architecture folder has a `roofs` folder that contains the files that will be copied to the Docker image in the root folder.
@@ -33,11 +33,11 @@ Each Docker image has a basic compilation test that is executed when the image i
 The compiler used to build the binaries is LLVM.
 Some of the Docker images are build for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.ci/scripts/buildx.sh` command.
 
-The Docker images are tagger using the following format:
+The Docker images are tagged using the following format:
 
 * `docker.elastic.co/beats-dev/golang-crossbuild:<go-version>-<arch>-<debian-version>`
 
-For the latest version of the images based on the latest Debian and Go versions, the following tags are also used:
+For the latest version of the images based on the latest Debian and Go versions, the following tag is also used:
 
 * `docker.elastic.co/beats-dev/golang-crossbuild:<go-version>-<arch>`
 
@@ -102,7 +102,7 @@ Until Golang version 1.15
 
 There are several Makefiles in the profect across the different folders.
 The Makefile in the root folder is used to build the Docker images for the different architectures,
-it triggers the build of all dockerimages for all architectures and Devian versions supported.
+it triggers the build of all Docker images for all architectures and Debian versions supported.
 
 The file `go/Makefile.common` is the default Makefile used to build the Docker images for the different architectures.
 There is additional Makefile for each Debian version that is used to build the Docker images for that Debian version.
@@ -115,7 +115,7 @@ There is additional Makefile for each Debian version that is used to build the D
 
 No all architectures are supported in all Debian versions, so the Makefile for each Debian version will only build the Docker images for the architectures that are supported in that Debian version.
 
-On the Makefiles threre are some variables to define the name of the Docker image, the version of the Docker image, the Debian version, and the suffix to use in the tag of the Docker image.
+On the Makefiles there are some variables to define the name of the Docker image, the version of the Docker image, the Debian version, and the suffix to use in the tag of the Docker image.
 
 ```make
 NAME           := golang-crossbuild
@@ -142,7 +142,7 @@ The common variables to all the Makefiles are defined at `Makefile.common` file.
 To more information about the supported architextures and the correlation with comercial names,
 you can check the [Debian Supported Architectures](https://wiki.debian.org/SupportedArchitectures) page.
 
-To make and push the Docker images for all the architectures and defaulr Debian version, you can run the following command:
+To make and push the Docker images for all the architectures and default Debian version, you can run the following command:
 
 ```shell
 make build push
@@ -162,7 +162,7 @@ make -C go -f Makefile.debian10 build push IMAGES=arm
 
 ## Multiarch Docker images
 
-Some of the Docker images are build for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.ci/scripts/buildx.sh` command.
+Some of the Docker images are built for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.ci/scripts/buildx.sh` command.
 To choose if build a Docker image for amd64 and arm64 or only for amd64, The Makefiles check fot the value o `BUILDX` and `DOCKER_MULTIARCH` variables. In the target Makefile the `DOCKER_COMMAND` is replaced with the `.ci/scripts/buildx.sh` command.
 
 ```make
@@ -175,7 +175,7 @@ endif
 
 The Docker images depends on each other, so there is an order to build them.
 The are two Docker images that are parent of all the other images, the `fpm` and the `go/llvm-apple`.
-Anytime a new Devian version is released, the `fpm` and `go/llvm-apple` image needs to be updated to use the new Debian version.
+Anytime a new Debian version is released, the `fpm` and `go/llvm-apple` image needs to be updated to use the new Debian version.
 The following diagram shows the dependencies between the Docker images.
 
 ```mermaid
@@ -201,7 +201,7 @@ stateDiagram-v2
 
 ## Releasing images for a new Go version
 
-With every new version of `go` we made a new branch with the name of the previous version to allow continue building the Docker images for the previous version of `go`. So if we are in go `1.17` and go `1.18` is released, we create a new branch `1.17`, the we update the `master` branch to install go `1.18`. Due to the changes in the Debian packages repositories, there is no guaranties that the Docker images for the previous version of `go` will continue to work after some time.
+With every new version of `go` we made a new branch with the name of the previous version to allow continue building the Docker images for the previous version of `go`. So if we are in go `1.19` and go `1.20` is released, we create a new branch `1.19`, the we update the `main` branch to install go `1.20`. Due to the changes in the Debian packages repositories, there is no guaranties that the Docker images for the previous version of `go` will continue to work after some time.
 
 1. Update the Docker tag in
    [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/Makefile.common#L5) and/or
