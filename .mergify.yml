@@ -10,6 +10,16 @@ pull_request_rules:
         - files~=^Jenkinsfile$
     actions:
       delete_head_branch:
+  - name: automatic approval for automated pull requests with golang bump updates
+    conditions:
+      - author=apmmachine
+      - check-success=beats-ci/pr-merge
+      - label=automation
+      - files~=^go/Makefile.common
+    actions:
+      review:
+        type: APPROVE
+        message: Automatically approving mergify
   - name: ask to resolve conflict
     conditions:
       - -merged
