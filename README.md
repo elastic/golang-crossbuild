@@ -12,6 +12,8 @@ The `armel`, `mips`, `ppc` and `s390x` platforms are only supported from `Debian
 
 `mips32` is not available in `Debian 11`.
 
+`Debian8` is not anymore provided from `1.19.8` and `1.20.3` onwards, see https://github.com/elastic/golang-crossbuild/issues/283.
+
 ## Docker Repo
 
 `docker.elastic.co/beats-dev/golang-crossbuild:[TAG]`
