@@ -1,3 +1,8 @@
+queue_rules:
+  - name: default
+    conditions:
+      - check-success=beats-ci/pr-merge
+      - check-success=CLA
 pull_request_rules:
   - name: delete upstream branch after merging changes on Jenkinsfile or it's closed
     conditions:
@@ -49,6 +54,16 @@ pull_request_rules:
         message: |
           This pull request has been automatically closed by Mergify.
           There are some other up-to-date pull requests.
+  - name: squash and merge updatecli PRs after CI passes with golang bump updates
+    conditions:
+      - label=automation
+      - head~=^updatecli
+      - -conflict
+      - files~=^go/Makefile.common
+    actions:
+      queue:
+        method: squash
+        name: default
   - name: notify the backport has not been merged yet
     conditions:
       - -merged
