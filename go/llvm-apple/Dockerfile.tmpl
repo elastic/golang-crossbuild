@@ -32,7 +32,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 #https://www.llvm.org/docs/CMake.html
 #https://github.com/apple/llvm-project
 RUN mkdir -p /tmp/llvm-project && cd /tmp/llvm-project \
-    && curl -sSL "https://github.com/apple/llvm-project/archive/refs/tags/swift-5.4.1-RELEASE.tar.gz" \
+    && curl -sSL "https://github.com/apple/llvm-project/archive/refs/tags/swift-5.6.3-RELEASE.tar.gz" \
       | tar -C /tmp/llvm-project --strip=1 -xzf - \
     && mkdir build && cd build \
     && cmake -DLLVM_ENABLE_PROJECTS="clang" \
