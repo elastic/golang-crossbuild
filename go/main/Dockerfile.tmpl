@@ -32,7 +32,7 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
          libsystemd-dev
 {{- end }}
 
-{{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") }}
+{{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
 # msitools
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
          msitools
