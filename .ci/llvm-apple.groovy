@@ -64,7 +64,7 @@ pipeline {
         axes {
           axis {
             name 'DEBIAN_VERSION'
-            values '10', '11'
+            values '10', '11', '12'
           }
           axis {
             name 'AGENT_LABELS'
