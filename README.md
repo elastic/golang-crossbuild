@@ -42,11 +42,13 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian11` - linux/s390x
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian12` - linux/s390x
 
-**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
-**Debian8** uses `glibc 2.19`.
-**Debian9** uses `glibc 2.24`.
-**Debian10** uses `glibc 2.28`.
-**Debian11** uses `glibc 2.31`.
+### glibc
+
+* **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+* **Debian8** uses `glibc 2.19`.
+* **Debian9** uses `glibc 2.24`.
+* **Debian10** uses `glibc 2.28`.
+* **Debian11** uses `glibc 2.31`.
 
 ## Old Build Tags
 
