@@ -74,10 +74,12 @@ Until Golang version 1.15
 | linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` |
 | linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` |
 
-**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
-**Debian8** uses `glibc 2.19`.
-**Debian9** uses `glibc 2.24`.
-**Debian10** uses `glibc 2.28`.
+### glibc
+
+* **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+* **Debian8** uses `glibc 2.19`.
+* **Debian9** uses `glibc 2.24`.
+* **Debian10** uses `glibc 2.28`.
 
 ## Usage Example
 
