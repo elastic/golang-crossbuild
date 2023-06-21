@@ -12,7 +12,7 @@ The `armel`, `mips`, `ppc` and `s390x` platforms are only supported from `Debian
 
 `mips32` is not available in `Debian 11`.
 
-`win32` has been dropped from Golang `1.19.11`/`1.20.6` onwards.
+`windows/386` is not supported from Golang versions `1.19`/`1.20` onwards, even though if docker images are available.
 
 ## Docker Repo
 
