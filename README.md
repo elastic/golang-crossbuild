@@ -12,6 +12,8 @@ The `armel`, `mips`, `ppc` and `s390x` platforms are only supported from `Debian
 
 `mips32` is not available in `Debian 11`.
 
+`win32` has been dropped from Golang `1.19.11`/`1.20.6` onwards.
+
 ## Docker Repo
 
 `docker.elastic.co/beats-dev/golang-crossbuild:[TAG]`
@@ -27,13 +29,13 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armhf` - linux/armv7
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-base`
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian12` - linux/i386, linux/amd64, windows/386, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian12` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips-debian11` - linux/mips64, linux/mips64el
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips-debian12` - linux/mips64, linux/mips64el
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle **NOTE**: it does not exist from Golang versions > `1.18.5`/`1.17.12`.

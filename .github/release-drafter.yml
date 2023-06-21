@@ -49,13 +49,13 @@ template: |
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armhf-debian12` - linux/armv7
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-base`
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian11` - linux/i386, linux/amd64, windows/386, windows/amd64
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian12` - linux/i386, linux/amd64, windows/386, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main` - linux/i386, linux/amd64, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian7` - linux/i386, linux/amd64, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian8` - linux/i386, linux/amd64, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian9` - linux/i386, linux/amd64, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian10` - linux/i386, linux/amd64, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian11` - linux/i386, linux/amd64, windows/amd64
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-main-debian12` - linux/i386, linux/amd64, windows/amd64
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-mips-debian11` - linux/mips64, linux/mips64el
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-mips-debian12` - linux/mips64, linux/mips64el
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-ppc-debian11` - linux/ppc64, linux/ppc64le
