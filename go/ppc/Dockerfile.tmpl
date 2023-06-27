@@ -37,7 +37,7 @@ RUN apt install -qq -y \
 #         libsystemd-dev:ppc64el libsystemd0:ppc64el liblz4-1:ppc64el
 {{- end }}
 
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:ppc64el

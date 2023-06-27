@@ -29,7 +29,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     DOCKER_REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
-    GO_VERSION = '1.20.4'
+    GO_VERSION = '1.20.5'
     BUILDX = "1"
   }
   options {
@@ -61,7 +61,7 @@ pipeline {
         axes {
           axis {
             name 'MAKEFILE'
-            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10', 'Makefile.debian11'
+            values 'Makefile', 'Makefile.debian7', 'Makefile.debian8', 'Makefile.debian9', 'Makefile.debian10', 'Makefile.debian11', 'Makefile.debian12'
           }
           axis {
             name 'PLATFORM'
@@ -117,6 +117,16 @@ pipeline {
             axis {
               name 'MAKEFILE'
               values 'Makefile.debian11'
+            }
+          }
+          exclude {
+            axis {
+              name 'PLATFORM'
+              values 'arm'
+            }
+            axis {
+              name 'MAKEFILE'
+              values 'Makefile.debian12'
             }
           }
         }

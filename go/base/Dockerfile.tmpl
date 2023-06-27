@@ -18,7 +18,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             file \
             flex \
             bison \
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
             binutils-multiarch \
             binutils-multiarch-dev \
             python3-venv \

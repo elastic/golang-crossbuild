@@ -52,22 +52,28 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armhf` - linux/armv7
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-base`
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/386, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips` - linux/mips64, linux/mips64el
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc` - linux/ppc64, linux/ppc64le
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x` - linux/s390x
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian12` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips-debian11` - linux/mips64, linux/mips64el
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips-debian12` - linux/mips64, linux/mips64el
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle **NOTE**: it does not exist from Golang versions > `1.18.5`/`1.17.12`.
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc-debian11` - linux/ppc64, linux/ppc64le
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc-debian12` - linux/ppc64, linux/ppc64le
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian11` - linux/s390x
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian12` - linux/s390x
 
-**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
-**Debian8** uses `glibc 2.19`.
-**Debian9** uses `glibc 2.24`.
-**Debian10** uses `glibc 2.28`.
-**Debian11** uses `glibc 2.31`.
+### glibc
+
+* **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+* **Debian8** uses `glibc 2.19`.
+* **Debian9** uses `glibc 2.24`.
+* **Debian10** uses `glibc 2.28`.
+* **Debian11** uses `glibc 2.31`.
 
 ## Old Build Tags
 
@@ -93,10 +99,12 @@ Until Golang version 1.15
 | linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` |
 | linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` |
 
-**Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
-**Debian8** uses `glibc 2.19`.
-**Debian9** uses `glibc 2.24`.
-**Debian10** uses `glibc 2.28`.
+### glibc
+
+* **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+* **Debian8** uses `glibc 2.19`.
+* **Debian9** uses `glibc 2.24`.
+* **Debian10** uses `glibc 2.28`.
 
 ## Makefiles
 
