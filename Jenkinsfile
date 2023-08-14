@@ -198,7 +198,8 @@ pipeline {
 
 def buildImages(){
   log(level: 'INFO', text: "buildImages with ${MAKEFILE} for ${PLATFORM}")
-  withGoEnvExt(){
+  // this version is used only for preparing the templating.
+  withGoEnv(version: '1.20.7'){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''
@@ -210,20 +211,6 @@ def buildImages(){
         sh(label: 'list Docker images staging', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild" """)
         sh(label: 'list Docker images production', script: """docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${env.DOCKER_REGISTRY}/beats-dev/golang-crossbuild" """)
       }
-    }
-  }
-}
-
-def withGoEnvExt(body) {
-  // Configure PATH to contain where the gvm is installed.
-  withEnv(["PATH+GVM=$WORKSPACE/bin"]) {
-    dir("${env.BASE_DIR}"){
-      retryWithSleep(retries: 3, seconds: 15, backoff: true) {
-        sh(label: 'install gvm', script: '.ci/scripts/install-gvm.sh')
-      }
-    }
-    withGoEnv(){
-      body()
     }
   }
 }
