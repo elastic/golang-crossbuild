@@ -1,5 +1,5 @@
 ---
-name: bump-golang-1.19
+name: bump-golang-1.20
 
 on:
   workflow_dispatch:
@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/workflows/bump-golang
         with:
-          branch: '1.19'
-          go-minor: '1.19'
+          branch: '1.20'
+          go-minor: '1.20'
           vaultUrl: ${{ secrets.VAULT_ADDR }}
           vaultRoleId: ${{ secrets.VAULT_ROLE_ID }}
           vaultSecretId: ${{ secrets.VAULT_SECRET_ID }}
