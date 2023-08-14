@@ -218,7 +218,9 @@ def withGoEnvExt(body) {
   // Configure PATH to contain where the gvm is installed.
   withEnv(["PATH+GVM=$WORKSPACE/bin"]) {
     dir("${env.BASE_DIR}"){
-      sh(label: 'install gvm', script: '.ci/scripts/install-gvm.sh')
+      retryWithSleep(retries: 3, seconds: 15, backoff: true) {
+        sh(label: 'install gvm', script: '.ci/scripts/install-gvm.sh')
+      }
     }
     withGoEnv(){
       body()
