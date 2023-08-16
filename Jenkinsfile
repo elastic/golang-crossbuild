@@ -29,7 +29,7 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     DOCKER_REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
-    GO_VERSION = '1.20.7'
+    GO_VERSION = '1.21.0'
     BUILDX = "1"
   }
   options {
@@ -198,7 +198,8 @@ pipeline {
 
 def buildImages(){
   log(level: 'INFO', text: "buildImages with ${MAKEFILE} for ${PLATFORM}")
-  withGoEnv(){
+  // this version is used only for preparing the templating.
+  withGoEnv(version: '1.20.7'){
     withGCPEnv(secret: 'secret/observability-team/ci/elastic-observability-account-auth'){
       dir("${env.BASE_DIR}"){
         def platform = (PLATFORM?.trim().equals('arm')) ? '-arm' : ''

@@ -5,7 +5,7 @@ on:
   workflow_run:
     workflows:
       - bump-golang-main
-      - bump-golang-1.19
+      - bump-golang-1.20
     types: [completed]
 
 jobs:
