@@ -29,7 +29,11 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
 
 # libsystemd-dev
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
-         libsystemd-dev
+{{- if eq .DEBIAN_VERSION "11" }}
+        libsystemd0 \
+{{- end }}
+        libsystemd-dev
+
 {{- end }}
 
 {{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
