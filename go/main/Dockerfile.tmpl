@@ -30,7 +30,7 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
 # libsystemd-dev
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
 {{- if eq .DEBIAN_VERSION "11" }}
-        libsystemd0=247.3-7+deb11u2 \
+        --allow-downgrades libsystemd0=247.3-7+deb11u2 \
 {{- end }}
         libsystemd-dev
 
