@@ -4,10 +4,10 @@ ARG TAG_EXTENSION=''
 FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-amd64
 
 RUN dpkg --add-architecture arm64 \
-    && apt update -y --no-install-recommends \
-    && apt upgrade -y --no-install-recommends \
-    && apt full-upgrade -y --no-install-recommends \
-    && apt install -qq -y --no-install-recommends \
+        && apt update -y --no-install-recommends \
+        && apt upgrade -y --no-install-recommends \
+        && apt full-upgrade -y --no-install-recommends \
+        && apt install -qq -y --no-install-recommends \
         crossbuild-essential-arm64 \
         linux-libc-dev-arm64-cross
 
@@ -32,13 +32,18 @@ RUN apt install -y \
         libsqlite3-0:arm64
 
 # libsystemd-dev
-RUN apt install -y \
+RUN apt install -y --fix-broken \
         libsystemd-dev:arm64 libsystemd0:arm64 liblz4-1:arm64
 {{- end }}
 
+{{- if eq .DEBIAN_VERSION "11"}}
+RUN apt update --install-suggests --fix-broken \
+        && apt install -y \
+        libsystemd0:arm64=247.3-7+deb11u2
+{{- end }}
+
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
-# librpm-dev
-RUN apt install -y \
+RUN apt install -y --install-suggests \
         librpm-dev:arm64
 
 # libsystemd-dev
@@ -51,11 +56,12 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-arm64
 
+
 RUN dpkg --add-architecture arm64 \
-    && apt update -y --no-install-recommends \
-    && apt upgrade -y --no-install-recommends \
-    && apt full-upgrade -y --no-install-recommends \
-    && apt install -qq -y --no-install-recommends \
+        && apt update -y --no-install-recommends \
+        && apt upgrade -y --no-install-recommends \
+        && apt full-upgrade -y --no-install-recommends \
+        && apt install -qq -y --no-install-recommends \
         build-essential \
         libc-dev \
         libpopt-dev \
@@ -81,13 +87,20 @@ RUN apt install -y \
         libsystemd-dev libsystemd0 liblz4-1
 {{- end }}
 
+{{- if eq .DEBIAN_VERSION "11"}}
+RUN apt update \
+        && apt install -y --allow-downgrades --fix-broken \
+        libsystemd0=247.3-7+deb11u2
+{{- end }}
+
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
+
 # librpm-dev
-RUN apt install -y \
+RUN apt install -y --install-suggests --fix-broken \
         librpm-dev
 
 # libsystemd-dev
-RUN apt install -y \
+RUN apt install -y --install-suggests --fix-broken \
         libsystemd-dev
 {{- end }}
 
@@ -102,15 +115,15 @@ COPY rootfs /
 
 # Basic test
 RUN cd / \
-  && aarch64-linux-gnu-gcc helloWorld.c -o helloWorld \
-  && file helloWorld \
-  && readelf -h helloWorld \
-  && file helloWorld | cut -d "," -f 2 | grep -c 'ARM aarch64'\
-  && rm helloWorld.c helloWorld
+        && aarch64-linux-gnu-gcc helloWorld.c -o helloWorld \
+        && file helloWorld \
+        && readelf -h helloWorld \
+        && file helloWorld | cut -d "," -f 2 | grep -c 'ARM aarch64'\
+        && rm helloWorld.c helloWorld
 
 RUN cd /libpcap/libpcap-1.8.1 \
-	&& CC=aarch64-linux-gnu-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=aarch64-unknown-linux-gnu --with-pcap=linux \
-	&& make
+        && CC=aarch64-linux-gnu-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=aarch64-unknown-linux-gnu --with-pcap=linux \
+        && make
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
@@ -118,7 +131,7 @@ ARG IMAGE
 ARG VCS_REF
 ARG VCS_URL
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
+        org.label-schema.name=$IMAGE \
+        org.label-schema.vcs-ref=$VCS_REF \
+        org.label-schema.vcs-url=$VCS_URL \
+        org.label-schema.schema-version="1.0"
