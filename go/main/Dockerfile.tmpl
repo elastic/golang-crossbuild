@@ -29,7 +29,7 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
 
 {{- if eq .DEBIAN_VERSION "11"}}
 RUN apt update \
-  && apt install -y \
+  && apt install -y --allow-downgrades \
   libsystemd0=247.3-7+deb11u2
 {{- end }}
 
