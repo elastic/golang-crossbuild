@@ -3,11 +3,6 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
-# Needed by libsystemd-dev 247.3-7+deb11u4
-{{- if eq .DEBIAN_VERSION "11"}}
-RUN echo "deb http://deb.debian.org/debian bullseye-updates main" >> /etc/apt/sources.list
-{{- end }}
-
 RUN \
   dpkg --add-architecture i386 \
   && apt-get -o Acquire::Check-Valid-Until=false update \
