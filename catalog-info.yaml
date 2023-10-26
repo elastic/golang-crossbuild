@@ -34,7 +34,7 @@ spec:
       name: golang-crossbuild
       description: 'Pipeline for the golang-crossbuild project'
     spec:
-      branch_configuration: "main v1.*"
+#      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/pipeline.yml"
       provider_settings:
         build_pull_request_forks: false
