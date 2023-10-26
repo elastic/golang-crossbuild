@@ -1,5 +1,96 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 
+env:
+  SETUP_GVM_VERSION: "v0.5.1"
+  GOLANG_VERSION: "1.21.3"
+  TAG: "v1.21.3"
+  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2004"
+  IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
+  DOCKER_REGISTRY: "docker.elastic.co"
+  STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
+  DOCKER_REGISTRY_SECRET_PATH: "secret/observability-team/ci/docker-registry/prod"
+  BUILDX: 1
+
 steps:
-  - label: "Example test"
-    command: echo "Hello!"
+  - group: "Staging"
+    key: "staging"
+
+    steps:
+      - label: ":unix: Staging / Ubuntu X86_64 - {{matrix.makefile}}"
+        key: "build-ubuntu-x86"
+        command:
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        if: build.env("BUILDKITE_PULL_REQUEST") == "true"
+        notify:
+          - github_commit_status:
+              context: "Staging / Ubuntu X86_64"
+        agents:
+          provider: "gcp"
+          image: "${IMAGE_UBUNTU_X86_64}"
+        matrix:
+          setup:
+            makefile:
+              - "Makefile"
+              - "Makefile.debian7"
+              - "Makefile.debian8"
+              - "Makefile.debian9"
+              - "Makefile.debian10"
+              - "Makefile.debian11"
+              - "Makefile.debian12"
+
+      - label: ":unix: Staging / Ubuntu ARM - {{matrix.makefile}}"
+        key: "build-ubuntu-arm"
+        command:
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        env:
+          REPOSITORY: "${STAGING_IMAGE}"
+        if: build.env("BUILDKITE_PULL_REQUEST") == "true"
+        notify:
+          - github_commit_status:
+              context: "Staging / Ubuntu ARM"
+        agents:
+          provider: "aws"
+          imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
+          instanceType: "t4g.large"
+        matrix:
+          setup:
+            makefile:
+              - "Makefile.debian9"
+
+  - group: "Release"
+    key: "release"
+    notify:
+      - github_commit_status:
+          context: "Release / Ubuntu X86_64 && ARM"
+
+    steps:
+      - label: ":unix: Release: Ubuntu X86_64 - {{matrix.makefile}}"
+        key: "release-ubuntu-x86"
+        command: "echo TestMe"
+#        - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+#        - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        branches: "^(main|\\d+\\.\\d+)$"
+        agents:
+          provider: "gcp"
+          image: "${IMAGE_UBUNTU_X86_64}"
+        matrix:
+          setup:
+            makefile:
+              - "Makefile"
+#              - "Makefile.debian7"
+#              - "Makefile.debian8"
+#              - "Makefile.debian9"
+#              - "Makefile.debian10"
+#              - "Makefile.debian11"
+#              - "Makefile.debian12"
+
+      - label: "Post-Release"
+        key: "post-release"
+        command: "echo release exists:${RELEASE_EXISTS}"
+#        skip: "${RELEASE_EXISTS}"
+#        branches: "^(main|\\d+\\.\\d+)$"
+        agents:
+          provider: "gcp"
+          image: "${IMAGE_UBUNTU_X86_64}"
