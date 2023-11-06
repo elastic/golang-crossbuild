@@ -109,7 +109,8 @@ steps:
       - label: "Post-Release"
         key: "post-release"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
-        if: !${RELEASE_EXISTS}
+        if: build.env("RELEASE_EXISTS") == "false"
+#        if: !${RELEASE_EXISTS}
         branches: "^(main|\\d+\\.\\d+)$"
         notify:
           - github_commit_status:
