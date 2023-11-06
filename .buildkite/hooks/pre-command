@@ -23,7 +23,7 @@ fi
 
 if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == "post-release" ]]; then
     export GITHUB_TOKEN_SECRET=$(retry 5 vault kv get -field token ${GITHUB_TOKEN_VAULT_PATH})
-    export RELEASE_EXISTS=$(releaseExists ${GITHUB_TOKEN_VAULT_PATH} ${TAG})
+    export RELEASE_EXISTS=$(releaseExists ${GITHUB_TOKEN_VAULT_PATH} v${GOLANG_VERSION})
     export GITHUB_USERNAME_SECRET=$(retry 5 vault kv get -field username ${GITHUB_TOKEN_VAULT_PATH})
     export GITHUB_EMAIL_SECRET=$(retry 5 vault kv get -field email ${GITHUB_TOKEN_VAULT_PATH})
 fi

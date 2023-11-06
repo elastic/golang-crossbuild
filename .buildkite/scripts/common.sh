@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-REPO="golang-crossbuild"
 WORKSPACE="$(pwd)/bin"
 HW_TYPE="$(uname -m)"
 PLATFORM_TYPE="$(uname)"

@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 
 env:
+  REPO: "golang-crossbuild"
   SETUP_GVM_VERSION: "v0.5.1"
   GOLANG_VERSION: "1.21.3"
-  TAG: "v1.21.3"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2004"
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
@@ -66,11 +66,11 @@ steps:
           context: "Release / Ubuntu X86_64 && ARM"
 
     steps:
-      - label: ":unix: Release: Ubuntu X86_64 - {{matrix.makefile}}"
+      - label: ":unix: Release / Ubuntu X86_64 - {{matrix.makefile}}"
         key: "release-ubuntu-x86"
-        command: "echo TestMe"
-#        - ".buildkite/scripts/build.sh {{matrix.makefile}}"
-#        - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        command:
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         branches: "^(main|\\d+\\.\\d+)$"
         agents:
           provider: "gcp"
@@ -79,18 +79,42 @@ steps:
           setup:
             makefile:
               - "Makefile"
-#              - "Makefile.debian7"
-#              - "Makefile.debian8"
-#              - "Makefile.debian9"
-#              - "Makefile.debian10"
-#              - "Makefile.debian11"
-#              - "Makefile.debian12"
+              - "Makefile.debian7"
+              - "Makefile.debian8"
+              - "Makefile.debian9"
+              - "Makefile.debian10"
+              - "Makefile.debian11"
+              - "Makefile.debian12"
+
+      - label: ":unix: Release / Ubuntu ARM - {{matrix.makefile}}"
+        key: "release-ubuntu-arm"
+        command:
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        branches: "^(main|\\d+\\.\\d+)$"
+        agents:
+          provider: "aws"
+          imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
+          instanceType: "t4g.large"
+        matrix:
+          setup:
+            makefile:
+              - "Makefile"
+              - "Makefile.debian7"
+              - "Makefile.debian8"
+              - "Makefile.debian9"
+              - "Makefile.debian10"
+              - "Makefile.debian11"
+              - "Makefile.debian12"
 
       - label: "Post-Release"
         key: "post-release"
-        command: "echo release exists:${RELEASE_EXISTS}"
-#        skip: "${RELEASE_EXISTS}"
-#        branches: "^(main|\\d+\\.\\d+)$"
+        command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
+        if: !${RELEASE_EXISTS}
+        branches: "^(main|\\d+\\.\\d+)$"
+        notify:
+          - github_commit_status:
+              context: "Post-release"
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
