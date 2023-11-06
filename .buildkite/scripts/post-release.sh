@@ -18,7 +18,7 @@ tag_commit() {
 
 git_push_with_auth() {
   echo "Pushing tag ${TAG}"
-  retry 3 git push https://${GITHUB_USERNAME_SECRET}:${GITHUB_TOKEN_SECRET}@github.com/elastic/${REPO}.git ${TAG}
+  retry 3 git push https://${GITHUB_USERNAME_SECRET}:${GITHUB_TOKEN_SECRET}@github.com/elastic/golang-crossbuild.git ${TAG}
 }
 
 set_git_config

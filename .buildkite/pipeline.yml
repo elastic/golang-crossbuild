@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 
 env:
-  REPO: "golang-crossbuild"
   SETUP_GVM_VERSION: "v0.5.1"
   GOLANG_VERSION: "1.21.3"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2004"
