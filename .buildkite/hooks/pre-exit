@@ -14,5 +14,13 @@ if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && ("$BUILDKITE_STEP_KEY
     docker logout "${DOCKER_REGISTRY}"
 fi
 
+#if [[ "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple" && "$BUILDKITE_STEP_KEY" =~ ^build ]]; then
+#    google_cloud_logout_active_account
+#fi
+#
+#if [[ "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple" && ("$BUILDKITE_STEP_KEY" =~ ^build || "$BUILDKITE_STEP_KEY" =~ ^publish) ]]; then
+#    docker logout "${DOCKER_REGISTRY}"
+#fi
+
 # Ensure that any temporal files created during any step are removed
 cleanup

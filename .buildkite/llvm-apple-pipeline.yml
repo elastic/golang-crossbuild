@@ -1,3 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+
+env:
+  SETUP_GVM_VERSION: "v0.5.1"
+  GOLANG_VERSION: "1.21.3"
+  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
+  IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
+  DOCKER_REGISTRY: "docker.elastic.co"
+  STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
+  DOCKER_REGISTRY_SECRET_PATH: "secret/observability-team/ci/docker-registry/prod"
+  MAKEFILE: "go/llvm-apple"
+  FILES_TO_CHECK: ".buildkite/llvm-apple-pipeline.yml .buildkite/scripts/build-apple.sh go/llvm-apple"
+  BUILDX: "0"
+
 steps:
-  - label: "Example test"
-    command: echo "Hello!"
+  - label: ":linux: Build / Ubuntu X86_64 - {{matrix.debianVersion}}"
+    key: "build-ubuntu-x86"
+    #    if: (build.env("LLVM_APPLE_FILES_CHANGED") == "true") && ((build.env("BUILDKITE_PULL_REQUEST") != "false") || (build.branch == "main") || (build.branch =~ /[0-9]+\.[0-9]+/))
+    #    if: build.env("LLVM_APPLE_FILES_CHANGED") == "true"
+    command:
+      - ".buildkite/scripts/build-apple.sh ${MAKEFILE} ${FILES_TO_CHECK}"
+    notify:
+      - github_commit_status:
+          context: "Build / Ubuntu X86_64"
+    env:
+      TAG_EXTENSION: "-debian{{matrix.debianVersion}}-amd64"
+      REPOSITORY: "${STAGING_IMAGE}"
+      DEBIAN_VERSION: "{{matrix.debianVersion}}"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+    matrix:
+      setup:
+        debianVersion:
+          - "10"
+          - "11"
+#        - "12"
+
+#  - label:  ":linux: Build / Ubuntu ARM - {{matrix.debianVersion}}"
+#    key: "build-ubuntu-arm"
+#    #    branches: "(main|\\d+\\.\\d+)"
+#    command: ""
+#    if: build.env("BUILDKITE_PULL_REQUEST") != "false"
+#    notify:
+#      - github_commit_status:
+#          context: "Build / Ubuntu ARM"
+#    env:
+#      TAG_EXTENSION: "-debian{{matrix.debianVersion}}-arm64"
+#      REPOSITORY: "${STAGING_IMAGE}"
+#    agents:
+#      provider: "aws"
+#      imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
+#      instanceType: "t4g.large"
+#    matrix:
+#      setup:
+#      debianVersion:
+#        - "10"
+#        - "11"
+#        - "12"

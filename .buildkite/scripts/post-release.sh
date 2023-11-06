@@ -30,4 +30,3 @@ fi
 set_git_config
 tag_commit
 git_push_with_auth
-
