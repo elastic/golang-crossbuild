@@ -122,7 +122,7 @@ cleanup() {
   echo "Done."
 }
 
-releaseExists() {
+tagExists() {
   local ghSecret=$1
   local tag=$2
   local url=https://api.github.com/repos/elastic/${REPO}/releases/tags/${tag}

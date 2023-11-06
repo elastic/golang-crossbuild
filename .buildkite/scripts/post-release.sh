@@ -21,6 +21,12 @@ git_push_with_auth() {
   retry 3 git push https://${GITHUB_USERNAME_SECRET}:${GITHUB_TOKEN_SECRET}@github.com/elastic/golang-crossbuild.git ${TAG}
 }
 
-set_git_config
-tag_commit
-git_push_with_auth
+if [ ${TAG_EXISTS} ]; then
+  echo "Tag already exists! Skipping Pos-release stage."
+  exit 0
+else
+  set_git_config
+  tag_commit
+  git_push_with_auth
+fi
+
