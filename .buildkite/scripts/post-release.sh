@@ -22,7 +22,7 @@ git_push_with_auth() {
 }
 
 if [ ${TAG_EXISTS} ]; then
-  echo "Tag already exists! Exiting Pos-release stage."
+  echo "Tag already exists! Exiting Post-release stage."
   exit 1
 else
   set_git_config
