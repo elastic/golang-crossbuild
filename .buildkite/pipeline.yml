@@ -109,7 +109,7 @@ steps:
       - label: "Post-Release"
         key: "post-release"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
-        branches: "^(main|\\d+\\.\\d+)$"
+#        branches: "^(main|\\d+\\.\\d+)$"
         notify:
           - github_commit_status:
               context: "Post-release"
