@@ -13,8 +13,8 @@ with_go "${GOLANG_VERSION}"
 with_mage
 google_cloud_auth
 
-make -C go -f "${MAKEFILE}" build"${is_arm}"
-#make -C go -f "${MAKEFILE}" build"${is_arm}" TAG_EXTENSION=-buildkite
+#make -C go -f "${MAKEFILE}" build"${is_arm}"
+make -C go -f "${MAKEFILE}" build"${is_arm}" TAG_EXTENSION=-buildkite
 docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
 docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${DOCKER_REGISTRY}/beats-dev/golang-crossbuild"
 
