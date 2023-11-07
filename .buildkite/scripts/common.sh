@@ -122,16 +122,15 @@ cleanup() {
   echo "Done."
 }
 
-tagExists() {
-  local ghSecret=$1
-  local tag=$2
+tag_Exists() {
+  local tag=$1
   local url=https://api.github.com/repos/elastic/${REPO}/releases/tags/${tag}
-  local status=$(curl -s -o /dev/null -w "%{http_code}" -u ${ghSecret}:x-oauth-basic ${url})
+  local status=$(retry 3 curl -s -o /dev/null -w "%{http_code}" -u ${GITHUB_TOKEN_SECRET}:x-oauth-basic ${url})
 
   if [ "${status}" == "200" ]; then
-    echo "true"
+    echo true
   else
-    echo "false"
+    echo false
   fi
 }
 

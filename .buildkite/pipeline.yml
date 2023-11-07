@@ -15,7 +15,7 @@ steps:
     key: "staging"
 
     steps:
-      - label: ":unix: Staging / Ubuntu X86_64 - {{matrix.makefile}}"
+      - label: ":linux: Staging / Ubuntu X86_64 - {{matrix.makefile}}"
         key: "build-ubuntu-x86"
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
@@ -38,7 +38,7 @@ steps:
               - "Makefile.debian11"
               - "Makefile.debian12"
 
-      - label: ":unix: Staging / Ubuntu ARM - {{matrix.makefile}}"
+      - label: ":linux: Staging / Ubuntu ARM - {{matrix.makefile}}"
         key: "build-ubuntu-arm"
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
@@ -65,7 +65,7 @@ steps:
           context: "Release / Ubuntu X86_64 && ARM"
 
     steps:
-      - label: ":unix: Release / Ubuntu X86_64 - {{matrix.makefile}}"
+      - label: ":linux: Release / Ubuntu X86_64 - {{matrix.makefile}}"
         key: "release-ubuntu-x86"
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
@@ -85,7 +85,7 @@ steps:
               - "Makefile.debian11"
               - "Makefile.debian12"
 
-      - label: ":unix: Release / Ubuntu ARM - {{matrix.makefile}}"
+      - label: ":linux: Release / Ubuntu ARM - {{matrix.makefile}}"
         key: "release-ubuntu-arm"
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
