@@ -5,8 +5,8 @@ set -euo pipefail
 source .buildkite/scripts/common.sh
 
 DOCKER_REGISTRY_SECRET_PATH="kv/ci-shared/platform-ingest/docker_registry_prod"
-PRIVATE_CI_GCS_CREDENTIALS_PATH="secret/observability-team/ci/elastic-observability-account-auth"
-#PRIVATE_CI_GCS_CREDENTIALS_PATH="kv/ci-shared/platform-ingest/private_ci_artifacts_gcs_credentials"
+#PRIVATE_CI_GCS_CREDENTIALS_PATH="secret/observability-team/ci/elastic-observability-account-auth"
+PRIVATE_CI_GCS_CREDENTIALS_PATH="kv/ci-shared/platform-ingest/private_ci_artifacts_gcs_credentials"
 GITHUB_TOKEN_VAULT_PATH="kv/ci-shared/platform-ingest/github_token"
 
 # Secrets must be redacted
