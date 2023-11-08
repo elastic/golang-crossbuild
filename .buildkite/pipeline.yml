@@ -38,11 +38,11 @@ steps:
               - "Makefile.debian11"
               - "Makefile.debian12"
 
-      - label: ":linux: Staging / Ubuntu ARM - {{matrix.makefile}}"
+      - label: ":linux: Staging / Ubuntu ARM - Makefile.debian9"
         key: "build-ubuntu-arm"
         command:
-          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
-          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/build.sh Makefile.debian9"
+          - ".buildkite/scripts/publish.sh Makefile.debian9"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
         if: build.env("BUILDKITE_PULL_REQUEST") != "false"
@@ -53,10 +53,6 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
-        matrix:
-          setup:
-            makefile:
-              - "Makefile.debian9"
 
   - group: "Release"
     key: "release"
