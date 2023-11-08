@@ -7,6 +7,7 @@ NPCAP_VERSION := 1.76
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
+GS_BUCKET_PATH ?= obs-ci-cache
 
 
 ifeq ($(BUILDX),1)
@@ -20,7 +21,7 @@ copy-npcap: status=".status.copy-npcap"
 copy-npcap:
 	@echo '0' > ${status}
 ifeq ($(CI),true)
-	@gsutil cp gs://obs-ci-cache/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE) || echo '1' > ${status}
+	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE) || echo '1' > ${status}
 else
 	@echo 'Only available if running in the CI'
 endif

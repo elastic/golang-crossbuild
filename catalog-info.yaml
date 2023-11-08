@@ -34,8 +34,7 @@ spec:
       name: golang-crossbuild
       description: 'Pipeline for the golang-crossbuild project'
     spec:
-#      TODO uncomment when pipeline is ready
-#      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
+      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/pipeline.yml"
       provider_settings:
         build_tags: true
@@ -50,9 +49,8 @@ spec:
       cancel_intermediate_builds_branch_filter: '!main'
       skip_intermediate_builds: true
       skip_intermediate_builds_branch_filter: '!main'
-      # TODO uncomment this environment variable when pipeline definition is updated
-      # env:
-      #   ELASTIC_PR_COMMENTS_ENABLED: 'true'
+      env:
+         ELASTIC_PR_COMMENTS_ENABLED: 'true'
       teams:
         ingest-fp:
           access_level: MANAGE_BUILD_AND_READ
