@@ -96,6 +96,9 @@ steps:
         key: "post-release"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
         branches: "(main|\\d+\\.\\d+)"
+        depends_on:
+          - "release-ubuntu-x86"
+          - "release-ubuntu-arm"
         notify:
           - github_commit_status:
               context: "Post-release"
