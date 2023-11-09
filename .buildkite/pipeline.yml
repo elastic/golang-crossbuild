@@ -66,7 +66,7 @@ steps:
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
-        branches: "^(main|\\d+\\.\\d+)$"
+        branches: "(main|\\d+\\.\\d+)"
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
@@ -81,31 +81,24 @@ steps:
               - "Makefile.debian11"
               - "Makefile.debian12"
 
-      - label: ":linux: Release / Ubuntu ARM - {{matrix.makefile}}"
+      - label: ":linux: Release / Ubuntu ARM - Makefile.debian9"
         key: "release-ubuntu-arm"
         command:
-          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
-          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
-        branches: "^(main|\\d+\\.\\d+)$"
+          - ".buildkite/scripts/build.sh Makefile.debian9"
+          - ".buildkite/scripts/publish.sh Makefile.debian9"
+        branches: "(main|\\d+\\.\\d+)"
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
-        matrix:
-          setup:
-            makefile:
-              - "Makefile"
-              - "Makefile.debian7"
-              - "Makefile.debian8"
-              - "Makefile.debian9"
-              - "Makefile.debian10"
-              - "Makefile.debian11"
-              - "Makefile.debian12"
 
       - label: "Post-Release"
         key: "post-release"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
-        branches: "^(main|\\d+\\.\\d+)$"
+        branches: "(main|\\d+\\.\\d+)"
+        depends_on:
+          - "release-ubuntu-x86"
+          - "release-ubuntu-arm"
         notify:
           - github_commit_status:
               context: "Post-release"
