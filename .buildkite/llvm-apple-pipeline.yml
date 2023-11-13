@@ -55,7 +55,7 @@ steps:
       instanceType: "t4g.large"
     matrix:
       setup:
-      debianVersion:
-        - "10"
-        - "11"
-        - "12"
+        debianVersion:
+          - "10"
+          - "11"
+          - "12"
