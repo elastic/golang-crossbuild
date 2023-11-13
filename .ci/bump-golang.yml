@@ -99,3 +99,5 @@ targets:
     scmid: githubConfig
     spec:
       command: .ci/bump-go-release-version.sh
+      environments:
+        - name: PATH
