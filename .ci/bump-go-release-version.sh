@@ -12,6 +12,14 @@
 set -euo pipefail
 MSG="parameter missing."
 GO_RELEASE_VERSION=${1:?$MSG}
+
+# Updatecli uses this to do nothing when using the shell target
+if grep -q "$GO_RELEASE_VERSION" go/Makefile.common ; then
+  ## No change
+  # early return with no output
+  exit 0
+fi
+
 OS=$(uname -s| tr '[:upper:]' '[:lower:]')
 if [ "${OS}" == "darwin" ] ; then
 	SED="sed -i .bck"

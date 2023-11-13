@@ -63,15 +63,6 @@ conditions:
       image: golang
       tag: '{{ source "latestGoVersion" }}'
     sourceid: latestGoVersion
-  is:
-    name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
-    disablesourceinput: true
-    kind: file
-    spec:
-      file: go/Makefile.common
-      line: 5
-      content: VERSION        := {{ source `latestGoVersion` }}
-    failwhen: true
 
 targets:
   update-go-version:
