@@ -74,6 +74,24 @@ conditions:
     failwhen: true
 
 targets:
+  update-go-version:
+    name: "Update .go-version"
+    sourceid: latestGoVersion
+    scmid: githubConfig
+    kind: file
+    spec:
+      content: '{{ source "latestGoVersion" }}'
+      file: .go-version
+      matchpattern: '\d+.\d+.\d+'
+  update-go-makefile.common:
+    name: "Update go/Makefile.common"
+    sourceid: latestGoVersion
+    scmid: githubConfig
+    kind: file
+    spec:
+      content: '{{ source "latestGoVersion" }}'
+      file: go/Makefile.common
+      matchpattern: '\d+.\d+.\d+'
   update-go-versions:
     name: 'Update go version {{ source "latestGoVersion" }}'
     kind: shell
