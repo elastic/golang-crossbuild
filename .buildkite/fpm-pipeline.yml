@@ -1,3 +1,29 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+
+env:
+  SETUP_GVM_VERSION: "v0.5.1"
+  GOLANG_VERSION: "1.21.3"
+  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
+  DOCKER_REGISTRY: "docker.elastic.co"
+  STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
+  DOCKER_REGISTRY_SECRET_PATH: "secret/observability-team/ci/docker-registry/prod"
+  MAKEFILE: "fpm"
+  FILES_TO_CHECK: ".buildkite/fpm-pipeline.yml:.buildkite/scripts/llvm-fpm:fpm"
+  DOCKER_FILTER_REF: "docker.elastic.co/beats-dev"
+  BUILDX: "0"
+
 steps:
-  - label: "Example test"
-    command: echo "Hello!"
+  - label: ":linux: Build FPM / Ubuntu X86_64"
+    key: "build-ubuntu-x86"
+    #    ((build.env("BUILDKITE_SOURCE") == "ui") || (build.env("BUILDKITE_PULL_REQUEST") != "false") || (build.branch == "main") || (build.branch =~ /[0-9]+\.[0-9]+/))
+    command:
+      - ".buildkite/scripts/llvm-fpm/build.sh ${MAKEFILE} ${FILES_TO_CHECK} ${DOCKER_FILTER_REF}"
+      - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE}"
+    notify:
+      - github_commit_status:
+          context: "Build FPM / Ubuntu X86_64"
+    env:
+      REPOSITORY: "${STAGING_IMAGE}"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
