@@ -9,6 +9,10 @@ PLATFORM_TYPE="$(uname)"
 TMP_FOLDER="tmp.${REPO}"
 GOOGLE_CREDENTIALS_FILENAME="google-cloud-credentials.json"
 
+if [[ -z "${GOLANG_VERSION-""}" ]]; then
+    export GOLANG_VERSION=$(cat "${WORKSPACE}/.go-version")
+fi
+
 add_bin_path() {
     echo "Adding PATH to the environment variables..."
     create_workspace
