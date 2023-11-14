@@ -14,7 +14,7 @@ env:
 steps:
   - label: ":linux: Build FPM / Ubuntu X86_64"
     key: "build-ubuntu-x86"
-    #    ((build.env("BUILDKITE_SOURCE") == "ui") || (build.env("BUILDKITE_PULL_REQUEST") != "false") || (build.branch == "main") || (build.branch =~ /[0-9]+\.[0-9]+/))
+    if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
     command:
       - ".buildkite/scripts/llvm-fpm/build.sh ${MAKEFILE} ${FILES_TO_CHECK} ${DOCKER_FILTER_REF}"
       - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE} ${FILES_TO_CHECK}"
