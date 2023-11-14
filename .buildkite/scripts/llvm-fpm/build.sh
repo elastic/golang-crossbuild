@@ -8,11 +8,6 @@ makefile=${1}
 patterns=${2}
 docker_filter_ref=${3}
 
-#if [[ $(git_diff "$patterns") == false ]]; then
-#  echo ""
-#  exit 0;
-#fi
-
 are_files_changed "$patterns"
 add_bin_path
 with_go "${GOLANG_VERSION}"
