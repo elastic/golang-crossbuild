@@ -52,6 +52,9 @@ pipeline {
         deleteDir()
         gitCheckout(basedir: BASE_DIR)
         stash name: 'source', useDefaultExcludes: false
+        dir("${BASE_DIR}"){
+          setEnvVar('GO_VERSION', readFile(".go-version").trim())
+        }
       }
     }
     stage('Package'){
