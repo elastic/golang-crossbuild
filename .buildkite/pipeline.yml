@@ -55,10 +55,6 @@ steps:
 
   - group: "Release"
     key: "release"
-    notify:
-      - github_commit_status:
-          context: "Release / Ubuntu X86_64 && ARM"
-          if: build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
 
     steps:
       - label: ":linux: Release / Ubuntu X86_64 - {{matrix.makefile}}"
@@ -80,6 +76,9 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+        notify:
+          - github_commit_status:
+              context: "Release / Ubuntu X86_64"
 
       - label: ":linux: Release / Ubuntu ARM - Makefile.debian9"
         key: "release-ubuntu-arm"
@@ -91,6 +90,9 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+        notify:
+          - github_commit_status:
+              context: "Release / Ubuntu ARM"
 
       - label: "Post-Release"
         key: "post-release"
@@ -105,3 +107,4 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+
