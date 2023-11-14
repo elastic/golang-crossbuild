@@ -18,7 +18,7 @@ steps:
     if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
     command:
       - ".buildkite/scripts/llvm-fpm/build.sh ${MAKEFILE} ${FILES_TO_CHECK} ${DOCKER_FILTER_REF}"
-      - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE}"
+      - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE} ${FILES_TO_CHECK}"
     notify:
       - github_commit_status:
           context: "Build LLVM Apple / Ubuntu X86_64"

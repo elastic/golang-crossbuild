@@ -157,3 +157,13 @@ git_diff() {
     echo false
   fi
 }
+
+are_files_changed() {
+  patterns=$1
+
+  if [[ $(git_diff "$patterns") == false ]]; then
+    echo "No files changed in $patterns"
+    exit 0;
+  fi
+}
+

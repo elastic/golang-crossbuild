@@ -4,11 +4,13 @@ set -euo pipefail
 
 source .buildkite/scripts/common.sh
 
-MAKEFILE=${1}
+makefile=${1}
+patterns=${2}
 
-if [[ $(git_diff "$patterns") == false ]]; then
-  exit 0;
-fi
+#if [[ $(git_diff "$patterns") == false ]]; then
+#  exit 0;
+#fi
 
+are_files_changed "$patterns"
 add_bin_path
-retry 3 make -C ${MAKEFILE} push
+retry 3 make -C ${makefile} push
