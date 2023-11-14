@@ -58,6 +58,7 @@ steps:
     notify:
       - github_commit_status:
           context: "Release / Ubuntu X86_64 && ARM"
+          if: build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
 
     steps:
       - label: ":linux: Release / Ubuntu X86_64 - {{matrix.makefile}}"
