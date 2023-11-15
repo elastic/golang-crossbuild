@@ -7,7 +7,7 @@ env:
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   MAKEFILE: "go/llvm-apple"
-  FILES_TO_CHECK: "/^\.buildkite/llvm-apple-pipeline.yml$:^\.buildkite/scripts/llvm-apple:^go/llvm-apple/"
+  FILES_TO_CHECK: ".buildkite/scripts/changeset/llvm-apple"
   DOCKER_FILTER_REF: "*/*/golang-crossbuild:llvm-apple*"
   BUILDX: "0"
 steps:

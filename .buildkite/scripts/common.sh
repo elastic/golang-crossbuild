@@ -148,13 +148,12 @@ check_is_arm() {
 }
 
 are_files_changed() {
-  patterns=$1
-  patterns_formatted="$(echo "$patterns" | tr ':' '\n')"
+  changeset=$1
 
-  if git diff --name-only HEAD@{1} HEAD | grep -qE "$patterns_formatted"; then
+  if git diff --name-only HEAD@{1} HEAD | grep -qE "$changeset"; then
     return 0;
   else
-    echo "No files changed in $patterns"
+    echo "No files changed in $changeset"
     return 1;
   fi
 }
