@@ -147,23 +147,15 @@ check_is_arm() {
   fi
 }
 
-git_diff() {
+are_files_changed() {
   patterns=$1
   patterns_formatted="$(echo "$patterns" | tr ':' '\n')"
 
-  if git diff --name-only HEAD@{1} HEAD | grep -qE -e "$patterns_formatted"; then
-    echo true
+  if git diff --name-only HEAD@{1} HEAD | grep -qE "$patterns_formatted"; then
+    return 0;
   else
-    echo false
-  fi
-}
-
-are_files_changed() {
-  patterns=$1
-
-  if [[ $(git_diff "$patterns") == false ]]; then
     echo "No files changed in $patterns"
-    exit 0;
+    return 1;
   fi
 }
 

@@ -6,7 +6,6 @@ env:
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
-  DOCKER_REGISTRY_SECRET_PATH: "secret/observability-team/ci/docker-registry/prod"
   BUILDX: 1
 
 steps:
@@ -62,7 +61,7 @@ steps:
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
-        if: build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
@@ -85,7 +84,7 @@ steps:
         command:
           - ".buildkite/scripts/build.sh Makefile.debian9"
           - ".buildkite/scripts/publish.sh Makefile.debian9"
-        if: build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
@@ -97,7 +96,7 @@ steps:
       - label: "Post-Release"
         key: "post-release"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
-        if: build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         depends_on:
           - "release-ubuntu-x86"
           - "release-ubuntu-arm"

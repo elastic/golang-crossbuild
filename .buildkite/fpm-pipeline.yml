@@ -5,16 +5,15 @@ env:
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
-  DOCKER_REGISTRY_SECRET_PATH: "secret/observability-team/ci/docker-registry/prod"
   MAKEFILE: "fpm"
-  FILES_TO_CHECK: ".buildkite/fpm-pipeline.yml:.buildkite/scripts/llvm-fpm:fpm"
+  FILES_TO_CHECK: "^\.buildkite/fpm-pipeline.yml$:^\.buildkite/scripts/llvm-fpm:^fpm"
   DOCKER_FILTER_REF: "docker.elastic.co/beats-dev"
   BUILDX: "0"
 
 steps:
   - label: ":linux: Build FPM / Ubuntu X86_64"
     key: "build-ubuntu-x86"
-    if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /[0-9]+\.[0-9]+/
+    if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
     command:
       - ".buildkite/scripts/llvm-fpm/build.sh ${MAKEFILE} ${FILES_TO_CHECK} ${DOCKER_FILTER_REF}"
       - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE} ${FILES_TO_CHECK}"

@@ -8,7 +8,10 @@ makefile=${1}
 patterns=${2}
 docker_filter_ref=${3}
 
-are_files_changed "$patterns"
+if ! are_files_changed "$patterns" ; then
+    exit 0
+fi
+
 add_bin_path
 with_go "${GOLANG_VERSION}"
 with_mage
