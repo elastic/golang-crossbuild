@@ -6,7 +6,7 @@ env:
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   MAKEFILE: "fpm"
-  FILES_TO_CHECK: "^\.buildkite/fpm-pipeline.yml$:^\.buildkite/scripts/llvm-fpm:^fpm"
+  FILES_TO_CHECK: "/^\.buildkite/fpm-pipeline.yml$:^\.buildkite/scripts/llvm-fpm:^fpm/"
   DOCKER_FILTER_REF: "docker.elastic.co/beats-dev"
   BUILDX: "0"
 
