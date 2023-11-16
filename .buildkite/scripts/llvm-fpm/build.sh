@@ -13,7 +13,7 @@ if ! are_files_changed "$patterns" ; then
 fi
 
 add_bin_path
-with_go "${GOLANG_VERSION}"
+with_go
 with_mage
 
 retry 3 make -C "${makefile}" build GS_BUCKET_PATH=ingest-buildkite-ci

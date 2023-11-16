@@ -21,14 +21,13 @@ add_bin_path() {
 }
 
 with_go() {
-    local go_version="${1}"
     echo "Setting up the Go environment..."
     create_bin
     check_platform_architecture
     retry 5 curl -sL -o ${BIN}/gvm "https://github.com/andrewkroh/gvm/releases/download/${SETUP_GVM_VERSION}/gvm-${PLATFORM_TYPE}-${arch_type}"
     export PATH="${PATH}:${BIN}"
     chmod +x ${BIN}/gvm
-    eval "$(gvm "$go_version")"
+    eval "$(gvm "$GOLANG_VERSION")"
     go version
     which go
     export PATH="${PATH}:$(go env GOPATH):$(go env GOPATH)/bin"
