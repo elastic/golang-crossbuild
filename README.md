@@ -31,7 +31,7 @@ Each architecture folder has a `roofs` folder that contains the files that will 
 In `rootfs` we have the `compolers.yml` file that contains the list of compilers that will be installed in the Docker image.
 Each Docker image has a basic compilation test that is executed when the image is built. This test uses `rootfs/helloworld.c` file to compile a simple C program and verify the architecture of the result binary.
 The compiler used to build the binaries is LLVM.
-Some of the Docker images are build for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.ci/scripts/buildx.sh` command.
+Some of the Docker images are build for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.buildkite/scripts/buildx.sh` command.
 
 The Docker images are tagged using the following format:
 
@@ -170,12 +170,12 @@ make -C go -f Makefile.debian10 build push IMAGES=arm
 
 ## Multiarch Docker images
 
-Some of the Docker images are built for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.ci/scripts/buildx.sh` command.
-To choose if build a Docker image for amd64 and arm64 or only for amd64, The Makefiles check fot the value o `BUILDX` and `DOCKER_MULTIARCH` variables. In the target Makefile the `DOCKER_COMMAND` is replaced with the `.ci/scripts/buildx.sh` command.
+Some of the Docker images are built for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.buildkite/scripts/buildx.sh` command.
+To choose if build a Docker image for amd64 and arm64 or only for amd64, The Makefiles check fot the value o `BUILDX` and `DOCKER_MULTIARCH` variables. In the target Makefile the `DOCKER_COMMAND` is replaced with the `.buildkite/scripts/buildx.sh` command.
 
 ```make
 ifeq ($(DOCKER_MULTIARCH),1)
-DOCKER_CMD := $(SELF_DIR)/../.ci/scripts/buildx.sh
+DOCKER_CMD := $(SELF_DIR)/../.buildkite/scripts/buildx.sh
 endif
 ```
 
