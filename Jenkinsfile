@@ -29,10 +29,6 @@ pipeline {
     DOCKER_REGISTRY_SECRET = 'secret/observability-team/ci/docker-registry/prod'
     DOCKER_REGISTRY = 'docker.elastic.co'
     STAGING_IMAGE = "${env.DOCKER_REGISTRY}/observability-ci"
-<<<<<<< HEAD
-    GO_VERSION = '1.20.11'
-=======
->>>>>>> d3e2bdb (updatecli: use .go-version (#335))
     BUILDX = "1"
   }
   options {
