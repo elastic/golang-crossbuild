@@ -36,6 +36,7 @@ spec:
     spec:
       branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/pipeline.yml"
+      maximum_timeout_in_minutes: 120
       provider_settings:
         build_tags: true
         publish_commit_status: true
@@ -43,7 +44,7 @@ spec:
         build_pull_requests: true # requires filter_enabled and filter_condition settings as below when used with buildkite-pr-bot
         filter_enabled: true
         filter_condition: >-
-          build.creator.name == 'elasticmachine' && build.pull_request.id != null
+          build.pull_request.id == null || (build.creator.name == 'elasticmachine' && build.pull_request.id != null)
       repository: elastic/golang-crossbuild
       cancel_intermediate_builds: true
       cancel_intermediate_builds_branch_filter: '!main'
@@ -79,8 +80,9 @@ spec:
       name: llvm-apple
       description: "Pipeline for LLVM Apple version"
     spec:
-      #      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks  #TODO - enable when pipeline is ready
+      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/llvm-apple-pipeline.yml"
+      maximum_timeout_in_minutes: 360 # cmake is taking at least 4h to run
       provider_settings:
         build_tags: true
         publish_commit_status: true
@@ -94,8 +96,8 @@ spec:
       cancel_intermediate_builds_branch_filter: '!main'
       skip_intermediate_builds: true
       skip_intermediate_builds_branch_filter: '!main'
-      #      env:
-      #        ELASTIC_PR_COMMENTS_ENABLED: 'true'  #TODO - enable when pipeline is ready
+      env:
+        ELASTIC_PR_COMMENTS_ENABLED: 'true'
       teams:
         ingest-fp:
           access_level: MANAGE_BUILD_AND_READ
@@ -124,8 +126,9 @@ spec:
       name: fpm
       description: "Pipeline for FPM (packaging made simple)"
     spec:
-      #      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks  #TODO - enable when pipeline is ready
+      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/fpm-pipeline.yml"
+      maximum_timeout_in_minutes: 120
       provider_settings:
         build_tags: true
         publish_commit_status: true
@@ -139,8 +142,8 @@ spec:
       cancel_intermediate_builds_branch_filter: '!main'
       skip_intermediate_builds: true
       skip_intermediate_builds_branch_filter: '!main'
-      #      env:
-      #        ELASTIC_PR_COMMENTS_ENABLED: 'true'  #TODO - enable when pipeline is ready
+      env:
+        ELASTIC_PR_COMMENTS_ENABLED: 'true'
       teams:
         ingest-fp:
           access_level: MANAGE_BUILD_AND_READ
