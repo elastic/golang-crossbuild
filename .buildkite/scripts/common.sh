@@ -3,26 +3,31 @@
 set -euo pipefail
 
 REPO="golang-crossbuild"
-WORKSPACE="$(pwd)/bin"
+WORKSPACE="$(pwd)"
+BIN="${WORKSPACE}/bin"
 HW_TYPE="$(uname -m)"
 PLATFORM_TYPE="$(uname)"
 TMP_FOLDER="tmp.${REPO}"
 GOOGLE_CREDENTIALS_FILENAME="google-cloud-credentials.json"
 
+if [[ -z "${GOLANG_VERSION-""}" ]]; then
+    export GOLANG_VERSION=$(cat "${WORKSPACE}/.go-version")
+fi
+
 add_bin_path() {
     echo "Adding PATH to the environment variables..."
-    create_workspace
-    export PATH="${PATH}:${WORKSPACE}"
+    create_bin
+    export PATH="${PATH}:${BIN}"
 }
 
 with_go() {
     local go_version="${1}"
     echo "Setting up the Go environment..."
-    create_workspace
+    create_bin
     check_platform_architecture
-    retry 5 curl -sL -o ${WORKSPACE}/gvm "https://github.com/andrewkroh/gvm/releases/download/${SETUP_GVM_VERSION}/gvm-${PLATFORM_TYPE}-${arch_type}"
-    export PATH="${PATH}:${WORKSPACE}"
-    chmod +x ${WORKSPACE}/gvm
+    retry 5 curl -sL -o ${BIN}/gvm "https://github.com/andrewkroh/gvm/releases/download/${SETUP_GVM_VERSION}/gvm-${PLATFORM_TYPE}-${arch_type}"
+    export PATH="${PATH}:${BIN}"
+    chmod +x ${BIN}/gvm
     eval "$(gvm "$go_version")"
     go version
     which go
@@ -37,15 +42,15 @@ with_mage() {
             "github.com/jstemmer/go-junit-report"
             "gotest.tools/gotestsum"
     )
-    create_workspace
+    create_bin
     for pkg in "${install_packages[@]}"; do
         go install "${pkg}@latest"
     done
 }
 
-create_workspace() {
-    if [[ ! -d "${WORKSPACE}" ]]; then
-    mkdir -p ${WORKSPACE}
+create_bin() {
+    if [[ ! -d "${BIN}" ]]; then
+    mkdir -p ${BIN}
     fi
 }
 
@@ -87,7 +92,7 @@ retry() {
 }
 
 google_cloud_auth() {
-    local gsUtilLocation=$(mktemp -d -p ${WORKSPACE} -t "${TMP_FOLDER}.XXXXXXXXX")
+    local gsUtilLocation=$(mktemp -d -p ${BIN} -t "${TMP_FOLDER}.XXXXXXXXX")
     local secretFileLocation=${gsUtilLocation}/${GOOGLE_CREDENTIALS_FILENAME}
     echo "${PRIVATE_CI_GCS_CREDENTIALS_SECRET}" > ${secretFileLocation}
     gcloud auth activate-service-account --key-file ${secretFileLocation} 2> /dev/null
@@ -118,7 +123,7 @@ google_cloud_logout_active_account() {
 
 cleanup() {
   echo "Deleting temporary files..."
-  rm -rf ${WORKSPACE}/${TMP_FOLDER}.*
+  rm -rf ${BIN}/${TMP_FOLDER}.*
   echo "Done."
 }
 
