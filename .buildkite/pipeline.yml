@@ -6,7 +6,6 @@ env:
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
-  DOCKER_REGISTRY_SECRET_PATH: "secret/observability-team/ci/docker-registry/prod"
   BUILDX: 1
 
 steps:
@@ -55,9 +54,6 @@ steps:
 
   - group: "Release"
     key: "release"
-    notify:
-      - github_commit_status:
-          context: "Release / Ubuntu X86_64 && ARM"
 
     steps:
       - label: ":linux: Release / Ubuntu X86_64 - {{matrix.makefile}}"
@@ -65,7 +61,11 @@ steps:
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+<<<<<<< HEAD
         branches: "^(main|\\d+\\.\\d+)$"
+=======
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+>>>>>>> e2878ba (LLVM Apple & FPM pipelines migration (#330))
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
@@ -79,17 +79,27 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+        notify:
+          - github_commit_status:
+              context: "Release / Ubuntu X86_64"
 
       - label: ":linux: Release / Ubuntu ARM - {{matrix.makefile}}"
         key: "release-ubuntu-arm"
         command:
+<<<<<<< HEAD
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         branches: "^(main|\\d+\\.\\d+)$"
+=======
+          - ".buildkite/scripts/build.sh Makefile.debian9"
+          - ".buildkite/scripts/publish.sh Makefile.debian9"
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+>>>>>>> e2878ba (LLVM Apple & FPM pipelines migration (#330))
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+<<<<<<< HEAD
         matrix:
           setup:
             makefile:
@@ -100,14 +110,27 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+=======
+        notify:
+          - github_commit_status:
+              context: "Release / Ubuntu ARM"
+>>>>>>> e2878ba (LLVM Apple & FPM pipelines migration (#330))
 
       - label: "Post-Release"
         key: "post-release"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
+<<<<<<< HEAD
         branches: "^(main|\\d+\\.\\d+)$"
+=======
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+        depends_on:
+          - "release-ubuntu-x86"
+          - "release-ubuntu-arm"
+>>>>>>> e2878ba (LLVM Apple & FPM pipelines migration (#330))
         notify:
           - github_commit_status:
               context: "Post-release"
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+
