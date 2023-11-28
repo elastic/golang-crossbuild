@@ -94,7 +94,7 @@ steps:
               context: "Release / Ubuntu ARM"
 
       - label: "Post-Release"
-        key: "post-release"
+        key: "release-post"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
         if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         depends_on:
