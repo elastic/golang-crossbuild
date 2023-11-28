@@ -1,24 +1,13 @@
 queue_rules:
   - name: default
     conditions:
-      - check-success=beats-ci/pr-merge
+      - check-success=buildkite/golang-crossbuild
       - check-success=CLA
 pull_request_rules:
-  - name: delete upstream branch after merging changes on Jenkinsfile or it's closed
-    conditions:
-      - or:
-        - merged
-        - closed
-      - and:
-        - label=automation
-        - head~=^updatecli
-        - files~=^Jenkinsfile$
-    actions:
-      delete_head_branch:
   - name: automatic approval for automated pull requests with golang bump updates
     conditions:
       - author=apmmachine
-      - check-success=beats-ci/pr-merge
+      - check-success=buildkite/golang-crossbuild
       - label=automation
       - files~=^go/Makefile.common
     actions:
