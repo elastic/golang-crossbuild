@@ -6,11 +6,11 @@ source .buildkite/scripts/common.sh
 
 unset_secrets
 
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" =~ ^build ]]; then
+if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == build* ]]; then
     google_cloud_logout_active_account
 fi
 
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && ("$BUILDKITE_STEP_KEY" =~ ^build || "$BUILDKITE_STEP_KEY" =~ ^publish) ]]; then
+if [[ ( "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple" || "$BUILDKITE_PIPELINE_SLUG" == "fpm") && ( "$BUILDKITE_STEP_KEY" == build* ) ]]; then
     docker logout "${DOCKER_REGISTRY}"
 fi
 
