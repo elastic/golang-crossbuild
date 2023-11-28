@@ -29,7 +29,7 @@ runs:
           vaultUrl: ${{ inputs.vaultUrl }}
           vaultRoleId: ${{ inputs.vaultRoleId }}
           vaultSecretId: ${{ inputs.vaultSecretId }}
-          pipeline: ./.ci/bump-golang.yml
+          pipeline: ./.buildkite/bump-golang.yml
         env:
           BRANCH: ${{ inputs.branch }}
           GO_MINOR: ${{ inputs.go-minor }}
