@@ -21,7 +21,7 @@ if [[ ("$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE
     docker login -u "${DOCKER_USERNAME_SECRET}" -p "${DOCKER_PASSWORD_SECRET}" "${DOCKER_REGISTRY}" 2>/dev/null
 fi
 
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == "post-release" ]]; then
+if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == "release-post" ]]; then
     export GITHUB_TOKEN_SECRET=$(retry 5 vault kv get -field token ${GITHUB_TOKEN_VAULT_PATH})
     export GITHUB_USERNAME_SECRET=$(retry 5 vault kv get -field username ${GITHUB_TOKEN_VAULT_PATH})
     export GITHUB_EMAIL_SECRET=$(retry 5 vault kv get -field email ${GITHUB_TOKEN_VAULT_PATH})
