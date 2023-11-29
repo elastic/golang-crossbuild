@@ -11,25 +11,18 @@ GITHUB_TOKEN_VAULT_PATH="kv/ci-shared/platform-ingest/github_token"
 # Secrets must be redacted
 # https://buildkite.com/docs/pipelines/managing-log-output#redacted-environment-variables
 
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == build* ]]; then
+if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && ( "$BUILDKITE_STEP_KEY" == build* || "$BUILDKITE_STEP_KEY" == release* ) ]]; then
     export PRIVATE_CI_GCS_CREDENTIALS_SECRET=$(retry 5 vault kv get -field plaintext ${PRIVATE_CI_GCS_CREDENTIALS_PATH})
 fi
 
-if [[ ("$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple"  || "$BUILDKITE_PIPELINE_SLUG" == "fpm") && ( "$BUILDKITE_STEP_KEY" == build* ) ]]; then
+if [[ ("$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple"  || "$BUILDKITE_PIPELINE_SLUG" == "fpm") && ( "$BUILDKITE_STEP_KEY" == build* || "$BUILDKITE_STEP_KEY" == release* ) ]]; then
     export DOCKER_USERNAME_SECRET=$(retry 5 vault kv get -field user "${DOCKER_REGISTRY_SECRET_PATH}")
     export DOCKER_PASSWORD_SECRET=$(retry 5 vault kv get -field password "${DOCKER_REGISTRY_SECRET_PATH}")
     docker login -u "${DOCKER_USERNAME_SECRET}" -p "${DOCKER_PASSWORD_SECRET}" "${DOCKER_REGISTRY}" 2>/dev/null
 fi
 
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == "post-release" ]]; then
+if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY" == "release-post" ]]; then
     export GITHUB_TOKEN_SECRET=$(retry 5 vault kv get -field token ${GITHUB_TOKEN_VAULT_PATH})
     export GITHUB_USERNAME_SECRET=$(retry 5 vault kv get -field username ${GITHUB_TOKEN_VAULT_PATH})
     export GITHUB_EMAIL_SECRET=$(retry 5 vault kv get -field email ${GITHUB_TOKEN_VAULT_PATH})
-fi
-
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple" && ("$BUILDKITE_STEP_KEY" =~ ^build)]]; then
-#    export PRIVATE_CI_GCS_CREDENTIALS_SECRET=$(retry 5 vault kv get -field plaintext ${PRIVATE_CI_GCS_CREDENTIALS_PATH})
-    export DOCKER_USERNAME_SECRET=$(retry 5 vault kv get -field user "${DOCKER_REGISTRY_SECRET_PATH}")
-    export DOCKER_PASSWORD_SECRET=$(retry 5 vault kv get -field password "${DOCKER_REGISTRY_SECRET_PATH}")
-    docker login -u "${DOCKER_USERNAME_SECRET}" -p "${DOCKER_PASSWORD_SECRET}" "${DOCKER_REGISTRY}" 2>/dev/null
 fi
