@@ -23,10 +23,14 @@ git_push_with_auth() {
 }
 
 if [[ "${TAG_EXISTS}" == true ]]; then
-  echo "Tag already exists! Exiting Post-release stage."
-  exit 1
+  message="Tag '$TAG' already exists! Exiting Post-release stage."
+  echo "$message"
+  buildkite-agent annotate "$message" --style 'warning' --context 'ctx-warn'
+  # This should return any error but skip the release.
+  exit 0
 fi
 
 set_git_config
 tag_commit
 git_push_with_auth
+buildkite-agent annotate "Tag '$TAG' has been created." --style 'success' --context 'ctx-success'
