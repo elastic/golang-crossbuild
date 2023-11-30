@@ -34,7 +34,7 @@ spec:
       name: golang-crossbuild
       description: 'Pipeline for the golang-crossbuild project'
     spec:
-      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
+      branch_configuration: "main 1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/pipeline.yml"
       maximum_timeout_in_minutes: 120
       provider_settings:
@@ -80,7 +80,7 @@ spec:
       name: llvm-apple
       description: "Pipeline for LLVM Apple version"
     spec:
-      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
+      branch_configuration: "main 1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/llvm-apple-pipeline.yml"
       maximum_timeout_in_minutes: 360 # cmake is taking at least 4h to run
       provider_settings:
@@ -126,7 +126,7 @@ spec:
       name: fpm
       description: "Pipeline for FPM (packaging made simple)"
     spec:
-      branch_configuration: "main v1.*" # temporarily disable to build PRs from forks
+      branch_configuration: "main 1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/fpm-pipeline.yml"
       maximum_timeout_in_minutes: 120
       provider_settings:
