@@ -1,4 +1,4 @@
-[![Build Status](https://beats-ci.elastic.co/buildStatus/icon?job=golang-crossbuild%2Fgolang-crossbuild-mbp%2Fmain)](https://beats-ci.elastic.co/job/golang-crossbuild/job/golang-crossbuild-mbp/job/main/)
+[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg)](https://buildkite.com/elastic/golang-crossbuild)
 
 # golang-crossbuild Docker images
 
