@@ -214,7 +214,7 @@ stateDiagram-v2
 
 ## Releasing images for a new Go version
 
-With every new version of `go` we made a new branch with the name of the previous version to allow continue building the Docker images for the previous version of `go`. So if we are in go `1.19` and go `1.20` is released, we create a new branch `1.19`, the we update the `main` branch to install go `1.20`. Due to the changes in the Debian packages repositories, there is no guaranties that the Docker images for the previous version of `go` will continue to work after some time.
+With every new version of `go` we made a new branch with the name of the previous version to allow us to continue building the Docker images for the previous version of `go`. So if we are in go `1.19` and go `1.20` is released, we create a new branch `1.19`, then we update the `main` branch to install go `1.20` as explained in the below steps: 
 
 1. Update the Docker tag in
    [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/Makefile.common#L5) and/or
@@ -224,9 +224,13 @@ With every new version of `go` we made a new branch with the name of the previou
    [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/base/Dockerfile#L19-L21).
    The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
+1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.20`
+1. Update the `go-minor` value in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-1.20.yml) with the old minor go version, i.e: `1.19`
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
 1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
-1. When merging the PR then the automation will release those docker images.
+1. When merging the PR, the automation will release those docker images.
+
+**NOTE**: Due to the changes in the Debian packages repositories, there are no guarantees that the Docker images for the previous version of `go` will continue to work after some time.
 
 ## Packaging MacOS SDK
 
