@@ -214,18 +214,15 @@ stateDiagram-v2
 
 ## Releasing images for a new Go version
 
-With every new version of `go` we made a new branch with the name of the previous version to allow us to continue building the Docker images for the previous version of `go`. So if we are in go `1.19` and go `1.20` is released, we create a new branch `1.19`, then we update the `main` branch to install go `1.20` as explained in the below steps: 
+With every new version of `go` we made a new branch with the name of the previous version to allow us to continue building the Docker images for the previous version of `go`. So if we are in go `1.21` and go `1.22` is released, we create a new branch `1.21`, then we update the `main` branch to install go `1.22` as explained in the below steps: 
 
+1. Update the Go version in [.go-version](https://github.com/elastic/golang-crossbuild/blob/main/.go-version).
 1. Update the Docker tag in
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.11/Makefile.common#L5) and/or
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go1.12/Makefile.common#L5).
-1. Update the Go version and SHA256 in the
-   [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/base/Dockerfile#L19-L21).
-   The SHA256 must be obtained from <https://golang.org/dl/.>
+   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go/Makefile.common#L5).
+1. Run `.buildkite/bump-go-release-version.sh "$(cat .go-version)"`
 1. Update the versions listed in this README.md.
-1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.20`.
-1. Update the `go-minor` and `branch` values in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-previous.yml) with the old minor go version, i.e: `1.19`.
+1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.22`.
+1. Update the `go-minor` and `branch` values in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-previous.yml) with the old minor go version, i.e: `1.21`.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
 1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
 1. When merging the PR, the automation will release those docker images.
