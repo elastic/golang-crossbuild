@@ -17,6 +17,7 @@ jobs:
       - uses: ./.github/workflows/bump-golang
         with:
           branch: 'main'
+          # NOTE: when a new golang version please update me with 1.<go-version>
           go-minor: '1.21'
           vaultUrl: ${{ secrets.VAULT_ADDR }}
           vaultRoleId: ${{ secrets.VAULT_ROLE_ID }}

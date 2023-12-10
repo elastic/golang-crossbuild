@@ -224,8 +224,8 @@ With every new version of `go` we made a new branch with the name of the previou
    [Dockerfile(s)](https://github.com/elastic/golang-crossbuild/blob/main/go1.10/base/Dockerfile#L19-L21).
    The SHA256 must be obtained from <https://golang.org/dl/.>
 1. Update the versions listed in this README.md.
-1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.20`
-1. Update the `go-minor` value in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-1.20.yml) with the old minor go version, i.e: `1.19`
+1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.20`.
+1. Update the `go-minor` and `branch` values in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-previous.yml) with the old minor go version, i.e: `1.19`.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
 1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
 1. When merging the PR, the automation will release those docker images.
