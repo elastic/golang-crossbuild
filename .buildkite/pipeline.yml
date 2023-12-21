@@ -18,6 +18,8 @@ steps:
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        env:
+          REPOSITORY: "${STAGING_IMAGE}"
         if: build.env("BUILDKITE_PULL_REQUEST") != "false"
         notify:
           - github_commit_status:
