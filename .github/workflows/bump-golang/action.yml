@@ -10,7 +10,7 @@ inputs:
   messageIfFailure:
     description: 'Vault secret ID'
     required: false
-    default: ":traffic_cone: updatecli failed for `${{ github.repository }}@${{ github.ref_name }}`, @agent-team please look what's going on <${{ env.JOB_URL }}|here>"
+    default: ":traffic_cone: updatecli failed for `${{ github.repository }}@${{ github.ref_name }}`, @agent-team please look what's going on <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|here>"
   notifySlackChannel:
     description: 'Vault secret ID'
     required: false
