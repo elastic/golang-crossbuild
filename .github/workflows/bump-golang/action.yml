@@ -7,6 +7,14 @@ inputs:
   go-minor:
     description: 'What Go minor version ([0-9]+.[0.9]+)'
     required: true
+  messageIfFailure:
+    description: 'Vault secret ID'
+    required: false
+    default: ":traffic_cone: updatecli failed for `${{ github.repository }}@${{ github.ref_name }}`, @agent-team please look what's going on <${{ env.JOB_URL }}|here>"
+  notifySlackChannel:
+    description: 'Vault secret ID'
+    required: false
+    default: "#ingest-notifications"
   vaultUrl:
     description: 'Vault URL'
     required: true
@@ -30,6 +38,8 @@ runs:
           vaultRoleId: ${{ inputs.vaultRoleId }}
           vaultSecretId: ${{ inputs.vaultSecretId }}
           pipeline: ./.buildkite/bump-golang.yml
+          notifySlackChannel: ${{ inputs.notifySlackChannel }}
+          messageIfFailure: ${{ inputs.messageIfFailure }}
         env:
           BRANCH: ${{ inputs.branch }}
           GO_MINOR: ${{ inputs.go-minor }}
