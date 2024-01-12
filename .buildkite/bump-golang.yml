@@ -63,15 +63,25 @@ conditions:
       image: golang
       tag: '{{ source "latestGoVersion" }}'
     sourceid: latestGoVersion
-  is:
+## As long as there is a bug see https://github.com/updatecli/updatecli/issues/1849
+## Let's use the shell kind rather than the file kind.
+## When fixed then uncomment the code and remove is-already-updated
+#  is:
+#    name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
+#    disablesourceinput: true
+#    kind: file
+#    spec:
+#      file: go/Makefile.common
+#      line: 5
+#      content: VERSION        := {{ source `latestGoVersion` }}
+#    failwhen: true
+  is-already-updated:
     name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
     disablesourceinput: true
-    kind: file
+    kind: shell
     spec:
-      file: go/Makefile.common
-      line: 5
-      content: VERSION        := {{ source `latestGoVersion` }}
-    failwhen: true
+      command: grep 'VERSION        := {{ source `latestGoVersion` }}' go/Makefile.common && exit 1 || exit 0
+    failwhen: false
 
 targets:
   update-go-version:
