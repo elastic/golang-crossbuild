@@ -3,7 +3,7 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-main${TAG_EXTENSION}
 
-COPY lib /installer
+COPY lib/{{.NPCAP_FILE}} /installer/
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
