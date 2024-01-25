@@ -63,8 +63,6 @@ RUN go install github.com/ibmdb/go_ibm_db/installer@v0.4.5 \
   && cd ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db\@v0.4.5/installer \
   && go run setup.go
 
-RUN
-
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app
