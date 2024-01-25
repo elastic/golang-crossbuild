@@ -59,6 +59,11 @@ RUN curl -sSLO https://storage.googleapis.com/obs-ci-cache/beats/libpcap-1.8.1.t
 	&& tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
   && rm libpcap-1.8.1.tar.gz
 
+RUN go install github.com/ibmdb/go_ibm_db/installer@v0.4.5 \
+  && cd ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db\@v0.4.5/installer \
+  && go run setup.go
+
+RUN
 
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
