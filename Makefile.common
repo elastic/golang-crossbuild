@@ -7,7 +7,7 @@ NPCAP_VERSION := 1.79
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
-GS_BUCKET_PATH ?= obs-ci-cache
+GS_BUCKET_PATH ?= ingest-buildkite-ci
 
 
 ifeq ($(BUILDX),1)
