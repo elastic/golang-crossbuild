@@ -18,11 +18,11 @@ endif
 
 # Requires login at google storage.
 copy-npcap:
-	ifeq ($(CI),true)
-		@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE) 
-	else
-		@echo 'Only available if running in the CI'
-	endif
+ifeq ($(CI),true)
+	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE) 
+else
+	@echo 'Only available if running in the CI'
+endif
 
 push:
 	$(MAKE) atomic-push
