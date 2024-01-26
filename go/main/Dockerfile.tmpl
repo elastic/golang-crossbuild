@@ -27,7 +27,7 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
   libxml2-dev \
   libsqlite3-dev
 
-# For Debian 11 libsystemd-dev must be 247.3-7+deb11u4 because of preinstalled libsystemd0:247.3-7+deb11u4 
+# For Debian 11 libsystemd-dev must be 247.3-7+deb11u4 because of preinstalled libsystemd0:247.3-7+deb11u4
 # See https://github.com/elastic/golang-crossbuild/pull/316
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
   libsystemd-dev{{- if eq .DEBIAN_VERSION "11" }}=247.3-7+deb11u4{{- end }}
@@ -76,6 +76,10 @@ RUN curl -sSLO https://storage.googleapis.com/obs-ci-cache/beats/WpdPack_4_1_2.z
   -k \
   --output-lib /libpcap/win/WpdPack/Lib/x64/libwpcap.a \
   --input-def /libpcap/win/WpdPack/wpcap.def
+
+RUN go install github.com/ibmdb/go_ibm_db/installer@v0.4.5 \
+  && cd ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db\@v0.4.5/installer \
+  && go run setup.go
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
