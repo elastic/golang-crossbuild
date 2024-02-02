@@ -7,7 +7,7 @@ DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 
-export DEBIAN_VERSION TAG_EXTENSION
+export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE
 
 DOCKER_CMD := docker build
 
