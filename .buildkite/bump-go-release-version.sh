@@ -23,6 +23,17 @@ MAJOR_MINOR_VERSION=$(echo "$GO_RELEASE_VERSION" | sed -E -e "s#([0-9]+\.[0-9]+)
 GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-arm64.tar.gz\")) | .sha256")
 GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-amd64.tar.gz\")) | .sha256")
 
+## As long as https://golang.org/dl/?mode=json supports only 2 major versions
+## and there is a new major release, then it's required to parse https://golang.org/dl
+## see https://github.com/elastic/golang-crossbuild/pull/389/commits/d0af04f97a2381630ea5e8da5a99f50cf27856a0
+if [ -z "$GOLANG_DOWNLOAD_SHA256_ARM" ] ; then
+    GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl | grep go${GO_RELEASE_VERSION}.linux-arm64.tar.gz -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
+fi
+
+if [ -z "$GOLANG_DOWNLOAD_SHA256_AMD" ] ; then
+    GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl | grep go${GO_RELEASE_VERSION}.linux-amd64.tar.gz -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
+fi
+
 echo "Update go version ${GO_RELEASE_VERSION}"
 
 find "go" -type f -name Dockerfile.tmpl -print0 |
