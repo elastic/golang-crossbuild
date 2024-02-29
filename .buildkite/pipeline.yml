@@ -7,6 +7,7 @@ env:
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   BUILDX: 1
+  GOFLAGS: "-buildvcs=false"
 
 steps:
   - group: "Staging"
