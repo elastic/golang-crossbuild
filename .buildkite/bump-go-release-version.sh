@@ -31,7 +31,7 @@ if [ -z "$GOLANG_DOWNLOAD_SHA256_ARM" ] ; then
 fi
 
 if [ -z "$GOLANG_DOWNLOAD_SHA256_AMD" ] ; then
-    GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl | grep go${GO_RELEASE_VERSION}.linux-amd64.tar.gz -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
+    GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl | grep go${GO_RELEASE_VERSION}.linux-amd64.tar.gz -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
 fi
 
 echo "Update go version ${GO_RELEASE_VERSION}"
