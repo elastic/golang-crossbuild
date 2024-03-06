@@ -18,7 +18,7 @@ jobs:
         with:
           branch: 'main'
           # NOTE: when a new golang version please update me with 1.<go-version>
-          go-minor: '1.21'
+          go-minor: '1.22'
           vaultUrl: ${{ secrets.VAULT_ADDR }}
           vaultRoleId: ${{ secrets.VAULT_ROLE_ID }}
           vaultSecretId: ${{ secrets.VAULT_SECRET_ID }}
