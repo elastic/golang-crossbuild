@@ -105,6 +105,7 @@ func buildEnvironment(platform string) (map[string]string, error) {
 		"GOARCH":      goarch,
 		"GOARM":       goarm,
 		"PLATFORM_ID": platformID,
+		"GOFLAGS": "-buildvcs=false",
 	}
 
 	if err := loadCompilerSettings(goos, arch, env); err != nil {
