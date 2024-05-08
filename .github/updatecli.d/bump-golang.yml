@@ -108,6 +108,6 @@ targets:
     sourceid: latestGoVersion
     scmid: githubConfig
     spec:
-      command: .buildkite/bump-go-release-version.sh
+      command: .github/updatecli.d/bump-go-release-version.sh
       environments:
         - name: PATH
