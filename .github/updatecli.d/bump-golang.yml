@@ -6,13 +6,12 @@ scms:
   githubConfig:
     kind: github
     spec:
-      user: '{{ requiredEnv "GIT_USER" }}'
-      email: '{{ requiredEnv "GIT_EMAIL" }}'
+      user: '{{ requiredEnv "GITHUB_ACTOR" }}'
       owner: elastic
       repository: golang-crossbuild
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GIT_USER" }}'
       branch: '{{ requiredEnv "BRANCH" }}'
+      commitusingapi: true
 
 actions:
   default:
