@@ -13,8 +13,8 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/workflows/bump-golang
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/bump-golang
         with:
           branch: 'main'
           # NOTE: when a new golang version please update me with 1.<go-version>
