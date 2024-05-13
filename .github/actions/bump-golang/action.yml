@@ -41,6 +41,7 @@ runs:
           vaultUrl: ${{ inputs.vaultUrl }}
           vaultRoleId: ${{ inputs.vaultRoleId }}
           vaultSecretId: ${{ inputs.vaultSecretId }}
+          command: ${{ inputs.command }}
           pipeline: ./.buildkite/bump-golang.yml
           notifySlackChannel: ${{ inputs.notifySlackChannel }}
           messageIfFailure: ${{ inputs.messageIfFailure }}
