@@ -24,7 +24,7 @@ jobs:
           tag=${GITHUB_REF/refs\/tags\//}
           version=${tag#v}
           echo "::set-output name=version::${version}"
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v6
         with:
           version: ${{ steps.version.outputs.version }}
           publish: true
