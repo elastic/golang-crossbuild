@@ -219,7 +219,7 @@ With every new version of `go` we made a new branch with the name of the previou
 1. Update the Go version in [.go-version](https://github.com/elastic/golang-crossbuild/blob/main/.go-version).
 1. Update the Docker tag in
    [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go/Makefile.common#L5).
-1. Run `.buildkite/bump-go-release-version.sh "$(cat .go-version)"`
+1. Run `.github/updatecli.d/bump-go-release-version.sh "$(cat .go-version)"`
 1. Update the versions listed in this README.md.
 1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.22`.
 1. Update the `go-minor` and `branch` values in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-previous.yml) with the old minor go version, i.e: `1.21`.

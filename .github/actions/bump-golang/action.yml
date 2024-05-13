@@ -24,6 +24,10 @@ inputs:
   vaultSecretId:
     description: 'Vault secret ID'
     required: true
+  command:
+    description: 'What updatecli command'
+    default: 'apply'
+    required: false
 
 runs:
   using: "composite"
@@ -37,6 +41,7 @@ runs:
           vaultUrl: ${{ inputs.vaultUrl }}
           vaultRoleId: ${{ inputs.vaultRoleId }}
           vaultSecretId: ${{ inputs.vaultSecretId }}
+          command: ${{ inputs.command }}
           pipeline: ./.buildkite/bump-golang.yml
           notifySlackChannel: ${{ inputs.notifySlackChannel }}
           messageIfFailure: ${{ inputs.messageIfFailure }}
