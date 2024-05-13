@@ -24,6 +24,10 @@ inputs:
   vaultSecretId:
     description: 'Vault secret ID'
     required: true
+  command:
+    description: 'What updatecli command'
+    default: 'apply'
+    required: false
 
 runs:
   using: "composite"
