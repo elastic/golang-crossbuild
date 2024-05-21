@@ -12,6 +12,9 @@ permissions:
 jobs:
   bump:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/bump-golang
@@ -19,7 +22,6 @@ jobs:
           branch: 'main'
           # NOTE: when a new golang version please update me with 1.<go-version>
           go-minor: '1.22'
-          vaultUrl: ${{ secrets.VAULT_ADDR }}
-          vaultRoleId: ${{ secrets.VAULT_ROLE_ID }}
-          vaultSecretId: ${{ secrets.VAULT_SECRET_ID }}
           command: '--experimental apply'
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
