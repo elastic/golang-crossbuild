@@ -42,6 +42,7 @@ runs:
           BRANCH: ${{ inputs.branch }}
           GO_MINOR: ${{ inputs.go-minor }}
           GITHUB_TOKEN: ${{ inputs.github-token }}
+        shell: bash
 
       - if: ${{ failure()  }}
         uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e # v1.26.0
