@@ -42,6 +42,7 @@ runs:
           BRANCH: ${{ inputs.branch }}
           GO_MINOR: ${{ inputs.go-minor }}
           GITHUB_TOKEN: ${{ inputs.github-token }}
+          GIT_USER: "github-actions[bot]"
         shell: bash
 
       - if: ${{ failure()  }}
