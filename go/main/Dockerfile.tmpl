@@ -27,10 +27,8 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
   libxml2-dev \
   libsqlite3-dev
 
-# For Debian 11 libsystemd-dev must be 247.3-7+deb11u4 because of preinstalled libsystemd0:247.3-7+deb11u4 
-# See https://github.com/elastic/golang-crossbuild/pull/316
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
-  libsystemd-dev{{- if eq .DEBIAN_VERSION "11" }}=247.3-7+deb11u4{{- end }}
+  libsystemd-dev
 {{- end }}
 
 {{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
