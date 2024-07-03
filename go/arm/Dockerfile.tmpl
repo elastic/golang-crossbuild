@@ -44,7 +44,7 @@ RUN apt install -y \
 # For Debian 11 libsystemd-dev must be 247.3-7+deb11u4 because of preinstalled libsystemd0:247.3-7+deb11u4 
 # See https://github.com/elastic/golang-crossbuild/pull/316
 RUN apt install -y \
-        libsystemd-dev:arm64{{- if eq .DEBIAN_VERSION "11"}}=247.3-7+deb11u4{{- end }}
+        libsystemd-dev:arm64
 {{- end }}
 
 ARG REPOSITORY
