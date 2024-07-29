@@ -4,7 +4,8 @@ set -euo pipefail
 
 source .buildkite/scripts/common.sh
 
-TAG="v$1"
+#TAG="v$1"
+TAG="vPAT-test"
 TAG_EXISTS=$(tag_Exists ${TAG})
 
 set_git_config() {
