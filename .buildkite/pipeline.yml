@@ -98,10 +98,10 @@ steps:
       - label: "Post-Release"
         key: "release-post"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
-#        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
-#        depends_on:
-#          - "release-ubuntu-x86"
-#          - "release-ubuntu-arm"
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+        depends_on:
+          - "release-ubuntu-x86"
+          - "release-ubuntu-arm"
         notify:
           - github_commit_status:
               context: "Post-release"
