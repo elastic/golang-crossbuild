@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/bump-golang
         with:
-          branch: 'test/bump'
+          branch: 'main'
           # NOTE: when a new golang version please update me with 1.<go-version>
           go-minor: '1.22'
           command: '--experimental apply'
