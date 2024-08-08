@@ -8,7 +8,7 @@ scms:
     spec:
       user: '{{ requiredEnv "GITHUB_ACTOR" }}'
       username: '{{ requiredEnv "GITHUB_ACTOR" }}'
-      owner: v1v
+      owner: elastic
       repository: golang-crossbuild
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
       branch: '{{ requiredEnv "BRANCH" }}'
