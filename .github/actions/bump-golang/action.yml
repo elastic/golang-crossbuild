@@ -18,7 +18,7 @@ inputs:
   slack-channel-id:
     description: 'Slack channel ID'
     required: false
-    default: "#on-week-oblt-productivity"
+    default: "#ingest-notifications"
   slack-bot-token:
     description: 'Specify the slack bot token.'
     required: true
