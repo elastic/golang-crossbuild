@@ -36,7 +36,7 @@ runs:
         uses: updatecli/updatecli-action@3a8785d88ec4fa03d86521a181f37c0e74627463 # v2.64.0
 
       - name: Run Updatecli in Apply mode
-        run: updatecli ${{ env.COMMAND }} --config ./.github/updatecli.d/bump-golang.yml --debug
+        run: updatecli ${{ env.COMMAND }} --config ./.github/updatecli.d/bump-golang.yml
         env:
           COMMAND: ${{ inputs.command }}
           BRANCH: ${{ inputs.branch }}
