@@ -7,6 +7,7 @@ scms:
     kind: github
     spec:
       user: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       owner: elastic
       repository: golang-crossbuild
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
@@ -49,7 +50,7 @@ sources:
       owner: golang
       repository: go
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GIT_USER" }}'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       versionfilter:
         kind: regex
         pattern: go1\.{{ source "minor" }}(\.(\d*))?$
