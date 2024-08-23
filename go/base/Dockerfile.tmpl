@@ -48,6 +48,7 @@ COPY rootfs /
 RUN ldd --version
 
 WORKDIR /
+RUN go run golang.org/x/telemetry/cmd/gotelemetry@latest off
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && go get -d . \
     && go build -o /crossbuild /entrypoint.go \
