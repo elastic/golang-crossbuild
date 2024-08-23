@@ -48,7 +48,7 @@ COPY rootfs /
 RUN ldd --version
 
 WORKDIR /
-RUN go run golang.org/x/telemetry/cmd/gotelemetry@latest off
+RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && go get -d . \
     && go build -o /crossbuild /entrypoint.go \
