@@ -23,3 +23,7 @@ fi
 
 tar -C /usr/local -xzf "${GO_TAR_FILE}"
 rm "${GO_TAR_FILE}"
+
+# Fixes can't start telemetry child process
+mkdir -p "$HOME"/.config/go/telemetry
+echo "off 2024-08-23" > "$HOME"/.config/go/telemetry/mode

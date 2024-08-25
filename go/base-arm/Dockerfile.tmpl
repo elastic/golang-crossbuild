@@ -45,6 +45,7 @@ RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
 	&& tar -C /usr/local -xzf golang.tar.gz \
 	&& rm golang.tar.gz
+RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
@@ -61,7 +62,6 @@ RUN ldd --version
 RUN go version
 
 WORKDIR /
-RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
     && echo ">>> run go get -d" \
     && go get -d . \
