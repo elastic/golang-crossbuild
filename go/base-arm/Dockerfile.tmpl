@@ -57,9 +57,6 @@ COPY rootfs /
 # show the GLIBC version
 RUN ldd --version
 
-# show the go version
-RUN go version
-
 WORKDIR /
 
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
