@@ -37,7 +37,7 @@ RUN chmod ugo+rx /tmp/install-go.sh \
   && rm /tmp/install-go.sh
 
 ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+ENV PATH $PATH:/usr/local/go/bin
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
