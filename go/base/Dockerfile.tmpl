@@ -38,7 +38,6 @@ RUN chmod ugo+rx /tmp/install-go.sh \
 
 ENV GOPATH /go
 ENV PATH $PATH:/usr/local/go/bin
-ENV GOROOT=
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
@@ -55,6 +54,7 @@ RUN go version \
     && echo ">>> run go get -d" \
     && go get -d . \
     && echo ">>> run go build" \
+    && go env -u GOROOT \
     && go env \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
