@@ -54,7 +54,7 @@ RUN ldd --version
 
 WORKDIR /
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
-RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION
+RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && go get . \
     && go env \
     && echo "toolcompile=$(go tool compile -V)" \
