@@ -54,7 +54,7 @@ RUN go version \
     && echo ">>> run go get -d" \
     && go get -d . \
     && echo ">>> run go build" \
-    && go build -o /crossbuild \
+    && go build \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
 RUN curl -sSLO https://storage.googleapis.com/obs-ci-cache/beats/libpcap-1.8.1.tar.gz \
