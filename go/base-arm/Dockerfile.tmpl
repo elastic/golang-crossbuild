@@ -62,7 +62,7 @@ WORKDIR /
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 RUN echo "#!/bin/bash\n" \
          "if [ \"$1\" = \"/usr/lib/go/pkg/tool/linux_amd64/compile\" ]; then echo \"compile version go1.23.0\" && exit 0; fi\n" \
-         "\exec "$@\" || echo \"$@\"\n" > /root/toolexec.sh
+         "\exec \"$@\" || echo \"$@\"\n" > /root/toolexec.sh
 RUN chmod +x /root/toolexec.sh
 RUN go version \
     && go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
