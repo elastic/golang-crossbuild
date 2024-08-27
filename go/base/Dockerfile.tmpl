@@ -54,7 +54,7 @@ RUN echo "#!/bin/bash\n" \
          "if [ -z \"$$1\" ]; then echo \"compile version go1.23.0\" && exit 0; fi\n" \
          "if [ -n \"$$1\" ]; then exec \"$$@\" && exit 0; fi\n" > /root/toolexec.sh
 RUN chmod +x /root/toolexec.sh && chmod 777 /root/toolexec.sh
-RUN cat /root/toolexec.sh
+RUN cat /root/toolexec.sh | echo
 RUN go version \
     && go mod init github.com/elastic/golang-crossbuild \
     && echo ">>> run go get -d" \
