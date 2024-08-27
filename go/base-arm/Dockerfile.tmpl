@@ -60,18 +60,18 @@ RUN ldd --version
 WORKDIR /
 
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
-RUN echo "#!/bin/env sh\n" \
+RUN echo "#!/bin/bash\n" \
          "if [ \"$1\" = \"/usr/lib/go/pkg/tool/linux_amd64/compile\" ]; then echo \"compile version go1.23.0\" && exit 0; fi\n" \
-         "\exec "$@\"\n" > toolexec.sh
-RUN chmod +x toolexec.sh
+         "\exec "$@\"\n" > /root/toolexec.sh
+RUN chmod +x /root/toolexec.sh
 RUN go version \
     && go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
     && echo ">>> run go get -d" \
     && go get -d . \
     && echo ">>> run go build" \
     && go env \
-    && go tool compile -V \
-    && go build -toolexec="/toolexec.sh" -o /crossbuild /entrypoint.go \
+    && echo "toolcompile=$(go tool compile -V)" \
+    && go build -toolexec="/root/toolexec.sh" -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
 RUN curl -sSLO https://storage.googleapis.com/obs-ci-cache/beats/libpcap-1.8.1.tar.gz \
