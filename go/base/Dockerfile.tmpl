@@ -55,6 +55,7 @@ RUN go version \
     && go get -d . \
     && echo ">>> run go build" \
     && go env \
+    && go tool compile -V \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
