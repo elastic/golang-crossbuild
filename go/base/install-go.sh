@@ -21,5 +21,5 @@ if [ "$(uname -m)" != "x86_64" ]; then
     echo "$GOLANG_DOWNLOAD_SHA256_ARM  ${GO_TAR_FILE}" | sha256sum -c -
 fi
 
-tar -C /usr/local -xzf "${GO_TAR_FILE}"
+rm -rf /usr/local/go && tar -C /usr/local -xzf "${GO_TAR_FILE}"
 rm "${GO_TAR_FILE}"
