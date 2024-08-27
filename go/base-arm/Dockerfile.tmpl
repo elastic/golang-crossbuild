@@ -65,7 +65,7 @@ RUN go version \
     && echo ">>> run go get -d" \
     && go get -d . \
     && echo ">>> run go build" \
-    && go env -u GOROOT \
+    && go env -w GOROOT= \
     && go env \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
