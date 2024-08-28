@@ -46,8 +46,10 @@ find "go" -type f -name Dockerfile.tmpl -print0 |
         fi
     done
 
-if [ -e go/base/install-go.sh ] ; then
-    ${SED} -E -e "s#(GOLANG_VERSION)=[0-9]+\.[0-9]+(\.[0-9]+)?#\1=${GO_RELEASE_VERSION}#g" go/base/install-go.sh
-    ${SED} -E -e "s#(GOLANG_DOWNLOAD_SHA256_AMD)=.+#\1=${GOLANG_DOWNLOAD_SHA256_AMD}#g" go/base/install-go.sh
-    ${SED} -E -e "s#(GOLANG_DOWNLOAD_SHA256_ARM)=.+#\1=${GOLANG_DOWNLOAD_SHA256_ARM}#g" go/base/install-go.sh
-fi
+for install_file in go/base/install-go.sh go/base-arm/install-go.sh ; do
+    if [ -e $install_file ] ; then
+        ${SED} -E -e "s#(GOLANG_VERSION)=[0-9]+\.[0-9]+(\.[0-9]+)?#\1=${GO_RELEASE_VERSION}#g" $install_file
+        ${SED} -E -e "s#(GOLANG_DOWNLOAD_SHA256_AMD)=.+#\1=${GOLANG_DOWNLOAD_SHA256_AMD}#g" $install_file
+        ${SED} -E -e "s#(GOLANG_DOWNLOAD_SHA256_ARM)=.+#\1=${GOLANG_DOWNLOAD_SHA256_ARM}#g" $install_file
+    fi
+done
