@@ -37,10 +37,15 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
-COPY install-go.sh /tmp/install-go.sh
-RUN chmod ugo+rx /tmp/install-go.sh \
-  && /tmp/install-go.sh \
-  && rm /tmp/install-go.sh
+ARG GOLANG_VERSION=1.23.0
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
+ARG GOLANG_DOWNLOAD_SHA256=62788056693009bcf7020eedc778cdd1781941c6145eab7688bd087bce0f8659
+
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& rm -rf /usr/local/go \
+	&& tar -C /usr/local -xzf golang.tar.gz \
+	&& rm golang.tar.gz
 
 ENV GOPATH /go
 ENV PATH $PATH:/usr/local/go/bin
