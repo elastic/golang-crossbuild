@@ -37,7 +37,7 @@ ARG GOLANG_DOWNLOAD_SHA256=905a297f19ead44780548933e0ff1a1b86e8327bb459e92f9c001
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
-        && rm -rf /usr/local/go \
+	&& rm -rf /usr/local/go \
 	&& tar -C /usr/local -xzf golang.tar.gz \
 	&& rm golang.tar.gz
 
