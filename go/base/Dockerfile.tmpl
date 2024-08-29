@@ -31,13 +31,18 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
-COPY install-go.sh /tmp/install-go.sh
-RUN chmod ugo+rx /tmp/install-go.sh \
-  && /tmp/install-go.sh \
-  && rm /tmp/install-go.sh
+ARG GOLANG_VERSION=1.23.0
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ARG GOLANG_DOWNLOAD_SHA256=905a297f19ead44780548933e0ff1a1b86e8327bb459e92f9c0012569f76f5e3
+
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& rm -rf /usr/local/go \
+	&& tar -C /usr/local -xzf golang.tar.gz \
+	&& rm golang.tar.gz
 
 ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+ENV PATH $PATH:/usr/local/go/bin
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
@@ -48,9 +53,12 @@ COPY rootfs /
 RUN ldd --version
 
 WORKDIR /
+RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
-    && go get -d . \
-    && go build -o /crossbuild /entrypoint.go \
+    && go get . \
+    && go env \
+    && echo "toolcompile=$(go tool compile -V)" \
+    && CGO_ENABLED=0 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
 RUN curl -sSLO https://storage.googleapis.com/obs-ci-cache/beats/libpcap-1.8.1.tar.gz \

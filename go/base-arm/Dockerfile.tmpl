@@ -37,17 +37,18 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.22.6
+ARG GOLANG_VERSION=1.23.0
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=c15fa895341b8eaf7f219fada25c36a610eb042985dc1a912410c1c90098eaf2
+ARG GOLANG_DOWNLOAD_SHA256=62788056693009bcf7020eedc778cdd1781941c6145eab7688bd087bce0f8659
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& rm -rf /usr/local/go \
 	&& tar -C /usr/local -xzf golang.tar.gz \
 	&& rm golang.tar.gz
 
 ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+ENV PATH $PATH:/usr/local/go/bin
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
@@ -58,8 +59,12 @@ COPY rootfs /
 RUN ldd --version
 
 WORKDIR /
+
+RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
-    && go get -d . \
+    && go get . \
+    && go env \
+    && echo "toolcompile=$(go tool compile -V)" \
     && go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
