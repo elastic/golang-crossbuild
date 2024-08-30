@@ -1,7 +1,6 @@
 |                   | main | 1.21 |
 |-------------------|------|-|
 | golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.21)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.21)|
-| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.21)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.21)|
 | fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.21)](https://buildkite.com/elastic/fpm/builds?branch=1.21)|
 
 
@@ -23,8 +22,6 @@ To do that the project provides a set of Docker images that can be used to build
 * linux/ppc64le
 * linux/s390x
 * windows/amd64
-* darwin/amd64
-* darwin/arm64
 
 The Docker images are based on Debian and the cross compilers are installed using the crossbuild-essential package.
 Each architecture has its own folder with the files needed to build the Docker image for that architecture.
@@ -36,7 +33,7 @@ Each architecture folder has a `roofs` folder that contains the files that will 
 In `rootfs` we have the `compolers.yml` file that contains the list of compilers that will be installed in the Docker image.
 Each Docker image has a basic compilation test that is executed when the image is built. This test uses `rootfs/helloworld.c` file to compile a simple C program and verify the architecture of the result binary.
 The compiler used to build the binaries is LLVM.
-Some of the Docker images are build for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.buildkite/scripts/buildx.sh` command.
+Some of the Docker images are build for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64. This is done using the `.buildkite/scripts/buildx.sh` command.
 
 The Docker images are tagged using the following format:
 
@@ -56,7 +53,6 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armel` - linux/armv5, linux/armv6
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-armhf` - linux/armv7
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-base`
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/amd64
@@ -91,8 +87,6 @@ Until Golang version 1.15
 | linux/arm64 | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
 | linux/{armv5,armv6} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
 | linux/{armv7} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
-| darwin/{386} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.15.14-darwin` |
-| darwin/{amd64} | `1.10.8-darwin` | `1.11.13-darwin` | `1.12.12-darwin` | `1.13.12-darwin` | `1.14.15-darwin` | `1.15.14-darwin` |
 | linux/{ppc64,ppc64le} | `1.10.8-ppc` | `1.11.13-ppc` | `1.12.12-ppc` | `1.13.12-ppc` | `1.14.15-ppc` | `1.15.14-ppc` |
 | linux/{mips,mipsle,mips64,mips64le} | `1.10.8-mips` | `1.11.13-mips` | `1.12.12-mips` | `1.13.12-mips` | `1.14.15-mips` |
 | linux/{mips64,mips64le} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
@@ -175,7 +169,7 @@ make -C go -f Makefile.debian10 build push IMAGES=arm
 
 ## Multiarch Docker images
 
-Some of the Docker images are built for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64, darwin/amd64, and darwin/arm64. This is done using the `.buildkite/scripts/buildx.sh` command.
+Some of the Docker images are built for the amd64 and arm64 architectures, this allow to run the Docker images in linux/amd64, linux/arm64. This is done using the `.buildkite/scripts/buildx.sh` command.
 To choose if build a Docker image for amd64 and arm64 or only for amd64, The Makefiles check fot the value o `BUILDX` and `DOCKER_MULTIARCH` variables. In the target Makefile the `DOCKER_COMMAND` is replaced with the `.buildkite/scripts/buildx.sh` command.
 
 ```make
@@ -198,13 +192,10 @@ stateDiagram-v2
     Debian --> base
     Debian --> base_arm
     Debian --> llvm_apple
-    llvm_apple --> darwing_arm64
     base --> arm
     base --> armel
     base --> armhf
     base --> main
-    base --> darwin
-    base --> darwing_arm64
     base --> mips
     base --> mips32
     base --> npcap
@@ -292,23 +283,6 @@ The `main` image is the base image for the `amd64` architecture, it is build for
 It is used to cross compile for `linux/amd`, `linux/amd64`, `win/amd`, and `win/amd64`.
 This Docker immage add two libraries to the `base` image, `libpcap` and `WpdPack` to be able to capture network packages on diferent OS.
 Thes two libraries are precompiled and stores at https://storage.googleapis.com/obs-ci-cache.
-
-## go/darwin Docker image
-
-The `darwin` image is the base image for the MacOSX cross compilation, it is build for Debian 8+.
-It can compiles for `darwin/amd` (Debian 10+), `darwin/amd64`, `darwin/arm64`, `darwin/arm64e`, and universal binaries.
-This Docker image is based on the `base` image.
-It uses [osxcross](https://codeload.github.com/tpoechtrager/osxcross) to configure the crosscompile for MacOSX.
-This image require a MacOSX SDK to be installed in the Docker image,
-for the instructions to package the MacOS SDK see the [Packaging MacOS SDK](#packaging-macos-sdk) section.
-
-## go/darwin-arm64 Docker image
-
-The `darwin-arm64` image is the base image for the MacOSX cross compilation, it is build for Debian 10+.
-It can compiles for `darwin/amd64`, `darwin/arm64`, and `darwin/arm64e`, and universal binaries.
-This Docker image is based on the `base` image.
-It uses the `llvm-apple` image to cross compile for MacOSX.
-The `darwin-arm64` can replace the `darwin` image in the future, it is faster to build and it does not need to build [osxcross](https://codeload.github.com/tpoechtrager/osxcross) and uses the official LLVM fork from Apple so it support enhacement for `darwin` architectures.
 
 ## go/arm Docker image
 
