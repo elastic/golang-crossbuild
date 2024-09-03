@@ -181,8 +181,8 @@ endif
 ## Docker images dependencies
 
 The Docker images depends on each other, so there is an order to build them.
-The are two Docker images that are parent of all the other images, the `fpm` and the `go/llvm-apple`.
-Anytime a new Debian version is released, the `fpm` and `go/llvm-apple` image needs to be updated to use the new Debian version.
+The Docker image that is parent of all the other images is the `fpm`.
+Anytime a new Debian version is released, the `fpm` image needs to be updated to use the new Debian version.
 The following diagram shows the dependencies between the Docker images.
 
 ```mermaid
@@ -191,7 +191,6 @@ stateDiagram-v2
     Debian --> fpm
     Debian --> base
     Debian --> base_arm
-    Debian --> llvm_apple
     base --> arm
     base --> armel
     base --> armhf
@@ -250,14 +249,6 @@ GOARM, PLATFORM_ID, CC, and CXX.
 ## fpm Docker image
 
 This Docker image install the [fpm](https://github.com/jordansissel/fpm) tool that is used to build packages.
-
-## go/llvm-apple Docker image
-
-The LLVM compiler present in Debian does not support arm64e architecture, so we need to build our own LLVM compiler to support this architecture.
-The llvm-apple Docker image is based on [Apple LLVM fork](https://github.com/apple/llvm-project) and [osxcross](https://codeload.github.com/tpoechtrager/osxcross). The image build the LLVM compiler and configure the image to be able to cross compile for MacOSX.
-
-LLVM need a SDK for macOS, the MacOSX-SDK used in the Docker image must be genarated from a MacOSX machine.
-For the instructions to package the MacOS SDK see the [Packaging MacOS SDK](#packaging-macos-sdk) section.
 
 ## go/base Docker image
 
