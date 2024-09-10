@@ -39,7 +39,7 @@ RUN apt install -y \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
 # librpm-dev
 RUN apt install -y \
-        librpm-dev:armel
+        librpm-dev:armel libxml2:armel
 
 # libsystemd-dev
 RUN apt install -y \
