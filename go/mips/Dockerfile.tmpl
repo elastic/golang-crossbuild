@@ -46,11 +46,11 @@ RUN apt install -y \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
 # librpm-dev
 RUN apt install -y \
-        librpm-dev:mips64el
+        librpm-dev:mips64el libxml2:mips64el
 
 # libsystemd-dev
 RUN apt install -y \
-        libsystemd-dev:mips64el
+        libsystemd-dev:mips64el 
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
