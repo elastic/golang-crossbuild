@@ -43,7 +43,7 @@ RUN apt install -y \
 
 # libsystemd-dev
 RUN apt install -y \
-        libsystemd-dev:armel
+        libsystemd-dev:armel libsystemd0:armel
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
