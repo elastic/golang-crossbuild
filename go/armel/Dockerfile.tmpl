@@ -42,8 +42,8 @@ RUN apt install -y \
         librpm-dev:armel libxml2:armel
 
 # libsystemd-dev
-RUN apt install -y \
-        libsystemd-dev:armel libsystemd0:armel
+RUN apt-get install -y --allow-remove-essential \
+        libsystemd-dev:armel libsystemd0:armel liblz4-1:armel
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
