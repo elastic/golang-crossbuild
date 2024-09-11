@@ -22,6 +22,7 @@ To do that the project provides a set of Docker images that can be used to build
 * linux/ppc64
 * linux/ppc64le
 * linux/s390x
+* linux/riscv64
 * windows/amd64
 * darwin/amd64
 * darwin/arm64
@@ -71,6 +72,8 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc-debian12` - linux/ppc64, linux/ppc64le
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian11` - linux/s390x
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian12` - linux/s390x
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-riscv64-debian11` - linux/riscv64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-riscv64-debian12` - linux/riscv64
 
 ### glibc
 

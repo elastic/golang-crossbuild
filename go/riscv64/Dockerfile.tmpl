@@ -1,0 +1,76 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
+
+RUN dpkg --add-architecture riscv64 \
+    && apt update -y --no-install-recommends \
+    && apt upgrade -y --no-install-recommends \
+    && apt full-upgrade -y --no-install-recommends \
+    && apt install -qq -y --no-install-recommends \
+        g++-riscv64-linux-gnu \
+        gcc-riscv64-linux-gnu
+
+RUN apt install -qq -y \
+        libc-dev:riscv64 \
+        libpopt-dev:riscv64 \
+        linux-libc-dev:riscv64
+
+{{- if eq .DEBIAN_VERSION "9" }}
+RUN apt install -qq -y \
+        libelf1:riscv64 \
+        libicu-dev:riscv64 \
+        libicu57:riscv64 \
+        librpm-dev:riscv64 \
+        libxml2-dev:riscv64 \
+        libxml2:riscv64 \
+        librpm3:riscv64 \
+        librpmio3:riscv64 \
+        librpmbuild3:riscv64 \
+        librpmsign3:riscv64 \
+        libsqlite3-dev:riscv64 \
+        libnss3:riscv64 \
+        libsqlite3-0:riscv64
+
+# RUN apt install -y \
+#         libsystemd-dev:riscv64 libsystemd0:riscv64 liblz4-1:riscv64
+{{- end }}
+
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
+# librpm-dev
+RUN apt install -y \
+        librpm-dev:riscv64
+
+# libsystemd-dev
+RUN apt install -y \
+        libsystemd-dev:riscv64
+{{- end }}
+
+RUN rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+# Basic test
+RUN cd / \
+  && riscv64-linux-gnu-gcc helloWorld.c -o helloWorld \
+  && file helloWorld \
+  && readelf -h helloWorld \
+  && readelf -h helloWorld | grep -c 'RISC-V' \
+  && readelf -h helloWorld | grep -c 'ELF64' \
+  && readelf -h helloWorld | grep -c "little endian" \
+  && rm helloWorld.c helloWorld
+
+RUN cd /libpcap/libpcap-1.8.1 \
+	&& CC=riscv64-linux-gnu-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=riscv64-unknown-linux-gnu --with-pcap=linux \
+	&& make
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"

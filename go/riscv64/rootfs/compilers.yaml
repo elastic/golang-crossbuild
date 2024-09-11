@@ -1,0 +1,6 @@
+---
+
+linux:
+  riscv64:
+    CC:  riscv64-linux-gnu-gcc
+    CXX: riscv64-linux-gnu-g++
