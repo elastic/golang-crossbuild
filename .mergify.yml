@@ -1,5 +1,6 @@
 queue_rules:
   - name: default
+    merge_method: squash
     conditions:
       - check-success=buildkite/golang-crossbuild
       - check-success=CLA
@@ -51,7 +52,6 @@ pull_request_rules:
       - files~=^go/Makefile.common
     actions:
       queue:
-        method: squash
         name: default
   - name: notify the backport has not been merged yet
     conditions:
