@@ -42,6 +42,7 @@ RUN apt install -y \
         librpm-dev:armel libxml2:armel
 
 # libsystemd-dev
+RUN dpkg -s libsystemd0:armel | grep Version
 RUN apt install -y \
         libsystemd-dev:armel{{- if eq .DEBIAN_VERSION "11"}}=247.3-7+deb11u4{{- end }}
 {{- end }}
