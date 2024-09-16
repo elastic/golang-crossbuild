@@ -14,7 +14,8 @@ RUN dpkg --add-architecture armel \
 RUN apt install -qq -y \
         libc-dev:armel \
         libpopt-dev:armel \
-        linux-libc-dev:armel
+        linux-libc-dev:armel \
+        libsystemd-dev:armel libsystemd0:armel liblz4-1:armel
 
 {{- if eq .DEBIAN_VERSION "9"}}
 # librpm-dev
