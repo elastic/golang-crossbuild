@@ -39,7 +39,6 @@ template: |
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-arm-debian11` - linux/armv5, linux/armv6
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-arm-debian12` - linux/armv5, linux/armv6
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armel` - linux/armv5, linux/armv6
-  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armel-debian9` - linux/armv5, linux/armv6
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armel-debian12` - linux/armv5, linux/armv6
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armhf` - linux/armv7
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-armhf-debian9` - linux/armv7

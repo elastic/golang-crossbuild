@@ -317,7 +317,7 @@ It is used to cross compile for `linux/arm64`. This Docker image is based on the
 
 ## go/armel Docker image
 
-The `armel` image is the base image for the `armel` architecture, it is build for Debian 9+.
+The `armel` image is the base image for the `armel` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/armel`. This Docker image is based on the `base` image.
 
 ## go/armhf Docker image
