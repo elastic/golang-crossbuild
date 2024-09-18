@@ -317,7 +317,7 @@ It is used to cross compile for `linux/arm64`. This Docker image is based on the
 
 ## go/armel Docker image
 
-The `armel` image is the base image for the `armel` architecture, it is build for Debian 9+.
+The `armel` image is the base image for the `armel` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/armel`. This Docker image is based on the `base` image.
 
 ## go/armhf Docker image
@@ -327,7 +327,7 @@ It is used to cross compile for `linux/armhf`. This Docker image is based on the
 
 ## go/mips Docker image
 
-The `mips` image is the base image for the `mips` architecture, it is build for Debian 11+.
+The `mips` image is the base image for the `mips` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/mips`. This Docker image is based on the `base` image.
 
 ## go/mips32 Docker image
@@ -337,12 +337,12 @@ It is used to cross compile for `linux/mips32`. This Docker image is based on th
 
 ## go/ppc Docker image
 
-The `ppc` image is the base image for the `ppc` architecture, it is build for Debian 11+.
+The `ppc` image is the base image for the `ppc` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/ppc`. This Docker image is based on the `base` image.
 
 ## go/s390x Docker image
 
-The `s390x` image is the base image for the `s390x` architecture, it is build for Debian 11+.
+The `s390x` image is the base image for the `s390x` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/s390x`. This Docker image is based on the `base` image.
 
 ## go/npcap Docker image
