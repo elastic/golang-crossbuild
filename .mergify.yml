@@ -1,5 +1,6 @@
 queue_rules:
   - name: default
+    merge_method: squash
     conditions:
       - check-success=buildkite/golang-crossbuild
       - check-success=CLA
@@ -51,7 +52,6 @@ pull_request_rules:
       - files~=^go/Makefile.common
     actions:
       queue:
-        method: squash
         name: default
   - name: notify the backport has not been merged yet
     conditions:
@@ -165,6 +165,19 @@ pull_request_rules:
           - "{{ author }}"
         branches:
           - "1.21"
+        labels:
+          - "backport"
+        title: "[{{ destination_branch }}](backport #{{ number }}) {{ title }}"
+  - name: backport patches to 1.22 branch
+    conditions:
+      - merged
+      - label=backport-v1.22
+    actions:
+      backport:
+        assignees:
+          - "{{ author }}"
+        branches:
+          - "1.22"
         labels:
           - "backport"
         title: "[{{ destination_branch }}](backport #{{ number }}) {{ title }}"
