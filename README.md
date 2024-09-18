@@ -1,8 +1,8 @@
-|                   | main | 1.21 |
+|                   | main | 1.22 |
 |-------------------|------|-|
-| golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.21)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.21)|
-| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.21)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.21)|
-| fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.21)](https://buildkite.com/elastic/fpm/builds?branch=1.21)|
+| golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.22)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.22)|
+| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.22)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.22)|
+| fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.22)](https://buildkite.com/elastic/fpm/builds?branch=1.22)|
 
 
 # golang-crossbuild Docker images
@@ -318,7 +318,7 @@ It is used to cross compile for `linux/arm64`. This Docker image is based on the
 
 ## go/armel Docker image
 
-The `armel` image is the base image for the `armel` architecture, it is build for Debian 9+.
+The `armel` image is the base image for the `armel` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/armel`. This Docker image is based on the `base` image.
 
 ## go/armhf Docker image
@@ -328,7 +328,7 @@ It is used to cross compile for `linux/armhf`. This Docker image is based on the
 
 ## go/mips Docker image
 
-The `mips` image is the base image for the `mips` architecture, it is build for Debian 11+.
+The `mips` image is the base image for the `mips` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/mips`. This Docker image is based on the `base` image.
 
 ## go/mips32 Docker image
@@ -338,12 +338,12 @@ It is used to cross compile for `linux/mips32`. This Docker image is based on th
 
 ## go/ppc Docker image
 
-The `ppc` image is the base image for the `ppc` architecture, it is build for Debian 11+.
+The `ppc` image is the base image for the `ppc` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/ppc`. This Docker image is based on the `base` image.
 
 ## go/s390x Docker image
 
-The `s390x` image is the base image for the `s390x` architecture, it is build for Debian 11+.
+The `s390x` image is the base image for the `s390x` architecture, it is build for Debian 12+.
 It is used to cross compile for `linux/s390x`. This Docker image is based on the `base` image.
 
 ## go/npcap Docker image
