@@ -14,7 +14,6 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             curl \
             git \
             gnupg \
-            google-cloud-cli \
             make \
             file \
             flex \
@@ -27,6 +26,14 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
             python3 \
 {{- end }}
         && rm -rf /var/lib/apt/lists/*
+
+# copied from https://github.com/elastic/release-eng/blob/main/containers/download-page-publisher/Dockerfile
+# Install Google Cloud SDK
+RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+    && apt-get update -y && apt-get install google-cloud-cli -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 {{- if eq .DEBIAN_VERSION "10"}}
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
