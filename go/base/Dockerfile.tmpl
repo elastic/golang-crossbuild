@@ -27,14 +27,6 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 {{- end }}
         && rm -rf /var/lib/apt/lists/*
 
-# copied from https://github.com/elastic/release-eng/blob/main/containers/download-page-publisher/Dockerfile
-# Install Google Cloud SDK
-RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
-    && apt-get update -y && apt-get install google-cloud-cli -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
 {{- if eq .DEBIAN_VERSION "10"}}
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
@@ -69,7 +61,7 @@ RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && CGO_ENABLED=0 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-RUN curl -H "Authorization: Bearer \"$(gcloud auth application-default print-access-token)\"" -sSLO https://storage.googleapis.com/ingest-buildkite-ci/sdks/libpcap-1.8.1.tar.gz \
+RUN curl -sSLO https://storage.googleapis.com/ingest-buildkite-ci/sdks/libpcap-1.8.1.tar.gz \
   && ls -la libpcap-1.8.1.tar.gz \
   # && echo "673dbc69fdc3f5a86fb5759ab19899039a8e5e6c631749e48dcd9c6f0c83541e  libpcap-1.8.1.tar.gz" | sha256sum -c - \
   && mkdir /libpcap \
