@@ -16,9 +16,6 @@ DOCKER_MULTIARCH := 1
 endif
 endif
 
-	@echo "testing the gcloud storage api"
-	@gcloud storage ls gs://ingest-buildkite-ci/sdks
-
 # Requires login at google storage.
 copy-npcap:
 ifeq ($(CI),true)
