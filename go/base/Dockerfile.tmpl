@@ -61,10 +61,9 @@ RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && CGO_ENABLED=0 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-RUN pwd
-COPY ../../sdks/libpcap-1.8.1.tar.gz . \
-  && ls -la libpcap-1.8.1.tar.gz \
-  && rm libpcap-1.8.1.tar.gz
+COPY ../../sdks/libpcap-1.8.1.tar.gz . 
+RUN ls -la libpcap-1.8.1.tar.gz
+RUN rm libpcap-1.8.1.tar.gz
 
 RUN curl -sSLO https://storage.googleapis.com/ingest-buildkite-ci/sdks/libpcap-1.8.1.tar.gz \
   && ls -la libpcap-1.8.1.tar.gz \
