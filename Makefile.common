@@ -27,9 +27,9 @@ endif
 # Requires login at google storage.
 copy-sdks:
 ifeq ($(CI),true)
-	# just list them for now
 	@echo "testing the gcloud storage api"
-	@gcloud storage ls gs://ingest-buildkite-ci/sdks
+	@mkdir ../sdks
+	@gcloud storage cp gs://ingest-buildkite-ci/sdks ../sdks
 else
 	@echo 'Only available if running in the CI'
 endif
