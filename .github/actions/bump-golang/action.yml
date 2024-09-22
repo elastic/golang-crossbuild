@@ -33,7 +33,7 @@ runs:
           ref: ${{ inputs.branch }}
 
       - name: Install Updatecli in the runner
-        uses: updatecli/updatecli-action@3a8785d88ec4fa03d86521a181f37c0e74627463 # v2.64.0
+        uses: updatecli/updatecli-action@6b8881a17fc8038e884ec94ff72a49e8e8a4069f # v2.67.0
 
       - name: Run Updatecli in Apply mode
         run: updatecli ${{ env.COMMAND }} --config ./.github/updatecli.d/bump-golang.yml
@@ -45,7 +45,7 @@ runs:
         shell: bash
 
       - if: ${{ failure()  }}
-        uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e # v1.26.0
+        uses: slackapi/slack-github-action@37ebaef184d7626c5f204ab8d3baff4262dd30f0 # v1.27.0
         with:
           channel-id: ${{ inputs.slack-channel-id }}
           payload: |
