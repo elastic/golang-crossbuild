@@ -29,8 +29,8 @@ copy-sdks:
 ifeq ($(CI),true)
 	@echo "testing the gcloud storage api"
 	@pwd
-	@gcloud storage cp gs://ingest-buildkite-ci/sdks ../ --recursive
-	@ls -ls ../sdks
+	@gcloud storage cp gs://ingest-buildkite-ci/sdks . --recursive
+	@ls -ls ./sdks
 else
 	@echo 'Only available if running in the CI'
 endif
