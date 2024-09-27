@@ -26,7 +26,7 @@ build: copy-npcap copy-sdks
 	--progress=plain --no-cache \
 	.
 
-build-arm:
+build-arm: copy-sdks
 	@echo $(SELF_DIR)
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
