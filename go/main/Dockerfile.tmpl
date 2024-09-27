@@ -59,6 +59,7 @@ RUN cd /libpcap/libpcap-1.8.1 \
   && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
   && make
 
+RUN find / -type f -name '*.tar.*'
 COPY sdks/WpdPack_4_1_2.zip . 
 RUN ls -la WpdPack_4_1_2.zip
 
