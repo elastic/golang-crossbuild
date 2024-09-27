@@ -44,6 +44,7 @@ ARG SDK_VERSION=10.11
 ARG DARWIN_VERSION=15
 ARG OSX_VERSION_MIN=10.10
 
+RUN find / -type f -name '*.tar.*'
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
