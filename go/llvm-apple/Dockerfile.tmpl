@@ -60,8 +60,6 @@ RUN mkdir -p /tmp/osxcross
 COPY lcxx.patch /tmp/osxcross/lcxx.patch
 
 COPY sdks/MacOSX10.11.sdk.tar.xz tarballs/${OSX_SDK}.tar.xz
-RUN ls -la tarballs/${OSX_SDK}.tar.xz
-
 RUN \
     cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
