@@ -47,10 +47,9 @@ ARG OSX_VERSION_MIN=10.10
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
-        | tar -C /tmp/osxcross --strip=1 -xzf -
-COPY sdks/MacOSX10.11.sdk.tar.xz tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz
-RUN \
-    UNATTENDED=yes ./build.sh >/dev/null \
+        | tar -C /tmp/osxcross --strip=1 -xzf - \
+    && cp sdks/MacOSX10.11.sdk.tar.xz tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz
+    && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
 {{- end }}
