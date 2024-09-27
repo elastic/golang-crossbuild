@@ -45,14 +45,13 @@ ARG DARWIN_VERSION=15
 ARG OSX_VERSION_MIN=10.10
 
 # does the COPY cmd work when cp doesn't?
-COPY sdks/MacOSX10.11.sdk.tar.xz .
-RUN ls -l MacOSX10.11.sdk.tar.xz
+COPY sdks/MacOSX10.11.sdk.tar.xz .    # copies from darwin to /app workdir
 RUN find / -type f -name '*.tar.*'
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
-    && cp sdks/MacOSX10.11.sdk.tar.xz tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz \
+    && cp /app/MacOSX10.11.sdk.tar.xz tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz \
     && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
