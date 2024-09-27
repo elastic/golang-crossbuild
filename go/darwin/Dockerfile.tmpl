@@ -44,11 +44,12 @@ ARG OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa
 ARG SDK_VERSION=10.11
 ARG DARWIN_VERSION=15
 ARG OSX_VERSION_MIN=10.10
+COPY sdks/MacOSX10.11.sdk.tar.xz tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz
+RUN ls -la tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
-    && curl -sSLo "tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz" "${OSXCROSS_SDK_URL}" \
     && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
