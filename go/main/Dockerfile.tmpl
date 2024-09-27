@@ -59,10 +59,7 @@ RUN cd /libpcap/libpcap-1.8.1 \
   && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no \
   && make
 
-RUN find / -type f -name '*.tar.*'
 COPY sdks/WpdPack_4_1_2.zip . 
-RUN ls -la WpdPack_4_1_2.zip
-
 RUN mkdir -p /libpcap/win \
   && echo "ea799cf2f26e4afb1892938070fd2b1ca37ce5cf75fec4349247df12b784edbd  WpdPack_4_1_2.zip" | sha256sum -c - \
   && unzip WpdPack_4_1_2.zip -d /libpcap/win \
