@@ -11,7 +11,7 @@ export DEBIAN_VERSION TAG_EXTENSION
 
 DOCKER_CMD := docker build
 
-build: copy-npcap
+build: copy-npcap copy-sdks
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
 	@$(DOCKER_CMD) -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
@@ -25,7 +25,7 @@ build: copy-npcap
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
 
-build-arm:
+build-arm: copy-sdks
 	@echo $(SELF_DIR)
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
