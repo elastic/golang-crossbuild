@@ -111,10 +111,85 @@ The osxcross repository used to cross compile for MacOSX has [instructions for p
 
 The instructions for packaging the SDK on a Linux instance are:
 
+<<<<<<< HEAD
 1. Clone the [osxcross](https://github.com/tpoechtrager/osxcross) repo.
 1. Install `clang`, `make`, `libssl-dev`, `lzma-dev`, `libxml2-dev`, `libbz2-dev`.
 1. Download [Xcode from Apple](Download Xcode: https://developer.apple.com/download/more]).
 1. Run `./tools/gen_sdk_package_pbzx.sh <xcode>.xip`.
+=======
+## go/base-arm Docker image
+
+The `base-arm` image is the base image to crossbuild `linux/arm64` binaries on `arm` hosts, it is build for Debian 7+.
+This image is user to crosscompile in `linux/arm`.
+It was replaced by the `base` image for Debian 9+ when we started to build multiarchitecture Docker images.
+It could be removed in the future, it allow to `crosscompile` arm binaries in `linux/arm64` machines, that it is not needed because the native architecture is the same than the target architecture.
+It was added to golang-crossbuild due limitations of the build system.
+
+## go/main Docker image
+
+The `main` image is the base image for the `amd64` architecture, it is build for Debian 7+.
+It is used to cross compile for `linux/amd`, `linux/amd64`, `win/amd`, and `win/amd64`.
+This Docker immage add two libraries to the `base` image, `libpcap` and `WpdPack` to be able to capture network packages on diferent OS.
+Thes two libraries are precompiled and stored at https://storage.googleapis.com/ingest-buildkite-ci/sdks.
+
+## go/darwin Docker image
+
+The `darwin` image is the base image for the MacOSX cross compilation, it is build for Debian 8+.
+It can compiles for `darwin/amd` (Debian 10+), `darwin/amd64`, `darwin/arm64`, `darwin/arm64e`, and universal binaries.
+This Docker image is based on the `base` image.
+It uses [osxcross](https://codeload.github.com/tpoechtrager/osxcross) to configure the crosscompile for MacOSX.
+This image require a MacOSX SDK to be installed in the Docker image,
+for the instructions to package the MacOS SDK see the [Packaging MacOS SDK](#packaging-macos-sdk) section.
+
+## go/darwin-arm64 Docker image
+
+The `darwin-arm64` image is the base image for the MacOSX cross compilation, it is build for Debian 10+.
+It can compiles for `darwin/amd64`, `darwin/arm64`, and `darwin/arm64e`, and universal binaries.
+This Docker image is based on the `base` image.
+It uses the `llvm-apple` image to cross compile for MacOSX.
+The `darwin-arm64` can replace the `darwin` image in the future, it is faster to build and it does not need to build [osxcross](https://codeload.github.com/tpoechtrager/osxcross) and uses the official LLVM fork from Apple so it support enhacement for `darwin` architectures.
+
+## go/arm Docker image
+
+The `arm` image is the base image for the `arm64` architecture, it is build for Debian 9+.
+It is used to cross compile for `linux/arm64`. This Docker image is based on the `base` image.
+
+## go/armel Docker image
+
+The `armel` image is the base image for the `armel` architecture, it is build for Debian 12+.
+It is used to cross compile for `linux/armel`. This Docker image is based on the `base` image.
+
+## go/armhf Docker image
+
+The `armhf` image is the base image for the `armhf` architecture, it is build for Debian 9+.
+It is used to cross compile for `linux/armhf`. This Docker image is based on the `base` image.
+
+## go/mips Docker image
+
+The `mips` image is the base image for the `mips` architecture, it is build for Debian 12+.
+It is used to cross compile for `linux/mips`. This Docker image is based on the `base` image.
+
+## go/mips32 Docker image
+
+The `mips32` image is the base image for the `mips32` architecture, it is build for Debian 11+.
+It is used to cross compile for `linux/mips32`. This Docker image is based on the `base` image.
+
+## go/ppc Docker image
+
+The `ppc` image is the base image for the `ppc` architecture, it is build for Debian 12+.
+It is used to cross compile for `linux/ppc`. This Docker image is based on the `base` image.
+
+## go/s390x Docker image
+
+The `s390x` image is the base image for the `s390x` architecture, it is build for Debian 12+.
+It is used to cross compile for `linux/s390x`. This Docker image is based on the `base` image.
+
+## go/npcap Docker image
+
+The `npcap` image is a placeholder for the `npcap` library, see [npcap](./NPCAP.md) for more information.
+
+## Troubleshooting
+>>>>>>> 206cfe2 (Updating bucket references from O11y to Ingest path (#454))
 
 ### bzip2 issues
 
@@ -142,5 +217,5 @@ XCODEDIR=osxcross/build/tmp_<X> ./tools/gen_sdk_package.sh
 The SDK should be in the working directory.
 The tmp dir can be safely deleted after this.
 
-The SDKs should be uploaded into the `gs://obs-ci-cache` bucket on GCP (Google Cloud Platform).
-This is accessible to authorized users in the `elastic-observability` project [here](https://console.cloud.google.com/storage/browser/obs-ci-cache).
+The SDKs should be uploaded into the `gs://ingest-buildkite-ci/sdks` bucket on GCP (Google Cloud Platform).
+This is accessible to authorized users in the `platform-ingest` project [here](https://console.cloud.google.com/storage/browser/ingest-buildkite-ci/sdks).

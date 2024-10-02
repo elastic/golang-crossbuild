@@ -4,7 +4,18 @@ VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 .DEFAULT_GOAL := build
 
+<<<<<<< HEAD
 # Requires login at https://docker.elastic.co:7000/.
+=======
+# Requires login at google storage.
+copy-sdks:
+ifeq ($(CI),true)
+	@gcloud storage cp gs://ingest-buildkite-ci/sdks . --recursive
+else
+	@echo 'Only available if running in the CI'
+endif
+
+>>>>>>> 206cfe2 (Updating bucket references from O11y to Ingest path (#454))
 push:
 	echo ">> Pushing $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@docker push "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"

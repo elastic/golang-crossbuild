@@ -9,7 +9,13 @@ TAG_EXTENSION  ?=
 
 export DEBIAN_VERSION TAG_EXTENSION
 
+<<<<<<< HEAD
 build:
+=======
+DOCKER_CMD := docker build
+
+build: copy-npcap copy-sdks
+>>>>>>> 206cfe2 (Updating bucket references from O11y to Ingest path (#454))
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
 	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
@@ -23,7 +29,7 @@ build:
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
 
-build-arm:
+build-arm: copy-sdks
 	@echo $(SELF_DIR)
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
