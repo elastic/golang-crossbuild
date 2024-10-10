@@ -24,7 +24,7 @@ pull_request_rules:
     actions:
         comment:
           message: |
-            This pull request is now in conflicts. Could you fix it? 🙏
+            This pull request is now in conflict! Could you fix it? 🙏
             To fixup this pull request, you can check out it locally. See documentation: https://help.github.com/articles/checking-out-pull-requests-locally/
             ```
             git fetch upstream
