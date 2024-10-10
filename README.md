@@ -7,7 +7,7 @@
 
 # golang-crossbuild Docker images
 
-This repository contains Dockerfiles for cross building Go binaries for various platforms.
+This repo contains Dockerfiles for cross building Go binaries for various platforms.
 The aim is to provide a simple way to build Go binaries for multiple platforms without having to install and configure cross compilers on your host machine.
 To do that the project provides a set of Docker images that can be used to build Go binaries for the following platforms:
 
