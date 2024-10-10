@@ -13,7 +13,7 @@
             "always_trigger_comment_regex": "^(?:(?:buildkite\\W+)?(?:build|test)\\W+(?:this|it))|^/test$",
             "skip_ci_labels": [  ],
             "skip_target_branches": [ ],
-            "skip_ci_on_only_changed": [ ],
+            "skip_ci_on_only_changed": [ "\\.md$", ".mergify.yml", "^.github/workflows" ],
             "always_require_ci_on_changed": [ ],
             "fail_on_not_mergeable": true
         },
