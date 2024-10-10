@@ -73,7 +73,7 @@ pull_request_rules:
     actions:
       comment:
         message: |
-          This pull request does not have a backport label. Could you fix it @{{author}}? 🙏
+          This pull request doesn't have a backport label. Could you fix it @{{author}}? 🙏
           To fixup this pull request, you need to add the backport labels for the needed
           branches, such as:
           * `backport-v./d./d` is the label to automatically backport to the `1./d` branch. `/d` is the digit
