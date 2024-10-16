@@ -3,7 +3,7 @@ VCS_REF       := $(shell git rev-parse HEAD)
 VCS_URL       := https://github.com/elastic/golang-crossbuild
 BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 .DEFAULT_GOAL := build
-NPCAP_VERSION := 1.79
+NPCAP_VERSION := 1.80
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
@@ -19,7 +19,7 @@ endif
 # Requires login at google storage.
 copy-npcap:
 ifeq ($(CI),true)
-	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE) 
+	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
 endif
