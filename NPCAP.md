@@ -10,6 +10,8 @@ If you'd like to bump the npcap version please follow the below steps:
 
 Credentials to the artifact service can be found in the `APM-Shared` folder in the password management tool.
 
+4) After you've updated the npcap version in golang-crossbuild, make sure to change the npcap version specified in the [packetbeat magefile](https://github.com/elastic/beats/blob/main/x-pack/packetbeat/magefile.go)
+
 ## Backports
 
 If you'd like to backport any NCAP_VERSION to any existing golang-crosbuild version, then you need to:
