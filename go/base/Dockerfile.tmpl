@@ -35,8 +35,6 @@ ARG GOLANG_VERSION=1.23.5
 {{- if eq .FIPS "true"}}
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=448182d88e40398ea532ec58a6c41d519d0746ee2b6bacb4102cd5b63118b084
-ENV GOEXPERIMENT systemcrypto
-ENV CGO_ENABLED 1
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091
@@ -73,7 +71,10 @@ RUN mkdir /libpcap \
     && tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
     && rm libpcap-1.8.1.tar.gz
 
-
+{{- if eq .FIPS "true"}}
+ENV GOEXPERIMENT systemcrypto
+ENV CGO_ENABLED 1
+{{- end}}
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app
