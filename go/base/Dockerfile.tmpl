@@ -32,8 +32,15 @@ RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
 ARG GOLANG_VERSION=1.23.5
+{{- if eq .FIPS "true"}}
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-amd64.tar.gz
+ARG GOLANG_DOWNLOAD_SHA256=448182d88e40398ea532ec58a6c41d519d0746ee2b6bacb4102cd5b63118b084
+ENV GOEXPERIMENT systemcrypto
+ENV CGO_ENABLED 1
+{{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091
+{{- end}}
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
@@ -61,7 +68,7 @@ RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && CGO_ENABLED=0 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-COPY sdks/libpcap-1.8.1.tar.gz . 
+COPY sdks/libpcap-1.8.1.tar.gz .
 RUN mkdir /libpcap \
     && tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
     && rm libpcap-1.8.1.tar.gz
