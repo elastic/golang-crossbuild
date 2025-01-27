@@ -37,6 +37,7 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
+ARG GOLANG_VERSION=1.24rc2
 ARG GOLANG_DOWNLOAD_URL=https://go.dev/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=dc8009c89676b2af4410f96ddd815dd0e68047cf97c96a708bf68bf403ff3ef9
 
