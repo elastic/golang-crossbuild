@@ -6,6 +6,10 @@ VERSION        := 1.23.5
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
+FIPS           ?=
+ifeq "${FIPS}" "true"
+TAG_EXTENSION:=$(TAG_EXTENSION)-fips
+endif
 
 export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE
 
