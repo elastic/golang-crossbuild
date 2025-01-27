@@ -41,8 +41,6 @@ ARG GOLANG_VERSION=1.23.5
 {{- if eq .FIPS "true"}}
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-arm64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=f0a601089c1a523f72f645b5d47cc6582dae495f70b41da614fe193d1931e649
-ENV GOEXPERIMENT systemcrypto
-ENV CGO_ENABLED 1
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=47c84d332123883653b70da2db7dd57d2a865921ba4724efcdf56b5da7021db0
@@ -82,6 +80,10 @@ RUN mkdir /libpcap \
   && ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=aarch64-unknown-linux-gnu --with-pcap=linux \
   && make
 
+{{- if eq .FIPS "true"}}
+ENV GOEXPERIMENT systemcrypto
+ENV CGO_ENABLED 1
+{{- end}}
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app
