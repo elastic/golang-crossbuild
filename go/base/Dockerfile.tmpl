@@ -31,7 +31,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
-ARG GOLANG_VERSION=1.24.0rc2
+ARG GOLANG_VERSION=1.24rc2
 ARG GOLANG_DOWNLOAD_URL=https://go.dev/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=3835e217efb30c6ace65fcb98cb8f61da3429bfa9e3f6bb4e5e3297ccfc7d1a4
 

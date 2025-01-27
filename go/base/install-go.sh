@@ -2,7 +2,7 @@
 # This script install the Go version correct for each architecture.
 set -e
 
-GOLANG_VERSION=1.24.0rc2
+GOLANG_VERSION=1.24rc2
 GOLANG_DOWNLOAD_URL=https://go.dev/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 GOLANG_DOWNLOAD_SHA256_AMD=3835e217efb30c6ace65fcb98cb8f61da3429bfa9e3f6bb4e5e3297ccfc7d1a4
 GOLANG_DOWNLOAD_SHA256_ARM=dc8009c89676b2af4410f96ddd815dd0e68047cf97c96a708bf68bf403ff3ef9
