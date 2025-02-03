@@ -28,7 +28,7 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
-          machineType: "n1-standard-8"
+          machineType: "n2-standard-8"
         matrix:
           setup:
             makefile:
