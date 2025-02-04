@@ -8,6 +8,7 @@ SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 FIPS           ?=
 ifeq "${FIPS}" "true"
+BUILDX:=0
 ifeq ($(findstring -fips,$(TAG_EXTENSION)),)
 TAG_EXTENSION:=$(TAG_EXTENSION)-fips
 endif
