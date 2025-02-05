@@ -11,9 +11,9 @@ check_is_arm
 add_bin_path
 with_go "${GOLANG_VERSION}"
 with_mage
-google_cloud_auth
 
-make -C go -f "${MAKEFILE}" build"${is_arm}" GS_BUCKET_PATH=ingest-buildkite-ci
+
+make -C go -f "${MAKEFILE}" build"${is_arm}" GS_BUCKET_PATH=$GS_BUCKET_PATH
 echo ":: List Docker images staging ::"
 docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
 

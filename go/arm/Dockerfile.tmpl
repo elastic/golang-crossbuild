@@ -107,7 +107,7 @@ RUN cd / \
         && file helloWorld | cut -d "," -f 2 | grep -c 'ARM aarch64'\
         && rm helloWorld.c helloWorld
 
-RUN cd /libpcap/libpcap-1.8.1 \
+RUN cd /libpcap/libpcap-1.10.4 \
         && CC=aarch64-linux-gnu-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=aarch64-unknown-linux-gnu --with-pcap=linux \
         && make
 
