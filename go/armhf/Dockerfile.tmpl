@@ -58,7 +58,7 @@ RUN cd / \
   && file helloWorld | cut -d "," -f 5 | grep -c 'armhf.so'\
   && rm helloWorld.c helloWorld
 
-RUN cd /libpcap/libpcap-1.8.1 \
+RUN cd /libpcap/libpcap-1.10.4 \
 	&& CC=arm-linux-gnueabihf-gcc ./configure --enable-usb=no --enable-bluetooth=no --enable-dbus=no --host=arm-linux-gnueabihf --with-pcap=linux \
 	&& make
 
