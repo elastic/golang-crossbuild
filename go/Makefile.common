@@ -10,7 +10,6 @@ FIPS           ?=
 ifeq "${FIPS}" "true"
 ifeq ($(findstring -fips,$(TAG_EXTENSION)),)
 TAG_EXTENSION:=$(TAG_EXTENSION)-fips
-BUILDX:=0
 endif
 endif
 
