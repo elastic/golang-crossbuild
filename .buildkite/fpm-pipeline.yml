@@ -3,6 +3,7 @@
 env:
   SETUP_GVM_VERSION: "v0.5.1"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
+  GCP_DEFAULT_X86_64_MACHINE_TYPE: "n2-standard-16"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   MAKEFILE: "fpm"
@@ -25,3 +26,8 @@ steps:
     agents:
       provider: "gcp"
       image: "${IMAGE_UBUNTU_X86_64}"
+      machineType: "${GCP_DEFAULT_X86_64_MACHINE_TYPE}"
+    retry:
+      automatic:
+        - limit: 1
+
