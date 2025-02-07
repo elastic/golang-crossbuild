@@ -27,6 +27,7 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+          diskSizeGb: 200
         matrix:
           setup:
             makefile:
@@ -53,6 +54,7 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+          diskSizeGb: 200
 
   - group: "Release"
     key: "release"
@@ -67,6 +69,7 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+          diskSizeGb: 200
         matrix:
           setup:
             makefile:
@@ -91,6 +94,7 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+          diskSizeGb: 200
         notify:
           - github_commit_status:
               context: "Release / Ubuntu ARM"
@@ -108,3 +112,4 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+          diskSizeGb: 200
