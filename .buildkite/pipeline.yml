@@ -2,7 +2,8 @@
 
 env:
   SETUP_GVM_VERSION: "v0.5.1"
-  IMAGE_UBUNTU_X86_64: "core-ubuntu-2204"
+  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2404"
+  INSTANCE_TYPE_X86_64: "n2-standard-4"
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
@@ -26,9 +27,9 @@ steps:
           - github_commit_status:
               context: "Staging / Ubuntu X86_64"
         agents:
-          provider: "aws"
-          imagePrefix: "${IMAGE_UBUNTU_X86_64}"
-          instanceType: "t3a.xlarge"
+          provider: "gcp"
+          image: "${IMAGE_UBUNTU_X86_64}"
+          instanceType: "${INSTANCE_TYPE_X86_64}"
         matrix:
           setup:
             makefile:
@@ -78,9 +79,9 @@ steps:
           FIPS: "{{matrix.fips}}"
         if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         agents:
-          provider: "aws"
-          imagePrefix: "${IMAGE_UBUNTU_X86_64}"
-          instanceType: "t3a.xlarge"
+          provider: "gcp"
+          image: "${IMAGE_UBUNTU_X86_64}"
+          instanceType: "${INSTANCE_TYPE_X86_64}"
         matrix:
           setup:
             makefile:
@@ -130,6 +131,6 @@ steps:
           - github_commit_status:
               context: "Post-release"
         agents:
-          provider: "aws"
-          imagePrefix: "${IMAGE_UBUNTU_X86_64}"
-          instanceType: "t3a.xlarge"
+          provider: "gcp"
+          image: "${IMAGE_UBUNTU_X86_64}"
+          instanceType: "${INSTANCE_TYPE_X86_64}"
