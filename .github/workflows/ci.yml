@@ -12,7 +12,6 @@ env:
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
   REPOSITORY: "docker.elastic.co/observability-ci"
   #GS_BUCKET_PATH: ingest-buildkite-ci
-  GS_BUCKET_PATH: "golang-crossbuild-temporary"
 
 jobs:
   build-x86-64:
@@ -45,7 +44,7 @@ jobs:
           add_bin_path
           with_mage
           #google_cloud_auth
-          make -C go -f "${{matrix.makefile}}" build
+          make -C go -f "${{matrix.makefile}}" build GS_BUCKET_PATH="golang-crossbuild-temporary"
 
       - run: |
           docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
@@ -76,3 +75,4 @@ jobs:
           with_mage
           #google_cloud_auth
           make -C go -f "${{matrix.makefile}}" build
+          make -C go -f "${{matrix.makefile}}" build GS_BUCKET_PATH="golang-crossbuild-temporary"
