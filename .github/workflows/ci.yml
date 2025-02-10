@@ -11,20 +11,21 @@ env:
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
   REPOSITORY: "docker.elastic.co/observability-ci"
-  #GS_BUCKET_PATH: ingest-buildkite-ci
-  # bypass access to the google bucket for now
+  # TODO: use the google bucket instead
+  GS_BUCKET_PATH: "golang-crossbuild-tmp"
+  # TODO: bypass access to the google bucket for now
   CI: "false"
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build-x86-64:
-    runs-on: ubuntu-latest
+  build-push:
     permissions:
       contents: read
       id-token: write
     strategy:
       fail-fast: false
       matrix:
+        os: [ "ubuntu-24.04", "ubuntu-24.04-arm" ]
         makefile: [
           "Makefile",
           "Makefile.debian7",
@@ -35,8 +36,26 @@ jobs:
           "Makefile.debian12"
         ]
         fips: [ "false", "true" ]
+        # NOTE:
+        # exclude arm64 builds for all but debian9
+        exclude:
+          - makefile: "Makefile"
+            os: "ubuntu-24.04-arm"
+          - makefile: "Makefile.debian7"
+            os: "ubuntu-24.04-arm"
+          - makefile: "Makefile.debian8"
+            os: "ubuntu-24.04-arm"
+          - makefile: "Makefile.debian10"
+            os: "ubuntu-24.04-arm"
+          - makefile: "Makefile.debian11"
+            os: "ubuntu-24.04-arm"
+          - makefile: "Makefile.debian12"
+            os: "ubuntu-24.04-arm"
+    runs-on: ${{ matrix.os }}
     env:
       FIPS: "${{matrix.fips}}"
+      # NOTE: arm builds are suffixed with '-arm' in their make goals
+      GOAL_SUFFIX: ${{ contains(matrix.os, 'arm') && '-arm' || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -57,44 +76,14 @@ jobs:
           gsutil list -lra gs://golang-crossbuild-tmp/private || true
           gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
 
-      - run: |
+      - name: build and push
+        run: |
           source .buildkite/scripts/common.sh
           add_bin_path
           with_mage
-          GS_BUCKET_PATH="golang-crossbuild-tmp" make -C go -f "${{matrix.makefile}}" build
+          make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}} publish${{env.GOAL_SUFFIX}}
 
-      - run: |
+      - name: List docker images
+        run: |
           docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
           docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${DOCKER_REGISTRY}/beats-dev/golang-crossbuild"
-
-  build-arm-64:
-    runs-on: ubuntu-24.04-arm
-    permissions:
-      contents: read
-      id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        makefile: [
-          "Makefile.debian9"
-        ]
-        fips: [ "false", "true" ]
-    env:
-      FIPS: "${{matrix.fips}}"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: ".go-version"
-      - name: Log in to the Elastic Container registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
-          username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
-          password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
-      - uses: elastic/oblt-actions/google/auth@v1
-      - run: |
-          source .buildkite/scripts/common.sh
-          add_bin_path
-          with_mage
-          GS_BUCKET_PATH="golang-crossbuild-tmp" make -C go -f "${{matrix.makefile}}" build-arm
