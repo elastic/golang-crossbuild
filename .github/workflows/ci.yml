@@ -77,8 +77,9 @@ jobs:
       - name: Docker build
         run: make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}}
 
-      - name: Docker push
-        run: make -C go -f "${{matrix.makefile}}" push${{env.GOAL_SUFFIX}}
+      # TODO: uncomment when ready to push
+      #- name: Docker push
+      #  run: make -C go -f "${{matrix.makefile}}" push${{env.GOAL_SUFFIX}}
 
       - name: Docker images
         run: docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
