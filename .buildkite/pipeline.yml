@@ -2,7 +2,7 @@
 
 env:
   SETUP_GVM_VERSION: "v0.5.1"
-  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2404"
+  IMAGE_UBUNTU_X86_64: "family/platform-ingest-beats-ubuntu-2204"
   INSTANCE_TYPE_X86_64: "n2-standard-4"
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
@@ -17,11 +17,6 @@ steps:
       - label: ":linux: Staging / Ubuntu X86_64 - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "build-ubuntu-x86"
         command: |
-          set -euo pipefail
-          sudo apt-get update -y
-          sudo apt-get install -y qemu-kvm binfmt-support qemu-user-static
-          sudo update-binfmts --display
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           .buildkite/scripts/build.sh {{matrix.makefile}}
           .buildkite/scripts/publish.sh {{matrix.makefile}}
         env:
