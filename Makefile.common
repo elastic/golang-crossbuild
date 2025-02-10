@@ -19,6 +19,7 @@ endif
 # Requires login at google storage.
 copy-npcap:
 ifeq ($(CI),true)
+	@echo 'cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE)'
 	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
