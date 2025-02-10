@@ -40,3 +40,7 @@ jobs:
         env:
           # NOTE: For some reason the repository is not production but staging.
           REPOSITORY: 'docker.elastic.co/observability-ci'
+          # TODO: use the google bucket instead
+          GS_BUCKET_PATH: "golang-crossbuild-tmp"
+          # TODO: bypass access to the google bucket for now
+          CI: "false"
