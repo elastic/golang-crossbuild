@@ -81,7 +81,7 @@ jobs:
           source .buildkite/scripts/common.sh
           add_bin_path
           with_mage
-          make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}} publish${{env.GOAL_SUFFIX}}
+          make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}} push${{env.GOAL_SUFFIX}}
 
       - name: List docker images
         run: |
