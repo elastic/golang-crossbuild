@@ -7,6 +7,16 @@ on:
 permissions:
   contents: read
 
+env:
+  # TODO: support for other release branches with the format [0-9]+.[0-9]+
+  REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
+  # TODO: use the google bucket instead
+  GS_BUCKET_PATH: "golang-crossbuild-tmp"
+  # TODO: bypass access to the google bucket for now
+  CI: "false"
+  # NOTE: as long as we don't use the google bucket but downloading from github
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   build-push:
     permissions:
@@ -15,7 +25,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ "ubuntu-24.04", "ubuntu-24.04-arm" ]
         makefile: [
           "Makefile",
           "Makefile.debian7",
@@ -26,27 +35,13 @@ jobs:
           "Makefile.debian12"
         ]
         fips: [ "false", "true" ]
-        # NOTE:
-        # exclude arm64 builds for all but debian9
-        exclude:
-          - makefile: "Makefile"
-            os: "ubuntu-24.04-arm"
-          - makefile: "Makefile.debian7"
-            os: "ubuntu-24.04-arm"
-          - makefile: "Makefile.debian8"
-            os: "ubuntu-24.04-arm"
-          - makefile: "Makefile.debian10"
-            os: "ubuntu-24.04-arm"
-          - makefile: "Makefile.debian11"
-            os: "ubuntu-24.04-arm"
-          - makefile: "Makefile.debian12"
-            os: "ubuntu-24.04-arm"
-    runs-on: ${{ matrix.os }}
+    runs-on: "ubuntu-24.04"
     env:
       FIPS: "${{matrix.fips}}"
     steps:
       - uses: actions/checkout@v4
 
+      # TODO: move to the build-push composite action
       - uses: elastic/oblt-actions/google/auth@v1
 
       - name: Debug gcloud CLI
@@ -63,14 +58,30 @@ jobs:
           docker-password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
           make-directory: 'go'
           make-file: "${{matrix.makefile}}"
-          # NOTE: arm builds are suffixed with '-arm' in their make goals
-          make-goal-suffix: "${{ contains(matrix.os, 'arm') && '-arm' || '' }}"
-        env:
-          # TODO: support for other release branches with the format [0-9]+.[0-9]+
-          REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
-          # TODO: use the google bucket instead
-          GS_BUCKET_PATH: "golang-crossbuild-tmp"
-          # TODO: bypass access to the google bucket for now
-          CI: "false"
-          # NOTE: as long as we don't use the google bucket but downloading from github
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-push-arm:
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        fips: [ "false", "true" ]
+    runs-on: "ubuntu-24.04-arm"
+    env:
+      FIPS: "${{matrix.fips}}"
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO: move to the build-push composite action
+      - uses: elastic/oblt-actions/google/auth@v1
+
+      - name: Docker build and push
+        uses: ./.github/actions/build-push
+        with:
+          docker-registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
+          docker-username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
+          docker-password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
+          make-directory: 'go'
+          make-file: 'Makefile.debian9'
+          make-goal-suffix: '-arm'
