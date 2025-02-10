@@ -1,0 +1,50 @@
+---
+name: docker build and push
+inputs:
+  docker-registry:
+    description: 'The docker registry'
+    required: true
+  docker-username:
+    description: 'The docker username'
+    required: true
+  docker-password:
+    description: 'The docker password'
+    required: true
+  make-directory:
+    description: 'What directory to run make from'
+    required: true
+  make-file:
+    description: 'What Makefile'
+    required: true
+  make-goal-suffix:
+    description: 'What make goal suffix'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Docker login
+      uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+      with:
+        registry: ${{ inputs.docker-registry }}
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+
+    - name: Docker build
+      run: make -C ${{ env.MAKE_DIR }} -f $${{ env.MAKEFILE}} build${{env.MAKE_GOAL_SUFFIX}}
+      env:
+        MAKE_DIR: ${{ inputs.make-directory }}
+        MAKEFILE: ${{ inputs.make-file }}
+        MAKE_GOAL_SUFFIX: ${{ inputs.make-goal-suffix }}
+      shell: bash
+
+    - name: Docker build
+      run: echo "make -C ${{ env.MAKE_DIR }} -f ${{ env.MAKEFILE}} push${{env.MAKE_GOAL_SUFFIX}}"
+      env:
+        MAKE_DIR: ${{ inputs.make-directory }}
+        MAKEFILE: ${{ inputs.make-file }}
+        MAKE_GOAL_SUFFIX: ${{ inputs.make-goal-suffix }}
+      shell: bash
+
+    - name: Docker images
+      run: docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
+      shell: bash

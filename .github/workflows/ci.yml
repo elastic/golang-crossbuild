@@ -7,17 +7,6 @@ on:
 permissions:
   contents: read
 
-env:
-  DOCKER_REGISTRY: "docker.elastic.co"
-  # TODO: support for other release branches with the format [0-9]+.[0-9]+
-  REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
-  # TODO: use the google bucket instead
-  GS_BUCKET_PATH: "golang-crossbuild-tmp"
-  # TODO: bypass access to the google bucket for now
-  CI: "false"
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  MAKE_DIR: 'go'
-
 jobs:
   build-push:
     permissions:
@@ -69,18 +58,19 @@ jobs:
           gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
 
       - name: Docker login
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        uses: ./.github/actions/build-push
         with:
-          registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
-          username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
-          password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
-
-      - name: Docker build
-        run: make -C ${{ env.MAKE_DIR }} -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}}
-
-      # TODO: uncomment when ready to push
-      #- name: Docker push
-      #  run: make -C ${{ env.MAKE_DIR }} -f "${{matrix.makefile}}" push${{env.GOAL_SUFFIX}}
-
-      - name: Docker images
-        run: docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
+          docker-registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
+          docker-username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
+          docker-password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
+          make-directory: 'go'
+          make-file: ${{matrix.makefile}}
+          make-goal-suffix: ${{ env.GOAL_SUFFIX }}
+        env:
+          # TODO: support for other release branches with the format [0-9]+.[0-9]+
+          REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
+          # TODO: use the google bucket instead
+          GS_BUCKET_PATH: "golang-crossbuild-tmp"
+          # TODO: bypass access to the google bucket for now
+          CI: "false"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
