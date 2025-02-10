@@ -30,7 +30,7 @@ runs:
         password: ${{ inputs.docker-password }}
 
     - name: Docker build
-      run: make -C "${MAKE_DIR}" -f "${MAKEFILE}" build${MAKE_GOAL_SUFFIX}}
+      run: make -C "${MAKE_DIR}" -f "${MAKEFILE}" build${MAKE_GOAL_SUFFIX}
       env:
         MAKE_DIR: ${{ inputs.make-directory }}
         MAKEFILE: ${{ inputs.make-file }}

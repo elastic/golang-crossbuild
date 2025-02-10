@@ -44,8 +44,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       FIPS: "${{matrix.fips}}"
-      # NOTE: arm builds are suffixed with '-arm' in their make goals
-      GOAL_SUFFIX: ${{ contains(matrix.os, 'arm') && '-arm' || '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -64,8 +62,9 @@ jobs:
           docker-username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
           docker-password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
           make-directory: 'go'
-          make-file: ${{matrix.makefile}}
-          make-goal-suffix: ${{ env.GOAL_SUFFIX }}
+          make-file: "${{matrix.makefile}}"
+          # NOTE: arm builds are suffixed with '-arm' in their make goals
+          make-goal-suffix: "${{ contains(matrix.os, 'arm') && '-arm' || '' }}"
         env:
           # TODO: support for other release branches with the format [0-9]+.[0-9]+
           REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
