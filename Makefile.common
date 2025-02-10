@@ -27,8 +27,9 @@ endif
 
 # Requires login at google storage.
 copy-sdks:
+	@echo 'cp gs://$(GS_BUCKET_PATH)/sdks'
 ifeq ($(CI),true)
-	@gcloud storage cp gs://ingest-buildkite-ci/sdks . --recursive
+	@gcloud storage cp gs://$(GS_BUCKET_PATH)/sdks . --recursive
 else
 	@echo 'Only available if running in the CI'
 endif
