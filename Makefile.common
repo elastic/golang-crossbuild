@@ -7,7 +7,7 @@ NPCAP_VERSION := 1.80
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
-GS_BUCKET_PATH ?= ingest-buildkite-ci
+GS_BUCKET_PATH ?=
 
 
 ifeq ($(BUILDX),1)
@@ -18,8 +18,8 @@ endif
 
 # Requires login at google storage.
 copy-npcap:
-ifeq ($(CI),true)
 	@echo 'cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE)'
+ifeq ($(CI),true)
 	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
