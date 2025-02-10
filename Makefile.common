@@ -38,6 +38,8 @@ else
 	gh api https://github.com/the-tcpdump-group/tcpdump-htdocs/raw/refs/heads/master/release/libpcap-1.8.1.tar.gz -H "Accept: application/vnd.github.raw" > sdks/libpcap-1.8.1.tar.gz
 	curl -sSfL -o sdks/MacOSX10.11.sdk.tar.xz https://s3.amazonaws.com/beats-files/deps/MacOSX10.11.sdk.tar.xz
 	curl -sSfL -o sdks/WpdPack_4_1_2.zip https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
+# see https://github.com/elastic/golang-crossbuild/pull/454/files#diff-36b826ca106e191815b93280143b7cfd13c583e4adc3e27442a5057ac7294586L54
+	curl -sSfL -o sdks/MacOSX11.3.sdk.tar.xz https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz
 endif
 
 push:
