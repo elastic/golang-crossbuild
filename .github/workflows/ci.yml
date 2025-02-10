@@ -9,8 +9,8 @@ permissions:
 
 env:
   DOCKER_REGISTRY: "docker.elastic.co"
-  STAGING_REPOSITORY: "docker.elastic.co/observability-ci"
-  PRODUCTION_REPOSITORY: "docker.elastic.co/beats-dev"
+  # TODO: support for other release branches with the format [0-9]+.[0-9]+
+  REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
   # TODO: use the google bucket instead
   GS_BUCKET_PATH: "golang-crossbuild-tmp"
   # TODO: bypass access to the google bucket for now
@@ -58,35 +58,27 @@ jobs:
       GOAL_SUFFIX: ${{ contains(matrix.os, 'arm') && '-arm' || '' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: ".go-version"
 
-      - name: Log in to the Elastic Container registry
+      - uses: elastic/oblt-actions/google/auth@v1
+
+      - name: Debug gcloud CLI
+        run: |
+          gcloud info || true
+          gsutil list -lra gs://golang-crossbuild-tmp/private || true
+          gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
+
+      - name: Docker login
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
           username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
           password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
 
-      - uses: elastic/oblt-actions/google/auth@v1
-      - name: 'Use gcloud CLI'
-        run: |
-          gcloud info || true
-          gsutil list -lra gs://golang-crossbuild-tmp/private || true
-          gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
+      - name: Docker build
+        run: make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}}
 
-      - name: build and push
-        run: |
-          source .buildkite/scripts/common.sh
-          add_bin_path
-          with_mage
-          make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}} push${{env.GOAL_SUFFIX}}
-        env:
-          # TODO: support for other release branches with the format [0-9]+.[0-9]+
-          REPOSITORY: "${{ startsWith(github.head_ref, 'main') && env.PRODUCTION_REPOSITORY || env.STAGING_REPOSITORY }}"
+      - name: Docker push
+        run: make -C go -f "${{matrix.makefile}}" push${{env.GOAL_SUFFIX}}
 
-      - name: List docker images
-        run: |
-          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_REPOSITORY}/golang-crossbuild"
-          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${PRODUCTION_REPOSITORY}/beats-dev/golang-crossbuild"
+      - name: Docker images
+        run: docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
