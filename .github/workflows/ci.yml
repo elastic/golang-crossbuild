@@ -10,7 +10,8 @@ permissions:
 env:
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
-  GS_BUCKET_PATH: ingest-buildkite-ci
+  #GS_BUCKET_PATH: ingest-buildkite-ci
+  GS_BUCKET_PATH: "golang-crossbuild-temporary"
 
 jobs:
   build-x86-64:
@@ -33,7 +34,11 @@ jobs:
     env:
       FIPS: "${{matrix.fips}}"
     steps:
+      - uses: elastic/oblt-actions/google/auth@v1
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ".go-version"
       - run: |
           source .buildkite/scripts/common.sh
           add_bin_path
@@ -61,6 +66,7 @@ jobs:
     env:
       FIPS: "${{matrix.fips}}"
     steps:
+      - uses: elastic/oblt-actions/google/auth@v1
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
