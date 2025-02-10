@@ -38,7 +38,7 @@ runs:
       shell: bash
 
     - name: Docker build
-      run: echo "make -C "${MAKE_DIR}" -f "${MAKEFILE}" push${MAKE_GOAL_SUFFIX}"
+      run: make -C "${MAKE_DIR}" -f "${MAKEFILE}" push${MAKE_GOAL_SUFFIX}
       env:
         MAKE_DIR: ${{ inputs.make-directory }}
         MAKEFILE: ${{ inputs.make-file }}
