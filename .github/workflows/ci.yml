@@ -45,7 +45,7 @@ jobs:
           add_bin_path
           with_mage
           #google_cloud_auth
-          GS_BUCKET_PATH="golang-crossbuild-temporary" make -C go -f "${{matrix.makefile}}" build
+          GS_BUCKET_PATH="golang-crossbuild-tmp" make -C go -f "${{matrix.makefile}}" build
 
       - run: |
           docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
@@ -76,4 +76,4 @@ jobs:
           add_bin_path
           with_mage
           #google_cloud_auth
-          GS_BUCKET_PATH="golang-crossbuild-temporary" make -C go -f "${{matrix.makefile}}" build-arm
+          GS_BUCKET_PATH="golang-crossbuild-tmp" make -C go -f "${{matrix.makefile}}" build-arm
