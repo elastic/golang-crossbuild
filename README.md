@@ -120,8 +120,6 @@ it triggers the build of all Docker images for all architectures and Debian vers
 The file `go/Makefile.common` is the default Makefile used to build the Docker images for the different architectures.
 There is additional Makefile for each Debian version that is used to build the Docker images for that Debian version.
 
-* `go/Makefile.debian7`
-* `go/Makefile.debian8`
 * `go/Makefile.debian9`
 * `go/Makefile.debian10`
 * `go/Makefile.debian11`
