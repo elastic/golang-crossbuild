@@ -12,6 +12,8 @@ env:
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
   REPOSITORY: "docker.elastic.co/observability-ci"
   #GS_BUCKET_PATH: ingest-buildkite-ci
+  # bypass access to the google bucket for now
+  CI: "false"
 
 jobs:
   build-x86-64:
