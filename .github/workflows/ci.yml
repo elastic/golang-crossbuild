@@ -72,4 +72,5 @@ jobs:
           GS_BUCKET_PATH: "golang-crossbuild-tmp"
           # TODO: bypass access to the google bucket for now
           CI: "false"
+          # NOTE: as long as we don't use the google bucket but downloading from github
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
