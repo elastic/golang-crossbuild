@@ -20,6 +20,7 @@ jobs:
       contents: read
       id-token: write
     strategy:
+      fail-fast: false
       matrix:
         makefile: [
           "Makefile",
@@ -56,6 +57,7 @@ jobs:
       contents: read
       id-token: write
     strategy:
+      fail-fast: false
       matrix:
         makefile: [
           "Makefile.debian9"
