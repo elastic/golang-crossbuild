@@ -32,17 +32,17 @@ runs:
     - name: Docker build
       run: make -C "${MAKE_DIR}" -f "${MAKEFILE}" build${MAKE_GOAL_SUFFIX}
       env:
-        MAKE_DIR: ${{ inputs.make-directory }}
-        MAKEFILE: ${{ inputs.make-file }}
-        MAKE_GOAL_SUFFIX: ${{ inputs.make-goal-suffix }}
+        MAKE_DIR: "${{ inputs.make-directory }}"
+        MAKEFILE: "${{ inputs.make-file }}"
+        MAKE_GOAL_SUFFIX: "${{ inputs.make-goal-suffix }}"
       shell: bash
 
     - name: Docker build
       run: make -C "${MAKE_DIR}" -f "${MAKEFILE}" push${MAKE_GOAL_SUFFIX}
       env:
-        MAKE_DIR: ${{ inputs.make-directory }}
-        MAKEFILE: ${{ inputs.make-file }}
-        MAKE_GOAL_SUFFIX: ${{ inputs.make-goal-suffix }}
+        MAKE_DIR: "${{ inputs.make-directory }}"
+        MAKEFILE: "${{ inputs.make-file }}"
+        MAKE_GOAL_SUFFIX: "${{ inputs.make-goal-suffix }}"
       shell: bash
 
     - name: Docker images
