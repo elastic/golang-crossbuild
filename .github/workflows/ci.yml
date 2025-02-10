@@ -9,8 +9,8 @@ permissions:
 
 env:
   DOCKER_REGISTRY: "docker.elastic.co"
-  STAGING_IMAGE: "docker.elastic.co/observability-ci"
-  REPOSITORY: "docker.elastic.co/observability-ci"
+  STAGING_REPOSITORY: "docker.elastic.co/observability-ci"
+  PRODUCTION_REPOSITORY: "docker.elastic.co/beats-dev"
   # TODO: use the google bucket instead
   GS_BUCKET_PATH: "golang-crossbuild-tmp"
   # TODO: bypass access to the google bucket for now
@@ -82,8 +82,11 @@ jobs:
           add_bin_path
           with_mage
           make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}} push${{env.GOAL_SUFFIX}}
+        env:
+          # TODO: support for other release branches with the format [0-9]+.[0-9]+
+          REPOSITORY: "${{ startsWith(github.head_ref, 'main') && env.PRODUCTION_REPOSITORY || env.STAGING_REPOSITORY }}"
 
       - name: List docker images
         run: |
-          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
-          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${DOCKER_REGISTRY}/beats-dev/golang-crossbuild"
+          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_REPOSITORY}/golang-crossbuild"
+          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${PRODUCTION_REPOSITORY}/beats-dev/golang-crossbuild"
