@@ -24,11 +24,11 @@ jobs:
       matrix:
         makefile: [
           "Makefile",
-          "Makefile.debian7",
-          "Makefile.debian8",
-          "Makefile.debian9",
-          "Makefile.debian10",
-          "Makefile.debian11",
+          #"Makefile.debian7",
+          #"Makefile.debian8",
+          #"Makefile.debian9",
+          #"Makefile.debian10",
+          #"Makefile.debian11",
           "Makefile.debian12"
         ]
         fips: [ "false", "true" ]
@@ -40,11 +40,16 @@ jobs:
         with:
           go-version-file: ".go-version"
       - uses: elastic/oblt-actions/google/auth@v1
+      - name: 'Use gcloud CLI'
+        run: |
+          gcloud info || true
+          gsutil list -lra gs://golang-crossbuild-tmp/private || true
+          gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
+
       - run: |
           source .buildkite/scripts/common.sh
           add_bin_path
           with_mage
-          #google_cloud_auth
           GS_BUCKET_PATH="golang-crossbuild-tmp" make -C go -f "${{matrix.makefile}}" build
 
       - run: |
@@ -75,5 +80,4 @@ jobs:
           source .buildkite/scripts/common.sh
           add_bin_path
           with_mage
-          #google_cloud_auth
           GS_BUCKET_PATH="golang-crossbuild-tmp" make -C go -f "${{matrix.makefile}}" build-arm
