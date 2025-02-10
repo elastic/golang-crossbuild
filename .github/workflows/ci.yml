@@ -16,6 +16,7 @@ env:
   # TODO: bypass access to the google bucket for now
   CI: "false"
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MAKE_DIR: 'go'
 
 jobs:
   build-push:
@@ -75,11 +76,11 @@ jobs:
           password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
 
       - name: Docker build
-        run: make -C go -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}}
+        run: make -C ${{ env.MAKE_DIR }} -f "${{matrix.makefile}}" build${{env.GOAL_SUFFIX}}
 
       # TODO: uncomment when ready to push
       #- name: Docker push
-      #  run: make -C go -f "${{matrix.makefile}}" push${{env.GOAL_SUFFIX}}
+      #  run: make -C ${{ env.MAKE_DIR }} -f "${{matrix.makefile}}" push${{env.GOAL_SUFFIX}}
 
       - name: Docker images
         run: docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"

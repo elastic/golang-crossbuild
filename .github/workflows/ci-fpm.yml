@@ -1,0 +1,37 @@
+---
+name: ci-fpm
+
+on:
+  push:
+    paths:
+      - 'fpm/**'
+      - '.github/workflows/ci-fpm.yml'
+
+permissions:
+  contents: read
+
+env:
+  MAKE_DIR: 'fpm'
+
+jobs:
+  build-push:
+    runs-on: "ubuntu-24.04"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker login
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
+          username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
+          password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
+
+      - name: Docker build
+        run: make -C ${{ env.MAKE_DIR }} build
+
+      # TODO: uncomment when ready to push
+      #- name: Docker push
+      #  run: make -C ${{ env.MAKE_DIR }} push
+
+      - name: Docker images
+        run: docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
