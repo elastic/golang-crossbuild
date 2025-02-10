@@ -16,9 +16,14 @@ steps:
     steps:
       - label: ":linux: Staging / Ubuntu X86_64 - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "build-ubuntu-x86"
-        command:
-          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
-          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        command: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y qemu-kvm binfmt-support qemu-user-static
+          sudo update-binfmts --display
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          .buildkite/scripts/build.sh {{matrix.makefile}}
+          .buildkite/scripts/publish.sh {{matrix.makefile}}
         env:
           REPOSITORY: "${STAGING_IMAGE}"
           FIPS: "{{matrix.fips}}"
