@@ -19,9 +19,11 @@ inputs:
   make-goal-suffix:
     description: 'What make goal suffix'
     required: true
+
 runs:
   using: "composite"
   steps:
+    # TODO: use google auth action
     - name: Docker login
       uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
       with:
