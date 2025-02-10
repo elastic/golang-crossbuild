@@ -23,11 +23,11 @@ ifeq ($(CI),true)
 	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
-	mkdir -p $(CURDIR)/sdks/ $(CURDIR)/lib/
-	gh api https://github.com/the-tcpdump-group/tcpdump-htdocs/raw/refs/heads/master/release/libpcap-1.8.1.tar.gz -H "Accept: application/vnd.github.raw" > $(CURDIR)/sdks/libpcap-1.8.1.tar.gz
-	curl -sSfL -o $(CURDIR)/sdks/MacOSX11.3.sdk.tar.xz https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz
-	curl -sSfL -o $(CURDIR)/sdks/WpdPack_4_1_2.zip https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
-	touch $(CURDIR)/lib/npcap-1.80-oem.exe
+	mkdir -p ../sdks/ ../npcap/lib/
+	gh api https://github.com/the-tcpdump-group/tcpdump-htdocs/raw/refs/heads/master/release/libpcap-1.8.1.tar.gz -H "Accept: application/vnd.github.raw" > ../sdks/libpcap-1.8.1.tar.gz
+	curl -sSfL -o ../sdks/MacOSX11.3.sdk.tar.xz https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz
+	curl -sSfL -o ../sdks/WpdPack_4_1_2.zip https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
+	touch ../npcap/lib/npcap-1.80-oem.exe
 endif
 
 # Requires login at google storage.
