@@ -1,0 +1,77 @@
+---
+name: ci
+
+on:
+  push: ~
+
+permissions:
+  contents: read
+
+env:
+  DOCKER_REGISTRY: "docker.elastic.co"
+  STAGING_IMAGE: "docker.elastic.co/observability-ci"
+  GS_BUCKET_PATH: ingest-buildkite-ci
+
+jobs:
+  build-x86-64:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        makefile: [
+          "Makefile",
+          "Makefile.debian7",
+          "Makefile.debian8",
+          "Makefile.debian9",
+          "Makefile.debian10",
+          "Makefile.debian11",
+          "Makefile.debian12"
+        ]
+        fips: [ "false", "true" ]
+    env:
+      FIPS: "${{matrix.fips}}"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          source .buildkite/scripts/common.sh
+          add_bin_path
+          with_mage
+          #google_cloud_auth
+          make -C go -f "${{matrix.makefile}}" build
+        env:
+          REPOSITORY: "docker.elastic.co/observability-ci"
+      - run: |
+          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
+          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${DOCKER_REGISTRY}/beats-dev/golang-crossbuild"
+
+
+  build-arm-64:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        makefile: [
+          "Makefile.debian9"
+        ]
+        fips: [ "false", "true" ]
+    env:
+      FIPS: "${{matrix.fips}}"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ".go-version"
+      - run: |
+          source .buildkite/scripts/common.sh
+          add_bin_path
+          with_mage
+          #google_cloud_auth
+          make -C go -f "${{matrix.makefile}}" build
+        env:
+          REPOSITORY: "docker.elastic.co/observability-ci"
+
+
