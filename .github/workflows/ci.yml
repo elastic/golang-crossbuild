@@ -57,7 +57,7 @@ jobs:
           gsutil list -lra gs://golang-crossbuild-tmp/private || true
           gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
 
-      - name: Docker login
+      - name: Docker build and push
         uses: ./.github/actions/build-push
         with:
           docker-registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
