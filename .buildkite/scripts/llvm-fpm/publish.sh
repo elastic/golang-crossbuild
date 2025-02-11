@@ -11,5 +11,4 @@ if ! are_files_changed "$patterns" ; then
     exit 0
 fi
 
-add_bin_path
 retry 3 make -C ${makefile} push
