@@ -16,9 +16,9 @@ steps:
     steps:
       - label: ":linux: Staging / Ubuntu X86_64 - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "build-ubuntu-x86"
-        command: |
-          .buildkite/scripts/build.sh {{matrix.makefile}}
-          .buildkite/scripts/publish.sh {{matrix.makefile}}
+        command:
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
           FIPS: "{{matrix.fips}}"
