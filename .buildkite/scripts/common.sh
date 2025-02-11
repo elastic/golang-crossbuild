@@ -13,6 +13,12 @@ if [[ -z "${GOLANG_VERSION-""}" ]]; then
     export GOLANG_VERSION=$(cat "${WORKSPACE}/.go-version")
 fi
 
+create_bin() {
+    if [[ ! -d "${BIN}" ]]; then
+    mkdir -p ${BIN}
+    fi
+}
+
 retry() {
     local retries=$1
     shift
