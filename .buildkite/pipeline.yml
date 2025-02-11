@@ -2,7 +2,8 @@
 
 env:
   SETUP_GVM_VERSION: "v0.5.1"
-  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
+  IMAGE_UBUNTU_X86_64: "family/platform-ingest-beats-ubuntu-2204"
+  INSTANCE_TYPE_X86_64: "n2-standard-4"
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
@@ -28,6 +29,7 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+          instanceType: "${INSTANCE_TYPE_X86_64}"
         matrix:
           setup:
             makefile:
@@ -77,6 +79,7 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+          instanceType: "${INSTANCE_TYPE_X86_64}"
         matrix:
           setup:
             makefile:
@@ -126,3 +129,4 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
+          instanceType: "${INSTANCE_TYPE_X86_64}"
