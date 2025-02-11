@@ -214,7 +214,7 @@ stateDiagram-v2
 
 ## Releasing images for a new Go version
 
-With every new version of `go` we made a new branch with the name of the previous version to allow us to continue building the Docker images for the previous version of `go`. So if we are in go `1.21` and go `1.22` is released, we create a new branch `1.21`, then we update the `main` branch to install go `1.22` as explained in the below steps: 
+With every new version of `go` we made a new branch with the name of the previous version to allow us to continue building the Docker images for the previous version of `go`. So if we are in go `1.21` and go `1.22` is released, we create a new branch `1.21`, then we update the `main` branch to install go `1.22` as explained in the below steps:
 
 1. Update the Go version in [.go-version](https://github.com/elastic/golang-crossbuild/blob/main/.go-version).
 1. Update the Docker tag in
@@ -229,6 +229,16 @@ With every new version of `go` we made a new branch with the name of the previou
 1. When merging the PR, the automation will release those docker images.
 
 **NOTE**: Due to the changes in the Debian packages repositories, there are no guarantees that the Docker images for the previous version of `go` will continue to work after some time.
+
+## FIPS Build
+
+[Makefile.common](./go/Makefile.common) has an env var that can be used to create a FIPS compliant golang-crossbuild image:
+```make
+FIPS           ?=
+```
+
+When this var is set to `"true"` the [microsoft/go](https://github.com/microsoft/go) will be used instead of the regular upstream go release.
+Additionally the docker image will have the env vars `CGO_ENABLED=1` and `GOEXPERIMENT=systemcrypto` set to ensure binaries built within the crossbuild image are FIPS compliant by default.
 
 ## Packaging MacOS SDK
 

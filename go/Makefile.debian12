@@ -1,4 +1,4 @@
-IMAGES         := base main darwin arm armhf armel mips ppc s390x darwin-arm64 npcap
+IMAGES         := base main darwin arm armhf armel mips s390x darwin-arm64 npcap
 DEBIAN_VERSION := 12
 TAG_EXTENSION  := -debian12
 

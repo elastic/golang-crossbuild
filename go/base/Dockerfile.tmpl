@@ -32,11 +32,20 @@ RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
 ARG GOLANG_VERSION=1.24rc2
+{{- if eq .FIPS "true"}}
+ARG GOLANG_VERSION=1.23.6
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-amd64.tar.gz
+# Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
+ARG MSFT_DOWNLOAD_SHA256=6b6c3cea5a0469f10ba90c568c298d7f83717c6feb240005bbc41041a659400c
+ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
+{{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://go.dev/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=3835e217efb30c6ace65fcb98cb8f61da3429bfa9e3f6bb4e5e3297ccfc7d1a4
+ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
+{{- end }}
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
-	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& echo "$DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
 	&& rm -rf /usr/local/go \
 	&& tar -C /usr/local -xzf golang.tar.gz \
 	&& rm golang.tar.gz
@@ -67,6 +76,10 @@ RUN mkdir /libpcap \
     && rm libpcap-1.8.1.tar.gz
 
 
+{{- if eq .FIPS "true"}}
+ENV GOEXPERIMENT systemcrypto
+ENV CGO_ENABLED 1
+{{- end}}
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app

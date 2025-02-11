@@ -2,7 +2,8 @@
 
 env:
   SETUP_GVM_VERSION: "v0.5.1"
-  IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
+  IMAGE_UBUNTU_X86_64: "family/platform-ingest-beats-ubuntu-2204"
+  INSTANCE_TYPE_X86_64: "n2-standard-4"
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
@@ -13,13 +14,14 @@ steps:
     key: "staging"
 
     steps:
-      - label: ":linux: Staging / Ubuntu X86_64 - {{matrix.makefile}}"
+      - label: ":linux: Staging / Ubuntu X86_64 - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "build-ubuntu-x86"
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
+          FIPS: "{{matrix.fips}}"
         if: build.env("BUILDKITE_PULL_REQUEST") != "false"
         notify:
           - github_commit_status:
@@ -27,7 +29,7 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
-          diskSizeGb: 250
+          instanceType: "${INSTANCE_TYPE_X86_64}"
         matrix:
           setup:
             makefile:
@@ -38,14 +40,18 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+            fips:
+              - "false"
+              - "true"
 
-      - label: ":linux: Staging / Ubuntu ARM - Makefile.debian9"
+      - label: ":linux: Staging / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
         key: "build-ubuntu-arm"
         command:
           - ".buildkite/scripts/build.sh Makefile.debian9"
           - ".buildkite/scripts/publish.sh Makefile.debian9"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
+          FIPS: "{{matrix.fips}}"
         if: build.env("BUILDKITE_PULL_REQUEST") != "false"
         notify:
           - github_commit_status:
@@ -54,22 +60,28 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
-          diskSizeGb: 250
+        matrix:
+          setup:
+            fips:
+              - "false"
+              - "true"
 
   - group: "Release"
     key: "release"
 
     steps:
-      - label: ":linux: Release / Ubuntu X86_64 - {{matrix.makefile}}"
+      - label: ":linux: Release / Ubuntu X86_64 - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "release-ubuntu-x86"
         command:
           - ".buildkite/scripts/build.sh {{matrix.makefile}}"
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+        env:
+          FIPS: "{{matrix.fips}}"
         if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
-          diskSizeGb: 250
+          instanceType: "${INSTANCE_TYPE_X86_64}"
         matrix:
           setup:
             makefile:
@@ -80,21 +92,30 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+            fips:
+              - "false"
+              - "true"
         notify:
           - github_commit_status:
               context: "Release / Ubuntu X86_64"
 
-      - label: ":linux: Release / Ubuntu ARM - Makefile.debian9"
+      - label: ":linux: Release / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
         key: "release-ubuntu-arm"
         command:
           - ".buildkite/scripts/build.sh Makefile.debian9"
           - ".buildkite/scripts/publish.sh Makefile.debian9"
+        env:
+          FIPS: "{{matrix.fips}}"
         if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
-          diskSizeGb: 250
+        matrix:
+          setup:
+            fips:
+              - "false"
+              - "true"
         notify:
           - github_commit_status:
               context: "Release / Ubuntu ARM"
@@ -112,4 +133,4 @@ steps:
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
-          diskSizeGb: 250
+          instanceType: "${INSTANCE_TYPE_X86_64}"
