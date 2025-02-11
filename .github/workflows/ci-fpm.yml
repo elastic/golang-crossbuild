@@ -2,11 +2,13 @@
 name: ci-fpm
 
 on:
-  push:
-    paths:
-      - 'fpm/**'
-      - '.github/workflows/ci-fpm.yml'
-      - '.github/actions/build-push/**'
+  # disable for now unless it runs manually
+  workflow_dispatch:
+#  push:
+#    paths:
+#      - 'fpm/**'
+#      - '.github/workflows/ci-fpm.yml'
+#      - '.github/actions/build-push/**'
 
 permissions:
   contents: read

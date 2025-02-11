@@ -2,11 +2,13 @@
 name: ci-llvm-apple
 
 on:
-  push:
-    paths:
-      - 'go/llvm-apple/**'
-      - '.github/workflows/ci-llvm-apple.yml'
-      - '.github/actions/build-push/**'
+  # disable for now unless it runs manually
+  workflow_dispatch:
+  #push:
+  #  paths:
+  #    - 'go/llvm-apple/**'
+  #    - '.github/workflows/ci-llvm-apple.yml'
+  #    - '.github/actions/build-push/**'
 
 permissions:
   contents: read
