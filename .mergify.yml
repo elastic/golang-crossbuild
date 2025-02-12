@@ -7,7 +7,6 @@ queue_rules:
 pull_request_rules:
   - name: automatic approval for automated pull requests with golang bump updates
     conditions:
-      - author=apmmachine
       - check-success=buildkite/golang-crossbuild
       - label=automation
       - files~=^go/Makefile.common
@@ -20,7 +19,6 @@ pull_request_rules:
       - -merged
       - -closed
       - conflict
-      - -author=apmmachine
     actions:
         comment:
           message: |
@@ -37,7 +35,6 @@ pull_request_rules:
       - -merged
       - -closed
       - conflict
-      - author=apmmachine
       - label=automation
     actions:
       close:
@@ -178,6 +175,19 @@ pull_request_rules:
           - "{{ author }}"
         branches:
           - "1.22"
+        labels:
+          - "backport"
+        title: "[{{ destination_branch }}](backport #{{ number }}) {{ title }}"
+  - name: backport patches to 1.23 branch
+    conditions:
+      - merged
+      - label=backport-v1.23
+    actions:
+      backport:
+        assignees:
+          - "{{ author }}"
+        branches:
+          - "1.23"
         labels:
           - "backport"
         title: "[{{ destination_branch }}](backport #{{ number }}) {{ title }}"
