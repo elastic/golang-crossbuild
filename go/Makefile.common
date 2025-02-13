@@ -17,9 +17,12 @@ export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE
 
 DOCKER_CMD := docker build
 
-build: copy-npcap copy-sdks
+template:
+	@echo ">> Creating dockerfile from $(patsubst $(PWD)/%,%,$(CURDIR))/Dockerfile.tmpl"
+	@docker run --rm -it -v "$(PWD)":/usr/src -w /usr/src golang:$(VERSION)-alpine go run template.go -t $(patsubst $(PWD)/%,%,$(CURDIR))/Dockerfile.tmpl -o $(patsubst $(PWD)/%,%,$(SELF_DIR1))/Dockerfile
+
+build: copy-npcap copy-sdks template
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
-	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
 	@$(DOCKER_CMD) -t "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" \
 	--build-arg REPOSITORY=$(REPOSITORY) \
 	--build-arg VERSION=$(VERSION) \
