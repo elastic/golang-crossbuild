@@ -14,4 +14,4 @@ docker buildx create --name "${BUILDER_NAME}"
 docker buildx use "${BUILDER_NAME}"
 docker buildx inspect --bootstrap
 echo 'Build Docker image'
-docker buildx build --platform "${BUILDPLATFORM}" --push $*
+docker buildx build --progress=plain --platform "${BUILDPLATFORM}" --push $*
