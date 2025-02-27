@@ -42,24 +42,29 @@ steps:
               - "false"
               - "true"
 
-      - label: ":linux: Staging / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
-        key: "build-ubuntu-arm"
+      - label: ":linux: Staging / Ubuntu ARM64 - {{matrix.makefile}} - fips: {{matrix.fips}}"
+        key: "build-ubuntu-arm64"
         command:
-          - ".buildkite/scripts/build.sh Makefile.debian9"
-          - ".buildkite/scripts/publish.sh Makefile.debian9"
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
           FIPS: "{{matrix.fips}}"
         if: build.env("BUILDKITE_PULL_REQUEST") != "false"
         notify:
           - github_commit_status:
-              context: "Staging / Ubuntu ARM"
+              context: "Staging / Ubuntu {{matrix.makefile}}"
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
         matrix:
           setup:
+            makefile:
+              - "Makefile.debian9"
+              - "Makefile.debian10"
+              - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
