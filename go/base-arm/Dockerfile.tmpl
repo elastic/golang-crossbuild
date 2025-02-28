@@ -69,11 +69,12 @@ RUN ldd --version
 WORKDIR /
 
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
+ENV GOTOOLCHAIN local
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
     && go get . \
     && go env \
     && echo "toolcompile=$(go tool compile -V)" \
-    && go build -o /crossbuild /entrypoint.go \
+    && CGO_ENABLED=0 GOARCH=arm64 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
 COPY sdks/libpcap-1.8.1.tar.gz . 
