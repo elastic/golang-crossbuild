@@ -1,4 +1,4 @@
-IMAGES         := base main darwin armhf npcap
+IMAGES         := base main darwin arm armhf npcap
 ARM_IMAGES     := base-arm
 DEBIAN_VERSION := 9
 TAG_EXTENSION  := -debian9
@@ -11,7 +11,7 @@ build:
 build-arm:
 	@$(foreach var,$(ARM_IMAGES),$(MAKE) -C $(var) build-arm || exit 1;)
 
-# Requires login at https://docker-auth.elastic.co
+# Requires login at https://docker.elastic.co:7000/.
 push:
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) push || exit 1;)
 
