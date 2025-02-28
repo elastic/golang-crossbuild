@@ -1,4 +1,4 @@
-IMAGES         := base main darwin arm armhf npcap
+IMAGES         := base main darwin armhf npcap
 ARM_IMAGES     := base-arm
 DEBIAN_VERSION := 9
 TAG_EXTENSION  := -debian9
