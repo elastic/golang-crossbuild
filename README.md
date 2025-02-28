@@ -221,6 +221,7 @@ With every new version of `go` we made a new branch with the name of the previou
 1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.22`.
 1. Update the `go-minor` and `branch` values in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-previous.yml) with the old minor go version, i.e: `1.21`.
 1. Add an entry in the `.mergify.yml` file to support the label backport for `backport-v1.x-1`, i.e: `backport-v1.21`.
+1. Create the GitHub label backport for `backport-v1.x-1` in https://github.com/elastic/golang-crossbuild/labels, i.e: `backport-v1.21`.
 1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
 1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
 1. When merging the PR, the automation will release those docker images.
