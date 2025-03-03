@@ -6,7 +6,8 @@ BUILDPLATFORM=${BUILDPLATFORM:-"linux/amd64,linux/arm64"}
 
 BUILDER_NAME="multibuilder${RANDOM}"
 echo "Add support for multiarch"
-docker run --privileged --rm tonistiigi/binfmt:master --install all
+#docker run --privileged --rm tonistiigi/binfmt:master --install all
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
 
 docker buildx ls
 echo 'Create builder'
