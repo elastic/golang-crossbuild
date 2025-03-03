@@ -3,7 +3,6 @@
 env:
   SETUP_GVM_VERSION: "v0.5.1"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
-  IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   MAKEFILE: "fpm"
@@ -26,19 +25,3 @@ steps:
     agents:
       provider: "gcp"
       image: "${IMAGE_UBUNTU_X86_64}"
-
-  - label: ":linux: Build FPM / Ubuntu ARM64"
-    key: "build-ubuntu-arm64"
-    if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
-    command:
-      - ".buildkite/scripts/llvm-fpm/build.sh ${MAKEFILE} ${CHANGESET_FILE} ${DOCKER_FILTER_REF}"
-      - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE} ${CHANGESET_FILE}"
-    notify:
-      - github_commit_status:
-          context: "Build FPM / Ubuntu arm64"
-    env:
-      REPOSITORY: "${STAGING_IMAGE}"
-    agents:
-      provider: "aws"
-      imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
-      instanceType: "t4g.large"
