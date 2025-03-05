@@ -6,7 +6,7 @@ VERSION := 1.13.1
 build:
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)"
 	@go run ../template.go -t Dockerfile.tmpl -o Dockerfile
-	@docker run --privileged --rm tonistiigi/binfmt --install all
+	@docker run --privileged --rm tonistiigi/binfmt:v9.2.2 --install all
 
 	@docker buildx ls
 	@echo 'Create builder'
