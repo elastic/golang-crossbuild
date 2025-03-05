@@ -8,7 +8,7 @@ BUILDER_NAME="multibuilder${RANDOM}"
 echo "Add support for multiarch"
 # See https://docs.docker.com/build/building/multi-platform/#install-qemu-manually
 # We use QEMU for non arm platforms using the golang-crossbuild
-docker run --privileged --rm tonistiigi/binfmt --install all
+docker run --privileged --rm tonistiigi/binfmt:v9.2.2 --install all
 
 docker buildx ls
 echo 'Create builder'
