@@ -33,7 +33,11 @@ steps:
         matrix:
           setup:
             makefile:
+              - "Makefile"
+              - "Makefile.debian9"
+              - "Makefile.debian10"
               - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
@@ -57,6 +61,7 @@ steps:
         matrix:
           setup:
             makefile:
+              - "Makefile.debian9"
               - "Makefile.debian11"
             fips:
               - "false"
@@ -81,7 +86,11 @@ steps:
         matrix:
           setup:
             makefile:
+              - "Makefile"
+              - "Makefile.debian9"
+              - "Makefile.debian10"
               - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
@@ -104,6 +113,7 @@ steps:
         matrix:
           setup:
             makefile:
+              - "Makefile.debian9"
               - "Makefile.debian11"
             fips:
               - "false"
