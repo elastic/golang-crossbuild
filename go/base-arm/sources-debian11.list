@@ -1,2 +1,2 @@
-deb http://archive.debian.org/debian bullseye main
-deb [arch=arm64] http://archive.debian.org/debian-security bullseye/updates main
+deb http://deb.debian.org/debian bullseye main
+deb [arch=arm64] http://deb.debian.org/debian-security bullseye/updates main
