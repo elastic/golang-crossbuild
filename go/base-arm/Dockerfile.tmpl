@@ -25,13 +25,15 @@ RUN \
             libxml2-dev \
             libxml2 \
             libicu-dev \
-            libicu57 \
             icu-devtools \
             libsystemd-dev \
+            {{- if (eq .DEBIAN_VERSION "11") }}
+            libicu57 \
             librpm3  \
             librpmio3 \
             librpmbuild3 \
             librpmsign3 \
+            {{- end }}
             libsqlite3-dev \
             libnss3 \
             libsqlite3-0 \
