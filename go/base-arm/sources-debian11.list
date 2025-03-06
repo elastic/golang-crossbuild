@@ -1,2 +1,2 @@
 deb [trusted=yes] http://deb.debian.org/debian bullseye main
-deb [trusted=yes] [arch=arm64] https://security.debian.org/debian-security bullseye-security main
+deb [trusted=yes] [arch=arm64] http://deb.debian.org/debian-security bullseye-security main
