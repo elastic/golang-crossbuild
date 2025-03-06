@@ -27,7 +27,7 @@ RUN \
             libicu-dev \
             icu-devtools \
             libsystemd-dev \
-            {{- if (eq .DEBIAN_VERSION "11") }}
+            {{- if (ne .DEBIAN_VERSION "11") }}
             libicu57 \
             librpm3  \
             librpmio3 \
