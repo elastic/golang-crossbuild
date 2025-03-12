@@ -1,4 +1,3 @@
 ^\.buildkite/llvm-apple-pipeline.yml$
 ^\.buildkite/scripts/llvm-apple
-^\.buildkite/scripts/changeset/llvm-fpm
 ^go/llvm-apple/
