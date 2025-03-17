@@ -1,5 +1,5 @@
 * @elastic/elastic-agent-control-plane
 
 # Ownership of CI or related files by the Ingest Eng Prod team
-/.buildkite @elastic/ingest-eng-prod
-/catalog-info.yaml @elastic/ingest-eng-prod
+/.buildkite @elastic/observablt-robots
+/catalog-info.yaml @elastic/observablt-robots
