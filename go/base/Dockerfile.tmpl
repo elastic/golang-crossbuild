@@ -31,15 +31,15 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
-ARG GOLANG_VERSION=1.23.7
+ARG GOLANG_VERSION=1.24.1
 {{- if eq .FIPS "true"}}
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-amd64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
-ARG MSFT_DOWNLOAD_SHA256=aafcfa90c65ba5d44f38875801adf812f82f37d2ef5ea57ef9bb71cab3e3612e
+ARG MSFT_DOWNLOAD_SHA256=b0ca85ecc435a93e2ddb626dd9ef7fb6689700a0847b0392eb3e146345a8dea0
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=4741525e69841f2e22f9992af25df0c1112b07501f61f741c12c6389fcb119f3
+ARG GOLANG_DOWNLOAD_SHA256=cb2396bae64183cdccf81a9a6df0aea3bce9511fc21469fb89a0c00470088073
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end }}
 
