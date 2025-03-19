@@ -75,8 +75,8 @@ steps:
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           FIPS: "{{matrix.fips}}"
-        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for x.y.z.x).
-        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+/
+        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+/ || build.branch =~ /^[0-9]+\.[0-9]+\.[0-9]+\.x$$/
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
@@ -103,8 +103,8 @@ steps:
           - ".buildkite/scripts/publish.sh Makefile.debian9"
         env:
           FIPS: "{{matrix.fips}}"
-        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for x.y.z.x).
-        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+/
+        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/ || build.branch =~ /^[0-9]+\.[0-9]+\.[0-9]+\.x$$/
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
