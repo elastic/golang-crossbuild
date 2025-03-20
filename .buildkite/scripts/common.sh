@@ -139,6 +139,16 @@ tag_Exists() {
   fi
 }
 
+release_exists() {
+  local releases=$(retry 3 curl -s -u ${GITHUB_TOKEN_SECRET}:x-oauth-basic https://api.github.com/repos/elastic/${REPO}/releases)
+  echo ":: RELEASES ::"
+  echo $releases
+
+  if [[ $releases == *"${GOLANG_VERSION}"* ]]; then
+    echo ":: RELEASE EXISTS! ::"
+  fi
+}
+
 check_is_arm() {
   if [[ ${HW_TYPE} == "aarch64" || ${HW_TYPE} == "arm64" ]]; then
     is_arm="-arm"
