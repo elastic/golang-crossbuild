@@ -62,7 +62,9 @@ steps:
           setup:
             makefile:
               - "Makefile.debian9"
+              - "Makefile.debian10"
               - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
@@ -114,7 +116,9 @@ steps:
           setup:
             makefile:
               - "Makefile.debian9"
+              - "Makefile.debian10"
               - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
