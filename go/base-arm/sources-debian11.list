@@ -1,0 +1,4 @@
+# see https://wiki.debian.org/CrossToolchains
+deb [arch=arm64] http://deb.debian.org/debian bullseye main
+deb [arch=arm64] http://deb.debian.org/debian bullseye-updates main
+deb [arch=arm64] http://deb.debian.org/debian-security/ bullseye-security main
