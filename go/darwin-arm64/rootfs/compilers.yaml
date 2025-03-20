@@ -1,9 +1,6 @@
 ---
 
 darwin:
-  amd64:
-    CC:  o64-clang
-    CXX: o64-clang++
   arm64:
     CC:  oa64-clang
     CXX: oa64-clang++
