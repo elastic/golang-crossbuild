@@ -25,8 +25,8 @@ by mounting the project inside of a container equipped with cross-compilers.
 The root of your project's repo should be mounted at the appropriate location
 on the GOPATH which is set to /go.
 
-While executing the build command the following variables with be added to the
-environment: GOOS, GOARCH, GOARM, PLATFORM_ID, CC, and CXX.
+While executing the build command the following variables will be added to the
+environment: GOOS, GOARCH, GOARM, GOTOOLCHAIN=local, PLATFORM_ID, CC, and CXX.
 `,
 	RunE:         doBuild,
 	SilenceUsage: true,
@@ -104,6 +104,7 @@ func buildEnvironment(platform string) (map[string]string, error) {
 		"GOOS":        goos,
 		"GOARCH":      goarch,
 		"GOARM":       goarm,
+		"GOTOOLCHAIN": "local", // Disable automatic downloads of toolchains for reproducible builds.
 		"PLATFORM_ID": platformID,
 	}
 
