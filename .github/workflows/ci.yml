@@ -1,0 +1,86 @@
+---
+name: ci
+
+on:
+  push: ~
+
+permissions:
+  contents: read
+
+env:
+  # TODO: support for other release branches with the format [0-9]+.[0-9]+
+  REPOSITORY: "${{ startsWith(github.head_ref, 'main') && 'docker.elastic.co/beats-dev' || 'docker.elastic.co/observability-ci' }}"
+  # TODO: use the google bucket instead
+  GS_BUCKET_PATH: "golang-crossbuild-tmp"
+  # TODO: bypass access to the google bucket for now
+  CI: "false"
+  # NOTE: as long as we don't use the google bucket but downloading from github
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-push:
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        makefile: [
+          "Makefile",
+          "Makefile.debian9",
+          "Makefile.debian10",
+          "Makefile.debian11",
+          "Makefile.debian12"
+        ]
+        fips: [ "false", "true" ]
+    runs-on: "ubuntu-24.04"
+    env:
+      FIPS: "${{matrix.fips}}"
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO: move to the build-push composite action
+      #       then need to enable the support ci-fpm ane ci-llvm-apple
+      - uses: elastic/oblt-actions/google/auth@v1
+
+      - name: Debug gcloud CLI
+        run: |
+          gcloud info || true
+          gsutil list -lra gs://golang-crossbuild-tmp/private || true
+          gcloud auth list --filter=status:ACTIVE --format="value(account)" || true
+
+      - name: Docker build and push
+        uses: ./.github/actions/build-push
+        with:
+          docker-registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
+          docker-username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
+          docker-password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
+          make-directory: 'go'
+          make-file: "${{matrix.makefile}}"
+
+  build-push-arm:
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        fips: [ "false", "true" ]
+    runs-on: "ubuntu-24.04-arm"
+    env:
+      FIPS: "${{matrix.fips}}"
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO: move to the build-push composite action
+      - uses: elastic/oblt-actions/google/auth@v1
+
+      - name: Docker build and push
+        uses: ./.github/actions/build-push
+        with:
+          docker-registry: ${{ secrets.ELASTIC_DOCKER_REGISTRY }}
+          docker-username: ${{ secrets.ELASTIC_DOCKER_USERNAME }}
+          docker-password: ${{ secrets.ELASTIC_DOCKER_PASSWORD }}
+          make-directory: 'go'
+          make-file: 'Makefile.debian9'
+          make-goal-suffix: '-arm'
