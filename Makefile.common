@@ -9,6 +9,13 @@ SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 GS_BUCKET_PATH ?= ingest-buildkite-ci
 
+
+ifeq ($(BUILDX),1)
+ifeq ($(shell test $(DEBIAN_VERSION) -ge 10; echo $$?),0)
+DOCKER_MULTIARCH := 1
+endif
+endif
+
 # Requires login at google storage.
 copy-npcap:
 ifeq ($(CI),true)
