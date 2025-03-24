@@ -42,11 +42,11 @@ steps:
               - "false"
               - "true"
 
-      - label: ":linux: Staging / Ubuntu ARM - {{matrix.makefile}} - fips: {{matrix.fips}}"
+      - label: ":linux: Staging / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
         key: "build-ubuntu-arm"
         command:
-          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
-          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/build.sh Makefile.debian9"
+          - ".buildkite/scripts/publish.sh Makefile.debian9"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
           FIPS: "{{matrix.fips}}"
@@ -60,11 +60,6 @@ steps:
           instanceType: "t4g.large"
         matrix:
           setup:
-            makefile:
-              - "Makefile.debian9"
-              - "Makefile.debian10"
-              - "Makefile.debian11"
-              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
@@ -101,11 +96,11 @@ steps:
           - github_commit_status:
               context: "Release / Ubuntu X86_64"
 
-      - label: ":linux: Release / Ubuntu ARM - {{matrix.makefile}} - fips: {{matrix.fips}}"
+      - label: ":linux: Release / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
         key: "release-ubuntu-arm"
         command:
-          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
-          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/build.sh Makefile.debian9"
+          - ".buildkite/scripts/publish.sh Makefile.debian9"
         env:
           FIPS: "{{matrix.fips}}"
         # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
@@ -116,11 +111,6 @@ steps:
           instanceType: "t4g.large"
         matrix:
           setup:
-            makefile:
-              - "Makefile.debian9"
-              - "Makefile.debian10"
-              - "Makefile.debian11"
-              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
