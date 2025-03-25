@@ -3,15 +3,7 @@ ARG VERSION
 ARG TAG_EXTENSION=''
 
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
-FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple-amd64
-FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple-arm64
-# workaround to https://github.com/moby/moby/issues/34482
-ARG TARGETARCH=amd64
-ARG BUILDARCH=amd64
-FROM build-llvm-apple-${TARGETARCH} as build-llvm-apple
-ARG TARGETARCH
-ARG BUILDARCH
-RUN echo "Building ${TARGETARCH} on a ${BUILDARCH}"
+FROM --platform=linux/amd64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-amd64 AS build-llvm-apple
 {{- end }}
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
