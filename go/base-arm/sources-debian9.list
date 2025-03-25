@@ -1,2 +1,2 @@
-deb [arch=arm64] http://archive.debian.org/debian stretch main
+deb http://archive.debian.org/debian stretch main
 deb [arch=arm64] http://archive.debian.org/debian-security stretch/updates main
