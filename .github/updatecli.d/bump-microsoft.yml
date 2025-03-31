@@ -1,6 +1,6 @@
 ---
 name: Bump golang-microsoft to latest version
-pipelineid: 'bump-golang-version-{{ requiredEnv "BRANCH" }}'
+pipelineid: 'bump-golang-microsoft-version-{{ requiredEnv "BRANCH" }}'
 
 scms:
   githubConfig:
@@ -26,7 +26,7 @@ actions:
         - dependencies
         - backport-skip
       description: |
-        See [changelog](https://github.com/golang/go/issues?q=milestone%3AGo{{ source "latestGoVersion" }}+label%3ACherryPickApproved) for {{ source "latestGoVersion" }}
+        See https://github.com/microsoft/go/releases/v{{ source "latestGoVersion" }}
 
 sources:
   minor:
