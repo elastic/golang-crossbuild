@@ -59,7 +59,8 @@ RUN \
 
 ARG GOLANG_VERSION=1.24.1
 {{- if eq .FIPS "true"}}
-ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION.linux-arm64.tar.gz
+ARG SECURITY_VERSION=
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION$SECURITY_VERSION.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
 ARG MSFT_DOWNLOAD_SHA256=73b1befea457d5967632b2b0b93f8d2c0d899d5b6fbd1396c55d0a015292608b
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
