@@ -32,9 +32,9 @@ find "go" -type f -name Dockerfile.tmpl -print0 |
         ${SED} -E -e "s#(ARG GOLANG_VERSION)=[0-9]+\.[0-9]+(\.[0-9]+)?#\1=${MAJOR_MINOR_PATCH_VERSION}#g" "$line"
         if echo "$line" | grep -q 'arm' ; then
             ${SED} -E -e "s#(ARG MSFT_DOWNLOAD_SHA256)=.+#\1=${MSFT_DOWNLOAD_SHA256_ARM}#g" "$line"
-            ${SED} -E -e "s#(ARG SECURITY_VERSION)=.+#\1=${SECURITY_VERSION}#g" "$line"
+            ${SED} -E -e "s#(ARG SECURITY_VERSION)=.*#\1=${SECURITY_VERSION}#g" "$line"
         else
             ${SED} -E -e "s#(ARG MSFT_DOWNLOAD_SHA256)=.+#\1=${MSFT_DOWNLOAD_SHA256_AMD}#g" "$line"
-            ${SED} -E -e "s#(ARG SECURITY_VERSION)=.+#\1=${SECURITY_VERSION}#g" "$line"
+            ${SED} -E -e "s#(ARG SECURITY_VERSION)=.*#\1=${SECURITY_VERSION}#g" "$line"
         fi
     done
