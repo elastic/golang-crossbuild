@@ -37,15 +37,15 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.23.7
+ARG GOLANG_VERSION=1.23.8
 {{- if eq .FIPS "true"}}
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
-ARG MSFT_DOWNLOAD_SHA256=edbbeb2bba93a0956ff238867da2864a71e0b3813211864c355b5966fa95ea67
+ARG MSFT_DOWNLOAD_SHA256=6367764f5e2886e6e3a32c986d7d426f500423cb4c06ea80d844bd4013b96e62
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=597acbd0505250d4d98c4c83adf201562a8c812cbcd7b341689a07087a87a541
+ARG GOLANG_DOWNLOAD_SHA256=9d6d938422724a954832d6f806d397cf85ccfde8c581c201673e50e634fdc992
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end}}
 
