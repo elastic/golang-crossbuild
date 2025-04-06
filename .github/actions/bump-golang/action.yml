@@ -33,7 +33,7 @@ runs:
           ref: ${{ inputs.branch }}
 
       - name: Install Updatecli in the runner
-        uses: updatecli/updatecli-action@3a8785d88ec4fa03d86521a181f37c0e74627463 # v2.64.0
+        uses: updatecli/updatecli-action@f11c0cb3aca7a018d6000dc86a57eb3442277219 # v2.81.0
 
       - name: Run Updatecli in Apply mode
         run: updatecli ${{ env.COMMAND }} --config ./.github/updatecli.d/
@@ -45,7 +45,7 @@ runs:
         shell: bash
 
       - if: ${{ failure()  }}
-        uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e # v1.26.0
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
         with:
           channel-id: ${{ inputs.slack-channel-id }}
           payload: |
