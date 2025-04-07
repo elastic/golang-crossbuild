@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-IMAGES         := base main darwin arm armhf armel mips s390x darwin-arm64 npcap
-=======
 IMAGES         := base main darwin armhf armel mips ppc s390x npcap
 ARM_IMAGES     := base-arm darwin-arm64
->>>>>>> d40b4f7 (Revert "Remove building ppc (#504) (#513)" (#582))
 DEBIAN_VERSION := 12
 TAG_EXTENSION  := -debian12
 
