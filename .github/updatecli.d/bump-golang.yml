@@ -82,6 +82,13 @@ conditions:
     spec:
       command: grep 'VERSION        := {{ source `latestGoVersion` }}' go/Makefile.common && exit 1 || exit 0
     failwhen: false
+  is-not-available:
+    name: Is assets.json available?
+    kind: file
+    disablesourceinput: true
+    spec:
+      file: https://aka.ms/golang/release/latest/go{{ source `latestGoVersion` }}.assets.json
+    failwhen: true
 
 targets:
   update-go-version:
