@@ -67,7 +67,6 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips-debian11` - linux/mips64, linux/mips64el
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips-debian12` - linux/mips64, linux/mips64el
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-mips32` - linux/mips, linux/mipsle **NOTE**: it does not exist from Golang versions > `1.18.5`/`1.17.12`.
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc-debian11` - linux/ppc64, linux/ppc64le
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-ppc-debian12` - linux/ppc64, linux/ppc64le
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian11` - linux/s390x
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-s390x-debian12` - linux/s390x
