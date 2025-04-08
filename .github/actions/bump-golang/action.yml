@@ -39,4 +39,10 @@ runs:
           slack-channel-id: ${{ inputs.slack-channel-id }}
           slack-message: ${{ inputs.slack-message }}
           slack-send-when: "failure"
+          # TODO: automate the bump for this version.
           version: v0.81.1
+        env:
+          COMMAND: ${{ inputs.command }}
+          BRANCH: ${{ inputs.branch }}
+          GO_MINOR: ${{ inputs.go-minor }}
+          GITHUB_TOKEN: ${{ inputs.github-token }}
