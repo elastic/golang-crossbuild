@@ -32,16 +32,29 @@ runs:
         with:
           ref: ${{ inputs.branch }}
 
+<<<<<<< HEAD
       - name: Install Updatecli in the runner
         uses: updatecli/updatecli-action@92a13b95c2cd9f1c6742c965509203c6a5635ed7 # v2.68.0
 
       - name: Run Updatecli in Apply mode
         run: updatecli ${{ env.COMMAND }} --config ./.github/updatecli.d/bump-golang.yml
+=======
+      - uses: elastic/oblt-actions/updatecli/run-and-notify@v1
+        with:
+          command: ${{ env.COMMAND }} --config ./.github/updatecli.d/
+          slack-bot-token: ${{ inputs.slack-bot-token }}
+          slack-channel-id: ${{ inputs.slack-channel-id }}
+          slack-message: ${{ inputs.slack-message }}
+          slack-send-when: "failure"
+          # TODO: automate the bump for this version.
+          version: v0.81.1
+>>>>>>> d04122a (updatecli: use the oblt-actions (#588))
         env:
           COMMAND: ${{ inputs.command }}
           BRANCH: ${{ inputs.branch }}
           GO_MINOR: ${{ inputs.go-minor }}
           GITHUB_TOKEN: ${{ inputs.github-token }}
+<<<<<<< HEAD
         shell: bash
 
       - if: ${{ failure()  }}
@@ -64,3 +77,5 @@ runs:
         env:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
           SLACK_MESSAGE: ${{ inputs.slack-message }}
+=======
+>>>>>>> d04122a (updatecli: use the oblt-actions (#588))
