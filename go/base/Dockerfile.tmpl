@@ -70,7 +70,7 @@ RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
     && CGO_ENABLED=0 GOARCH=amd64 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-COPY sdks/libpcap-1.8.1.tar.gz . 
+COPY sdks/libpcap-1.8.1.tar.gz .
 RUN mkdir /libpcap \
     && tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
     && rm libpcap-1.8.1.tar.gz
