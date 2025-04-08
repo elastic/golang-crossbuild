@@ -7,22 +7,32 @@ NPCAP_VERSION := 1.80
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
-GS_BUCKET_PATH ?= ingest-buildkite-ci
+GS_BUCKET_PATH ?=
 
 # Requires login at google storage.
 copy-npcap:
+	@echo 'cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE)'
 ifeq ($(CI),true)
 	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
+	mkdir -p ../npcap/lib/
+	touch ../npcap/lib/npcap-1.80-oem.exe
 endif
 
 # Requires login at google storage.
 copy-sdks:
+	@echo 'cp gs://$(GS_BUCKET_PATH)/sdks'
 ifeq ($(CI),true)
-	@gcloud storage cp gs://ingest-buildkite-ci/sdks . --recursive
+	@gcloud storage cp gs://$(GS_BUCKET_PATH)/sdks . --recursive
 else
 	@echo 'Only available if running in the CI'
+	mkdir -p sdks/
+	gh api https://github.com/the-tcpdump-group/tcpdump-htdocs/raw/refs/heads/master/release/libpcap-1.8.1.tar.gz -H "Accept: application/vnd.github.raw" > sdks/libpcap-1.8.1.tar.gz
+	curl -sSfL -o sdks/MacOSX10.11.sdk.tar.xz https://s3.amazonaws.com/beats-files/deps/MacOSX10.11.sdk.tar.xz
+	curl -sSfL -o sdks/WpdPack_4_1_2.zip https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
+# see https://github.com/elastic/golang-crossbuild/pull/454/files#diff-36b826ca106e191815b93280143b7cfd13c583e4adc3e27442a5057ac7294586L54
+	curl -sSfL -o sdks/MacOSX11.3.sdk.tar.xz https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz
 endif
 
 push:
