@@ -32,35 +32,11 @@ runs:
         with:
           ref: ${{ inputs.branch }}
 
-      - name: Install Updatecli in the runner
-        uses: updatecli/updatecli-action@3a8785d88ec4fa03d86521a181f37c0e74627463 # v2.64.0
-
-      - name: Run Updatecli in Apply mode
-        run: updatecli ${{ env.COMMAND }} --config ./.github/updatecli.d/
-        env:
-          COMMAND: ${{ inputs.command }}
-          BRANCH: ${{ inputs.branch }}
-          GO_MINOR: ${{ inputs.go-minor }}
-          GITHUB_TOKEN: ${{ inputs.github-token }}
-        shell: bash
-
-      - if: ${{ failure()  }}
-        uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e # v1.26.0
+      - uses: elastic/oblt-actions/updatecli/run-and-notify@v1
         with:
-          channel-id: ${{ inputs.slack-channel-id }}
-          payload: |
-            {
-              "text": "${{ env.SLACK_MESSAGE }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ env.SLACK_MESSAGE }}"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
-          SLACK_MESSAGE: ${{ inputs.slack-message }}
+          command: ${{ env.COMMAND }} --config ./.github/updatecli.d/
+          slack-bot-token: ${{ inputs.slack-bot-token }}
+          slack-channel-id: ${{ inputs.slack-channel-id }}
+          slack-message: ${{ inputs.slack-message }}
+          slack-send-when: "failure"
+          version: v0.81.1
