@@ -80,7 +80,8 @@ steps:
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           FIPS: "{{matrix.fips}}"
-        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+/ || build.branch =~ /^[0-9]+\.[0-9]+\.[0-9]+\.x$$/
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
@@ -107,7 +108,8 @@ steps:
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           FIPS: "{{matrix.fips}}"
-        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/ || build.branch =~ /^[0-9]+\.[0-9]+\.[0-9]+\.x$$/
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
@@ -129,6 +131,7 @@ steps:
       - label: "Post-Release"
         key: "release-post"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
+        # Releases should only be for main for ^[0-9].[0-9]$ branches.
         if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         depends_on:
           - "release-ubuntu-x86"
