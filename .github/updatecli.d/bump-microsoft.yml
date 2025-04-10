@@ -41,19 +41,11 @@ sources:
 
   latestGoVersion:
     name: Get Latest Go Release
-    kind: githubrelease
+    kind: shell
     dependson:
       - minor
-    transformers:
-      - trimprefix: v
     spec:
-      owner: microsoft
-      repository: go
-      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
-      versionfilter:
-        kind: regex
-        pattern: v1\.{{ source "minor" }}\.(\d*)-(\d*)$
+      command: echo 1.24.3-2
 
   securityVersion:
     name: Get security version
