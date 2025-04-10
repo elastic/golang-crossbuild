@@ -55,7 +55,7 @@ sources:
         kind: regex
         pattern: v1\.{{ source "minor" }}\.(\d*)-(\d*)$
 
-  security:
+  securityVersion:
     name: Get security version
     dependson:
       - latestGoVersion
@@ -63,17 +63,17 @@ sources:
     transformers:
       - findsubmatch:
           pattern: '^1.{{ source "minor" }}.\d+-(\d+)'
-          captureindex: 2
+          captureindex: 1
     spec:
       command: echo {{ source "latestGoVersion" }}
 
 conditions:
   is-already-updated:
-    name: Is security version '{{ source "security" }}' not updated in 'go/base/Dockerfile.tmpl'?
+    name: Is security version '{{ source "securityVersion" }}' not updated in 'go/base/Dockerfile.tmpl'?
     disablesourceinput: true
     kind: shell
     spec:
-      command: grep 'ARG SECURITY_VERSION={{ source `security` }}' go/base/Dockerfile.tmpl && exit 1 || exit 0
+      command: grep 'ARG SECURITY_VERSION={{ source `securityVersion` }}' go/base/Dockerfile.tmpl && exit 1 || exit 0
     failwhen: false
 
 targets:
