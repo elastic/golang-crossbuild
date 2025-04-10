@@ -65,8 +65,8 @@ conditions:
     disablesourceinput: true
     kind: shell
     spec:
-      command: grep 'ARG SECURITY_VERSION={{ source `securityVersion` }}' go/base/Dockerfile.tmpl && exit 1 || exit 0
-    failwhen: true
+      command: grep 'ARG SECURITY_VERSION={{ source `securityVersion` }}' go/base/Dockerfile.tmpl && exit 0 || exit 1
+    failwhen: false
 
 targets:
   update-go-versions:
