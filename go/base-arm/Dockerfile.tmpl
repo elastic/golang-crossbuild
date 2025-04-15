@@ -25,27 +25,48 @@ RUN \
             libxml2-dev \
             libxml2 \
             libicu-dev \
-            libicu57 \
             icu-devtools \
             libsystemd-dev \
+            {{- if eq .DEBIAN_VERSION "9" }}
+            libicu57 \
             librpm3  \
             librpmio3 \
             librpmbuild3 \
             librpmsign3 \
+            {{- else if eq .DEBIAN_VERSION "10" }}
+            libicu63 \
+            librpm8  \
+            librpmio8 \
+            librpmbuild8 \
+            librpmsign8 \
+            {{- else if eq .DEBIAN_VERSION "11" }}
+            libicu67 \
+            librpm9  \
+            librpmio9 \
+            librpmbuild9 \
+            librpmsign9 \
+            {{- else }}
+            libicu72 \
+            librpm9  \
+            librpmio9 \
+            librpmbuild9 \
+            librpmsign9 \
+            {{- end }}
             libsqlite3-dev \
             libnss3 \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.24.0
+ARG GOLANG_VERSION=1.24.2
 {{- if eq .FIPS "true"}}
-ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-arm64.tar.gz
+ARG SECURITY_VERSION=-1
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION$SECURITY_VERSION.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
-ARG MSFT_DOWNLOAD_SHA256=5c58f2a182d9cf9d48e3fb1cc81136980ca9a5b17b0a8e2ea95844fc72408154
+ARG MSFT_DOWNLOAD_SHA256=26531b0ff1add9922b05b0dc8535dce5a9ca09517b6320d21d0dd77dc7f1f536
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=c3fa6d16ffa261091a5617145553c71d21435ce547e44cc6dfb7470865527cc7
+ARG GOLANG_DOWNLOAD_SHA256=756274ea4b68fa5535eb9fe2559889287d725a8da63c6aae4d5f23778c229f4b
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end}}
 
@@ -69,14 +90,15 @@ RUN ldd --version
 WORKDIR /
 
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
+ENV GOTOOLCHAIN local
 RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
     && go get . \
     && go env \
     && echo "toolcompile=$(go tool compile -V)" \
-    && go build -o /crossbuild /entrypoint.go \
+    && CGO_ENABLED=0 GOARCH=arm64 go build -o /crossbuild /entrypoint.go \
     && rm -rf /go/* /root/.cache/* /entrypoint.go
 
-COPY sdks/libpcap-1.8.1.tar.gz . 
+COPY sdks/libpcap-1.8.1.tar.gz .
 RUN mkdir /libpcap \
   && tar -xzf libpcap-1.8.1.tar.gz -C /libpcap \
   && cd /libpcap/libpcap-1.8.1 \

@@ -11,12 +11,11 @@ env:
   BUILDX: "0"
 
 steps:
-  - label: ":linux: Build FPM / Ubuntu X86_64"
-    key: "build-ubuntu-x86"
+  - label: ":linux: multiarch Linux x86_64/arm64 FPM docker image"
+    key: "build-and-publish-ubuntu-x86"
     if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
     command:
-      - ".buildkite/scripts/llvm-fpm/build.sh ${MAKEFILE} ${CHANGESET_FILE} ${DOCKER_FILTER_REF}"
-      - ".buildkite/scripts/llvm-fpm/publish.sh ${MAKEFILE} ${CHANGESET_FILE}"
+      - ".buildkite/scripts/llvm-fpm/build_and_publish.sh ${MAKEFILE} ${CHANGESET_FILE} ${DOCKER_FILTER_REF}"
     notify:
       - github_commit_status:
           context: "Build FPM / Ubuntu X86_64"

@@ -30,6 +30,9 @@ steps:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
           instanceType: "${INSTANCE_TYPE_X86_64}"
+        retry:
+          automatic:
+            limit: 1
         matrix:
           setup:
             makefile:
@@ -42,11 +45,11 @@ steps:
               - "false"
               - "true"
 
-      - label: ":linux: Staging / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
+      - label: ":linux: Staging / Ubuntu ARM - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "build-ubuntu-arm"
         command:
-          - ".buildkite/scripts/build.sh Makefile.debian9"
-          - ".buildkite/scripts/publish.sh Makefile.debian9"
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           REPOSITORY: "${STAGING_IMAGE}"
           FIPS: "{{matrix.fips}}"
@@ -58,8 +61,16 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+        retry:
+          automatic:
+            limit: 1
         matrix:
           setup:
+            makefile:
+              - "Makefile.debian9"
+              - "Makefile.debian10"
+              - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
@@ -75,11 +86,15 @@ steps:
           - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           FIPS: "{{matrix.fips}}"
-        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+/ || build.branch =~ /^[0-9]+\.[0-9]+\.[0-9]+\.x$$/
         agents:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
           instanceType: "${INSTANCE_TYPE_X86_64}"
+        retry:
+          automatic:
+            limit: 1
         matrix:
           setup:
             makefile:
@@ -95,20 +110,29 @@ steps:
           - github_commit_status:
               context: "Release / Ubuntu X86_64"
 
-      - label: ":linux: Release / Ubuntu ARM - Makefile.debian9 - fips: {{matrix.fips}}"
+      - label: ":linux: Release / Ubuntu ARM - {{matrix.makefile}} - fips: {{matrix.fips}}"
         key: "release-ubuntu-arm"
         command:
-          - ".buildkite/scripts/build.sh Makefile.debian9"
-          - ".buildkite/scripts/publish.sh Makefile.debian9"
+          - ".buildkite/scripts/build.sh {{matrix.makefile}}"
+          - ".buildkite/scripts/publish.sh {{matrix.makefile}}"
         env:
           FIPS: "{{matrix.fips}}"
-        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
+        # Releases should only be for main for ^[0-9].[0-9] branches (therefore support for major.minor.patch.x too).
+        if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/ || build.branch =~ /^[0-9]+\.[0-9]+\.[0-9]+\.x$$/
         agents:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+        retry:
+          automatic:
+            limit: 1
         matrix:
           setup:
+            makefile:
+              - "Makefile.debian9"
+              - "Makefile.debian10"
+              - "Makefile.debian11"
+              - "Makefile.debian12"
             fips:
               - "false"
               - "true"
@@ -119,6 +143,7 @@ steps:
       - label: "Post-Release"
         key: "release-post"
         command: ".buildkite/scripts/post-release.sh ${GOLANG_VERSION}"
+        # Releases should only be for main for ^[0-9].[0-9]$ branches.
         if: build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
         depends_on:
           - "release-ubuntu-x86"

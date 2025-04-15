@@ -47,9 +47,9 @@ spec:
           build.pull_request.id == null || (build.creator.name == 'elasticmachine' && build.pull_request.id != null)
       repository: elastic/golang-crossbuild
       cancel_intermediate_builds: true
-      cancel_intermediate_builds_branch_filter: '!main'
+      cancel_intermediate_builds_branch_filter: '!main !1.*'
       skip_intermediate_builds: true
-      skip_intermediate_builds_branch_filter: '!main'
+      skip_intermediate_builds_branch_filter: '!main !1.*'
       env:
          ELASTIC_PR_COMMENTS_ENABLED: 'true'
       teams:
