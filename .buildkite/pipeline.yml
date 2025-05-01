@@ -155,3 +155,8 @@ steps:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
           instanceType: "${INSTANCE_TYPE_X86_64}"
+
+# TODO: look for the right slack channel. Robots team don't own this project.
+notify:
+  - slack: "#observablt-bots"
+    if: build.state == "failed"
