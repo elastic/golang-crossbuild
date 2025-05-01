@@ -74,7 +74,7 @@ conditions:
     kind: shell
     spec:
       command: grep 'ARG SECURITY_VERSION={{ source `securityVersion` }}' go/base/Dockerfile.tmpl && exit 1 || exit 0
-    failwhen: true
+    failwhen: false
 
 targets:
   update-go-versions:
