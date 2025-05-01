@@ -14,7 +14,7 @@ inputs:
   slack-message:
     description: 'Slack message if failure'
     required: false
-    default: ":traffic_cone: updatecli failed for `${{ github.repository }}@${{ github.ref_name }}`, @agent-team please look what's going on <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|here>"
+    default: ":traffic_cone: updatecli failed for `${{ github.repository }}@${{ github.ref_name }}`, please look what's going on <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|here>"
   slack-channel-id:
     description: 'Slack channel ID'
     required: false

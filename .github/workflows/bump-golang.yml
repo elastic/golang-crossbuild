@@ -25,3 +25,4 @@ jobs:
           command: '--experimental apply'
           slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          slack-channel-id: '#on-week-oblt-productivity'
