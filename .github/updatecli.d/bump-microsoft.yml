@@ -53,7 +53,7 @@ sources:
       username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       versionfilter:
         kind: regex
-        pattern: v1\.{{ source "minor" }}\.(\d*)-(\d*)$
+        pattern: v1\.{{ source "minor" }}\.(\d*)(-\d*)$
 
   securityVersion:
     name: Get security version
@@ -62,7 +62,7 @@ sources:
     kind: shell
     transformers:
       - findsubmatch:
-          pattern: '^1.{{ source "minor" }}.\d+-(\d+)'
+          pattern: '^1.{{ source "minor" }}.\d+(-\d+)'
           captureindex: 1
     spec:
       command: echo {{ source "latestGoVersion" }}
