@@ -33,7 +33,7 @@ RUN ln -s /usr/bin/pip3 /usr/bin/pip
 
 ARG GOLANG_VERSION=1.24.2
 {{- if eq .FIPS "true"}}
-ARG SECURITY_VERSION=-1
+ARG SECURITY_VERSION=-2
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION$SECURITY_VERSION.linux-amd64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
 ARG MSFT_DOWNLOAD_SHA256=7844f426e83fb66b3d109357214abcb7cce4ed87178179ef413efca3bce0303a
