@@ -53,7 +53,28 @@ sources:
       username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       versionfilter:
         kind: regex
-        pattern: v1\.{{ source "minor" }}\.(\d*)-(\d*)$
+        pattern: v1\.{{ source "minor" }}\.(\d*)(-\d*)$
+
+  securityVersion:
+    name: Get security version
+    dependson:
+      - latestGoVersion
+    kind: shell
+    transformers:
+      - findsubmatch:
+          pattern: '^1.{{ source "minor" }}.\d+(-\d+)'
+          captureindex: 1
+    spec:
+      command: echo {{ source "latestGoVersion" }}
+
+conditions:
+  is-already-updated:
+    name: Is security version '{{ source "securityVersion" }}' not updated in 'go/base/Dockerfile.tmpl'?
+    disablesourceinput: true
+    kind: shell
+    spec:
+      command: grep 'ARG SECURITY_VERSION={{ source `securityVersion` }}' go/base/Dockerfile.tmpl && exit 1 || exit 0
+    failwhen: false
 
 targets:
   update-go-versions:
