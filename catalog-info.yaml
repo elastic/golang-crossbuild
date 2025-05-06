@@ -104,7 +104,7 @@ spec:
       skip_intermediate_builds: true
       skip_intermediate_builds_branch_filter: '!main'
       env:
-        ELASTIC_PR_COMMENTS_ENABLED: 'true'
+        ELASTIC_PR_COMMENTS_ENABLED: 'false'
       teams:
         ingest-fp:
           access_level: MANAGE_BUILD_AND_READ
@@ -152,7 +152,7 @@ spec:
       skip_intermediate_builds: true
       skip_intermediate_builds_branch_filter: '!main'
       env:
-        ELASTIC_PR_COMMENTS_ENABLED: 'true'
+        ELASTIC_PR_COMMENTS_ENABLED: 'false'
       teams:
         ingest-fp:
           access_level: MANAGE_BUILD_AND_READ
