@@ -82,6 +82,13 @@ conditions:
     spec:
       command: grep 'VERSION        := {{ source `latestGoVersion` }}' go/Makefile.common && exit 1 || exit 0
     failwhen: false
+  is-already-updated-go-version:
+    name: Is version '{{ source "latestGoVersion" }}' not updated in '.go-version'?
+    disablesourceinput: true
+    kind: shell
+    spec:
+      command: grep '{{ source `latestGoVersion` }}' .go-version && exit 1 || exit 0
+    failwhen: false
 
 targets:
   update-go-version:
