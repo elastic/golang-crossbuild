@@ -67,13 +67,35 @@ sources:
     spec:
       command: echo {{ source "latestGoVersion" }}
 
+  golangVersion:
+    name: Get golang version
+    dependson:
+      - latestGoVersion
+    kind: shell
+    transformers:
+      - findsubmatch:
+          pattern: '^(\d+.\d+.\d+)-(\d+)'
+          captureindex: 1
+    spec:
+      command: echo {{ source "latestGoVersion" }}
+
 conditions:
-  is-already-updated:
+  is-security-already-updated:
     name: Is security version '{{ source "securityVersion" }}' not updated in 'go/base/Dockerfile.tmpl'?
     disablesourceinput: true
     kind: shell
     spec:
       command: grep 'ARG SECURITY_VERSION={{ source `securityVersion` }}' go/base/Dockerfile.tmpl && exit 1 || exit 0
+    failwhen: false
+
+  # as long as the same golang version then update the security version.
+  # if a new golang version then .github/updatecli.d/bump-golang.yml will be triggered.
+  is-golang-available:
+    name: Is version '{{ source "golangVersion" }}' available in 'go/base/Dockerfile.tmpl'?
+    disablesourceinput: true
+    kind: shell
+    spec:
+      command: grep 'ARG GOLANG_VERSION={{ source `golangVersion` }}' go/base/Dockerfile.tmpl && exit 0 || exit 1
     failwhen: false
 
 targets:
