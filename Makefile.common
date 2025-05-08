@@ -7,12 +7,12 @@ NPCAP_VERSION := 1.80
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
-GS_BUCKET_PATH ?= ingest-buildkite-ci
+GS_BUCKET_PATH ?= golang-crossbuild-ci-internal
 
 # Requires login at google storage.
 copy-npcap:
 ifeq ($(CI),true)
-	@gsutil cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
+	@gcloud storage cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
 endif
@@ -20,7 +20,7 @@ endif
 # Requires login at google storage.
 copy-sdks:
 ifeq ($(CI),true)
-	@gcloud storage cp gs://ingest-buildkite-ci/sdks . --recursive
+	@gcloud storage cp gs://$(GS_BUCKET_PATH)/sdks . --recursive
 else
 	@echo 'Only available if running in the CI'
 endif
