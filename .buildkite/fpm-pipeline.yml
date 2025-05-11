@@ -10,7 +10,7 @@ env:
 
 steps:
   - label: ":linux: multiarch Linux x86_64/arm64 FPM docker image"
-    key: "build-and-publish-ubuntu-x86"
+    key: "fpm-build-and-publish-ubuntu-x86"
     if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
     command:
       - ".buildkite/scripts/llvm-fpm/build_and_publish.sh ${MAKEFILE}"
