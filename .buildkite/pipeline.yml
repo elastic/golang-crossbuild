@@ -10,6 +10,73 @@ env:
   BUILDX: 1
 
 steps:
+
+  - group: "FPM"
+    key: "fpm"
+
+    steps:
+      - label: "Trigger fpm-pipeline"
+        if: build.pull_request.id != null
+        plugins:
+          - monorepo-diff#v1.0.1:
+              diff: "git diff --name-only origin/${GITHUB_PR_TARGET_BRANCH}...HEAD"
+              interpolation: false
+              watch:
+                - path:
+                    - .buildkite/pipeline.yml
+                    - .buildkite/fpm-pipeline.yml
+                    - .buildkite/scripts/llvm-fpm
+                    - fpm/**
+                  config:
+                    label: ":pipeline: Upload FPM Pipeline"
+                    command: "buildkite-agent pipeline upload .buildkite/fpm-pipeline.yml"
+                    env:
+                      - BUILDKITE_PULL_REQUEST=${BUILDKITE_PULL_REQUEST}
+                      - BUILDKITE_PULL_REQUEST_BASE_BRANCH=${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
+                      - GITHUB_PR_LABELS=${GITHUB_PR_LABELS}
+
+      # Trigger for branches
+      - label: ":pipeline: Upload FPM Pipeline"
+        if: build.pull_request.id == null
+        command: "buildkite-agent pipeline upload .buildkite/fpm-pipeline.yml"
+        env:
+          - BUILDKITE_PULL_REQUEST=${BUILDKITE_PULL_REQUEST}
+          - BUILDKITE_PULL_REQUEST_BASE_BRANCH=${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
+          - GITHUB_PR_LABELS=${GITHUB_PR_LABELS}
+
+  - group: "llvm-apple"
+    key: "llvm-apple"
+
+    steps:
+      - label: "Trigger llvm-apple-pipeline"
+        if: build.pull_request.id != null
+        plugins:
+          - monorepo-diff#v1.0.1:
+              diff: "git diff --name-only origin/${GITHUB_PR_TARGET_BRANCH}...HEAD"
+              interpolation: false
+              watch:
+                - path:
+                    - .buildkite/pipeline.yml
+                    - .buildkite/llvm-apple-pipeline.yml
+                    - .buildkite/scripts/llvm-apple
+                    - go/llvm-apple/**
+                  config:
+                    label: ":pipeline: Upload FPM Pipeline"
+                    command: "buildkite-agent pipeline upload .buildkite/llvm-apple-pipeline.yml"
+                    env:
+                      - BUILDKITE_PULL_REQUEST=${BUILDKITE_PULL_REQUEST}
+                      - BUILDKITE_PULL_REQUEST_BASE_BRANCH=${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
+                      - GITHUB_PR_LABELS=${GITHUB_PR_LABELS}
+
+      # Trigger for branches
+      - label: ":pipeline: Upload llvm-apple Pipeline"
+        if: build.pull_request.id == null
+        command: "buildkite-agent pipeline upload .buildkite/llvm-apple-pipeline.yml"
+        env:
+          - BUILDKITE_PULL_REQUEST=${BUILDKITE_PULL_REQUEST}
+          - BUILDKITE_PULL_REQUEST_BASE_BRANCH=${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
+          - GITHUB_PR_LABELS=${GITHUB_PR_LABELS}
+
   - group: "Staging"
     key: "staging"
 
