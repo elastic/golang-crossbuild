@@ -1,4 +1,4 @@
-^\.buildkite/fpm-pipeline.yml$
+.buildkite/fpm-pipeline.yml
 ^\.buildkite/scripts/llvm-fpm
 ^\.buildkite/scripts/changeset/fpm
 ^fpm/
