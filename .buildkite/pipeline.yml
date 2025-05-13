@@ -35,9 +35,9 @@ steps:
                       - BUILDKITE_PULL_REQUEST_BASE_BRANCH=${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
                       - GITHUB_PR_LABELS=${GITHUB_PR_LABELS}
 
-      # Trigger for branches
+      # Trigger for the main branch only
       - label: ":pipeline: Upload FPM Pipeline"
-        if: build.pull_request.id == null
+        if: build.branch == 'main'
         command: "buildkite-agent pipeline upload .buildkite/fpm-pipeline.yml"
         env:
           - BUILDKITE_PULL_REQUEST=${BUILDKITE_PULL_REQUEST}
@@ -68,9 +68,9 @@ steps:
                       - BUILDKITE_PULL_REQUEST_BASE_BRANCH=${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
                       - GITHUB_PR_LABELS=${GITHUB_PR_LABELS}
 
-      # Trigger for branches
+      # Trigger for the main branch only
       - label: ":pipeline: Upload llvm-apple Pipeline"
-        if: build.pull_request.id == null
+        if: build.branch == 'main'
         command: "buildkite-agent pipeline upload .buildkite/llvm-apple-pipeline.yml"
         env:
           - BUILDKITE_PULL_REQUEST=${BUILDKITE_PULL_REQUEST}
