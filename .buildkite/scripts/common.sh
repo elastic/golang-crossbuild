@@ -92,6 +92,7 @@ retry() {
 }
 
 google_cloud_auth() {
+    echo "running google_cloud_auth"
     local gsUtilLocation=$(mktemp -d -p ${BIN} -t "${TMP_FOLDER}.XXXXXXXXX")
     local secretFileLocation=${gsUtilLocation}/${GOOGLE_CREDENTIALS_FILENAME}
     echo "${PRIVATE_CI_GCS_CREDENTIALS_SECRET}" > ${secretFileLocation}
