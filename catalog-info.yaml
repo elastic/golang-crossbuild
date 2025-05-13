@@ -137,7 +137,7 @@ spec:
     spec:
       branch_configuration: "main 1.*" # temporarily disable to build PRs from forks
       pipeline_file: ".buildkite/fpm-pipeline.yml"
-      maximum_timeout_in_minutes: 120
+      maximum_timeout_in_minutes: 360 # cmake is taking at least 4h to run
       provider_settings:
         build_tags: true
         publish_commit_status: true
