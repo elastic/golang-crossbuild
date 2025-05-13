@@ -8,7 +8,6 @@ BIN="${WORKSPACE}/bin"
 HW_TYPE="$(uname -m)"
 PLATFORM_TYPE="$(uname)"
 TMP_FOLDER="tmp.${REPO}"
-GOOGLE_CREDENTIALS_FILENAME="google-cloud-credentials.json"
 
 if [[ -z "${GOLANG_VERSION-""}" ]]; then
     export GOLANG_VERSION=$(cat "${WORKSPACE}/.go-version")
@@ -94,6 +93,7 @@ retry() {
 google_cloud_auth() {
     echo "running google_cloud_auth"
     local gsUtilLocation=$(mktemp -d -p ${BIN} -t "${TMP_FOLDER}.XXXXXXXXX")
+    GOOGLE_CREDENTIALS_FILENAME="google-cloud-credentials.json"
     local secretFileLocation=${gsUtilLocation}/${GOOGLE_CREDENTIALS_FILENAME}
     echo "${PRIVATE_CI_GCS_CREDENTIALS_SECRET}" > ${secretFileLocation}
     gcloud auth activate-service-account --key-file ${secretFileLocation} 2> /dev/null

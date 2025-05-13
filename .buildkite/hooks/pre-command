@@ -12,7 +12,6 @@ PRIVATE_CI_GCS_CREDENTIALS_PATH="kv/ci-shared/observability-ingest/cloud/gcp"
 
 if [[ ("$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple") && ( "$BUILDKITE_STEP_KEY" == build* || "$BUILDKITE_STEP_KEY" == release* ) ]]; then
     export PRIVATE_CI_GCS_CREDENTIALS_SECRET=$(retry 5 vault kv get -field=data -format=json ${PRIVATE_CI_GCS_CREDENTIALS_PATH})
-    google_cloud_auth
 fi
 
 if [[ ("$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple"  || "$BUILDKITE_PIPELINE_SLUG" == "fpm") && ( "$BUILDKITE_STEP_KEY" == build* || "$BUILDKITE_STEP_KEY" == release* ) ]]; then

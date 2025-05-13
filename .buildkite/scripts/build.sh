@@ -11,6 +11,7 @@ check_is_arm
 add_bin_path
 with_go "${GOLANG_VERSION}"
 with_mage
+google_cloud_auth
 
 make -C go -f "${MAKEFILE}" build"${is_arm}" GS_BUCKET_PATH=ingest-buildkite-ci
 echo ":: List Docker images staging ::"
