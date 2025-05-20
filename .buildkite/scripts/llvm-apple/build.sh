@@ -5,16 +5,13 @@ set -euo pipefail
 source .buildkite/scripts/common.sh
 
 makefile=${1}
-patterns=${2}
-docker_filter_ref=${3}
-
-if ! are_files_changed "$patterns" ; then
-    exit 0
-fi
 
 add_bin_path
 with_go "${GOLANG_VERSION}"
 with_mage
+google_cloud_auth
 
 retry 3 make -C "${makefile}" build GS_BUCKET_PATH=golang-crossbuild-ci-internal
-docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${docker_filter_ref}"
+
+echo "--- List Docker images"
+docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"

@@ -8,8 +8,8 @@ TAG="v$1"
 TAG_EXISTS=$(tag_Exists ${TAG})
 
 set_git_config() {
-    git config user.name "${GITHUB_USERNAME_SECRET}"
-    git config user.email "${GITHUB_EMAIL_SECRET}"
+    git config user.name "${GITHUB_USERNAME}"
+    git config user.email "${GITHUB_EMAIL}"
 }
 
 tag_commit() {
@@ -19,7 +19,7 @@ tag_commit() {
 
 git_push_with_auth() {
   echo "Pushing tag ${TAG}"
-  retry 3 git push https://${GITHUB_USERNAME_SECRET}:${GITHUB_TOKEN_SECRET}@github.com/elastic/golang-crossbuild.git ${TAG}
+  retry 3 git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN_SECRET}@github.com/elastic/golang-crossbuild.git ${TAG}
 }
 
 if [[ "${TAG_EXISTS}" == true ]]; then

@@ -6,8 +6,6 @@ env:
   DOCKER_REGISTRY: "docker.elastic.co"
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   MAKEFILE: "fpm"
-  CHANGESET_FILE: ".buildkite/scripts/changeset/fpm"
-  DOCKER_FILTER_REF: "docker.elastic.co/beats-dev"
   BUILDX: "0"
 
 # This section is used to define the plugins that will be used in the pipeline.
@@ -23,10 +21,10 @@ common:
 
 steps:
   - label: ":linux: multiarch Linux x86_64/arm64 FPM docker image"
-    key: "build-and-publish-ubuntu-x86"
+    key: "build-and-publish-ubuntu-x86-fpm"
     if: build.env("BUILDKITE_PULL_REQUEST") != "false" || build.source == "ui" || build.branch == "main" || build.branch =~ /^[0-9]+\.[0-9]+$$/
     command:
-      - ".buildkite/scripts/llvm-fpm/build_and_publish.sh ${MAKEFILE} ${CHANGESET_FILE} ${DOCKER_FILTER_REF}"
+      - ".buildkite/scripts/llvm-fpm/build_and_publish.sh ${MAKEFILE}"
     notify:
       - github_commit_status:
           context: "Build FPM / Ubuntu X86_64"
