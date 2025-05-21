@@ -90,36 +90,12 @@ retry() {
     return 0
 }
 
-google_cloud_auth() {
-    echo "running google_cloud_auth"
-    local gsUtilLocation=$(mktemp -d -p ${BIN} -t "${TMP_FOLDER}.XXXXXXXXX")
-    GOOGLE_CREDENTIALS_FILENAME="google-cloud-credentials.json"
-    local secretFileLocation=${gsUtilLocation}/${GOOGLE_CREDENTIALS_FILENAME}
-    echo "${PRIVATE_CI_GCS_CREDENTIALS_SECRET}" > ${secretFileLocation}
-    gcloud auth activate-service-account --key-file ${secretFileLocation} 2> /dev/null
-    export GOOGLE_APPLICATION_CREDENTIALS=${secretFileLocation}
-}
-
 unset_secrets () {
   for var in $(printenv | sed 's;=.*;;' | sort); do
     if [[ "$var" == *_SECRET || "$var" == *_TOKEN ]]; then
       unset "$var"
     fi
   done
-}
-
-google_cloud_logout_active_account() {
-  local active_account=$(gcloud auth list --filter=status:ACTIVE --format="value(account)" 2>/dev/null)
-  if [[ -n "$active_account" && -n "${GOOGLE_APPLICATION_CREDENTIALS+x}" ]]; then
-    echo "Logging out from GCP for active account"
-    gcloud auth revoke $active_account > /dev/null 2>&1
-  else
-    echo "No active GCP accounts found."
-  fi
-  if [ -n "${GOOGLE_APPLICATION_CREDENTIALS+x}" ]; then
-    unset GOOGLE_APPLICATION_CREDENTIALS
-    cleanup
-  fi
 }
 
 cleanup() {

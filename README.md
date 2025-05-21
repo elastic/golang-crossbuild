@@ -300,7 +300,7 @@ It was added to golang-crossbuild due limitations of the build system.
 The `main` image is the base image for the `amd64` architecture, it is build for Debian 7+.
 It is used to cross compile for `linux/amd`, `linux/amd64`, `win/amd`, and `win/amd64`.
 This Docker immage add two libraries to the `base` image, `libpcap` and `WpdPack` to be able to capture network packages on diferent OS.
-Thes two libraries are precompiled and stored at https://storage.googleapis.com/ingest-buildkite-ci/sdks.
+Thes two libraries are precompiled and stored at https://storage.googleapis.com/golang-crossbuild-ci-internal/sdks.
 
 ## go/darwin Docker image
 
@@ -387,5 +387,5 @@ XCODEDIR=osxcross/build/tmp_<X> ./tools/gen_sdk_package.sh
 The SDK should be in the working directory.
 The tmp dir can be safely deleted after this.
 
-The SDKs should be uploaded into the `gs://ingest-buildkite-ci/sdks` bucket on GCP (Google Cloud Platform).
-This is accessible to authorized users in the `platform-ingest` project [here](https://console.cloud.google.com/storage/browser/ingest-buildkite-ci/sdks).
+The SDKs should be uploaded into the `gs://golang-crossbuild-ci-internal/sdks` bucket on GCP (Google Cloud Platform).
+This is accessible to authorized users in the `elastic-observability-ci` project [here](https://console.cloud.google.com/storage/browser/golang-crossbuild-ci-internal/sdks).

@@ -9,6 +9,17 @@ env:
   STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
   BUILDX: 1
 
+# This section is used to define the plugins that will be used in the pipeline.
+# See https://buildkite.com/docs/pipelines/integrations/plugins/using#using-yaml-anchors-with-plugins
+common:
+  - oblt_google_auth_plugin: &gcp_oidc_plugin
+      # See https://github.com/elastic/oblt-infra/blob/main/conf/resources/repos/golang-crossbuild/01-gcp-buildkite-oidc.tf
+      # This plugin authenticates to Google Cloud using the OIDC token.
+      elastic/oblt-google-auth#v1.3.0:
+        lifetime: 10800 # seconds
+        project-id: "elastic-observability-ci"
+        project-number: "911195782929"
+
 steps:
 
   - group: "FPM"
@@ -97,6 +108,8 @@ steps:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
           instanceType: "${INSTANCE_TYPE_X86_64}"
+        plugins:
+          - *gcp_oidc_plugin
         retry:
           automatic:
             limit: 1
@@ -128,6 +141,8 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+        plugins:
+          - *gcp_oidc_plugin
         retry:
           automatic:
             limit: 1
@@ -159,6 +174,8 @@ steps:
           provider: "gcp"
           image: "${IMAGE_UBUNTU_X86_64}"
           instanceType: "${INSTANCE_TYPE_X86_64}"
+        plugins:
+          - *gcp_oidc_plugin
         retry:
           automatic:
             limit: 1
@@ -190,6 +207,8 @@ steps:
           provider: "aws"
           imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
           instanceType: "t4g.large"
+        plugins:
+          - *gcp_oidc_plugin
         retry:
           automatic:
             limit: 1
