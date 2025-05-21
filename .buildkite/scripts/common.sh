@@ -91,7 +91,6 @@ retry() {
     return 0
 }
 
-<<<<<<< HEAD
 google_cloud_auth() {
     local gsUtilLocation=$(mktemp -d -p ${BIN} -t "${TMP_FOLDER}.XXXXXXXXX")
     local secretFileLocation=${gsUtilLocation}/${GOOGLE_CREDENTIALS_FILENAME}
@@ -100,8 +99,6 @@ google_cloud_auth() {
     export GOOGLE_APPLICATION_CREDENTIALS=${secretFileLocation}
 }
 
-=======
->>>>>>> f041ab3 (bk: use GCP OIDC (#610))
 unset_secrets () {
   for var in $(printenv | sed 's;=.*;;' | sort); do
     if [[ "$var" == *_SECRET || "$var" == *_TOKEN ]]; then
