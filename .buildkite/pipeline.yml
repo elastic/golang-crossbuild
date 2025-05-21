@@ -27,7 +27,7 @@ steps:
 
     steps:
       - label: "Trigger fpm-pipeline"
-        if: build.pull_request.id != null
+        if: build.pull_request.id != null && build.env("BUILDKITE_PULL_REQUEST_BASE_BRANCH") == "main"
         plugins:
           - monorepo-diff#v1.0.1:
               diff: "git diff --name-only origin/${GITHUB_PR_TARGET_BRANCH}...HEAD"
@@ -60,7 +60,7 @@ steps:
 
     steps:
       - label: "Trigger llvm-apple-pipeline"
-        if: build.pull_request.id != null
+        if: build.pull_request.id != null && build.env("BUILDKITE_PULL_REQUEST_BASE_BRANCH") == "main"
         plugins:
           - monorepo-diff#v1.0.1:
               diff: "git diff --name-only origin/${GITHUB_PR_TARGET_BRANCH}...HEAD"
