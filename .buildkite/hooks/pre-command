@@ -5,15 +5,17 @@ set -euo pipefail
 source .buildkite/scripts/common.sh
 
 DOCKER_REGISTRY_SECRET_PATH="kv/ci-shared/platform-ingest/docker_registry_prod"
-PRIVATE_CI_GCS_CREDENTIALS_PATH="kv/ci-shared/observability-ingest/cloud/gcp"
 
 # Secrets must be redacted
 # https://buildkite.com/docs/pipelines/managing-log-output#redacted-environment-variables
 
+<<<<<<< HEAD
 if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && ( "$BUILDKITE_STEP_KEY" == build* || "$BUILDKITE_STEP_KEY" == release* ) ]]; then
     export PRIVATE_CI_GCS_CREDENTIALS_SECRET=$(retry 5 vault kv get -field=data -format=json ${PRIVATE_CI_GCS_CREDENTIALS_PATH})
 fi
 
+=======
+>>>>>>> 21badd9 (bk: remove unused secret access (#618))
 if [[ ("$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple"  || "$BUILDKITE_PIPELINE_SLUG" == "fpm") && ( "$BUILDKITE_STEP_KEY" == build* || "$BUILDKITE_STEP_KEY" == release* ) ]]; then
     export DOCKER_USERNAME_SECRET=$(retry 5 vault kv get -field user "${DOCKER_REGISTRY_SECRET_PATH}")
     export DOCKER_PASSWORD_SECRET=$(retry 5 vault kv get -field password "${DOCKER_REGISTRY_SECRET_PATH}")
