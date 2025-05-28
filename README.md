@@ -59,6 +59,7 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/amd64
+- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/amd64
@@ -73,6 +74,7 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 ### glibc
 
 * **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
+* **Debian8** uses `glibc 2.19`.
 * **Debian9** uses `glibc 2.24`.
 * **Debian10** uses `glibc 2.28`.
 * **Debian11** uses `glibc 2.31`.
