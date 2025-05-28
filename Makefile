@@ -9,6 +9,7 @@ build:
 	@echo '0' > ${status}
 	@$(foreach var,$(TARGETS), \
 		$(MAKE) -C $(var) $@ || echo '1' > ${status}; \
+		$(MAKE) -C $(var) -f Makefile.debian7 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian10 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian11 $@ || echo '1' > ${status}; \
@@ -31,6 +32,7 @@ push:
 	@echo '0' > ${status}
 	@$(foreach var,$(TARGETS), \
 		$(MAKE) -C $(var) $@ || echo '1' > ${status}; \
+		$(MAKE) -C $(var) -f Makefile.debian7 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian10 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian11 $@ || echo '1' > ${status}; \
