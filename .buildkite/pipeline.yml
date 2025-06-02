@@ -67,7 +67,8 @@ steps:
               interpolation: false
               watch:
                 - path:
-                    - .buildkite/pipeline.yml
+                    # As long as https://github.com/elastic/golang-crossbuild/issues/615
+                    #- .buildkite/pipeline.yml
                     - .buildkite/llvm-apple-pipeline.yml
                     - .buildkite/scripts/llvm-apple
                     - go/llvm-apple/**
