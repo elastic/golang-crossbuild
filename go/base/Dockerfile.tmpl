@@ -31,15 +31,15 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
-ARG GOLANG_VERSION=1.24.3
+ARG VERSION
 {{- if eq .FIPS "true"}}
 ARG SECURITY_VERSION=-1
-ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION$SECURITY_VERSION.linux-amd64.tar.gz
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-amd64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
 ARG MSFT_DOWNLOAD_SHA256=d1e9e4465951816b556f648dfebc1cf20fdef4832d7d3f01f1ef35a259375286
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
-ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-amd64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=3333f6ea53afa971e9078895eaa4ac7204a8c6b5c68c10e6bc9a33e8e391bdd8
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end }}
@@ -56,6 +56,10 @@ ENV PATH $PATH:/usr/local/go/bin
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
+# Validate the Go installation
+RUN go version \
+    && go version | grep "go${VERSION}" || (echo "Go version mismatch: expected to contain go${VERSION}" && exit 1)
+
 COPY rootfs /
 
 # show the GLIBC version
@@ -64,7 +68,7 @@ RUN ldd --version
 WORKDIR /
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 ENV GOTOOLCHAIN=local
-RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION \
+RUN go mod init github.com/elastic/golang-crossbuild-$VERSION \
     && go get . \
     && go env \
     && echo "toolcompile=$(go tool compile -V)" \
