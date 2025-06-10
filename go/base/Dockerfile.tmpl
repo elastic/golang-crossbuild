@@ -31,29 +31,17 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommend
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 {{- end }}
 
-<<<<<<< HEAD
-ARG GOLANG_VERSION=1.23.10
-{{- if eq .FIPS "true"}}
-ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION-1.linux-amd64.tar.gz
-=======
 ARG VERSION
 {{- if eq .FIPS "true"}}
-ARG SECURITY_VERSION=-1
-ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-amd64.tar.gz
->>>>>>> 416d57c (validate installed golang version and honour VERSION build-args (#625))
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION-1.linux-amd64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
 ARG MSFT_DOWNLOAD_SHA256=c4ee22c0de9fd2ff2c0d0d1a446e5aac75c9e3a3bfdc16e25e32d2461c5347ed
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
-<<<<<<< HEAD
-ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-arm64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=535f9f81802499f2a7dbfa70abb8fda3793725fcc29460f719815f6e10b5fd60
-=======
-ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=77e5da33bb72aeaef1ba4418b6fe511bc4d041873cbf82e5aa6318740df98717
->>>>>>> 416d57c (validate installed golang version and honour VERSION build-args (#625))
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
-{{- end }}
+{{- end}}
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
