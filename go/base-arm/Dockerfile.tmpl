@@ -57,15 +57,15 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
-ARG GOLANG_VERSION=1.24.4
+ARG VERSION
 {{- if eq .FIPS "true"}}
 ARG SECURITY_VERSION=-1
-ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$GOLANG_VERSION$SECURITY_VERSION.linux-arm64.tar.gz
+ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
 ARG MSFT_DOWNLOAD_SHA256=44b769dd398f8fc5f381812c2eb323b4bc6cb11010d59efdba3244184e29b3fd
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
-ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$GOLANG_VERSION.linux-arm64.tar.gz
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-arm64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=d5501ee5aca0f258d5fe9bfaed401958445014495dc115f202d43d5210b45241
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end}}
@@ -82,6 +82,10 @@ ENV PATH $PATH:/usr/local/go/bin
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
+# Validate the Go installation
+RUN go version \
+    && go version | grep "go${VERSION}" || (echo "Go version mismatch: expected to contain go${VERSION}" && exit 1)
+
 COPY rootfs /
 
 # show the GLIBC version
@@ -91,7 +95,7 @@ WORKDIR /
 
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
 ENV GOTOOLCHAIN local
-RUN go mod init github.com/elastic/golang-crossbuild-$GOLANG_VERSION-arm \
+RUN go mod init github.com/elastic/golang-crossbuild-$VERSION-arm \
     && go get . \
     && go env \
     && echo "toolcompile=$(go tool compile -V)" \
