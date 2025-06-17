@@ -3,8 +3,7 @@
 env:
   SETUP_GVM_VERSION: "v0.5.1"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
-  DOCKER_REGISTRY: "docker.elastic.co"
-  STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
+  STAGING_IMAGE: "docker.elastic.co/observability-ci"
   MAKEFILE: "fpm"
   BUILDX: "0"
 
@@ -18,6 +17,9 @@ common:
         lifetime: 10800 # seconds
         project-id: "elastic-observability-ci"
         project-number: "911195782929"
+  - docker_elastic_login_plugin: &docker_elastic_login_plugin
+      elastic/vault-docker-login#v0.5.2:
+        secret_path: 'kv/ci-shared/platform-ingest/elastic_docker_registry'
 
 steps:
   - label: ":linux: multiarch Linux x86_64/arm64 FPM docker image"
@@ -35,3 +37,4 @@ steps:
       image: "${IMAGE_UBUNTU_X86_64}"
     plugins:
       - *gcp_oidc_plugin
+      - *docker_elastic_login_plugin
