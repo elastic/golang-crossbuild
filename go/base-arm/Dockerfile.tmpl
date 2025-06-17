@@ -27,7 +27,13 @@ RUN \
             libicu-dev \
             icu-devtools \
             libsystemd-dev \
-            {{- if eq .DEBIAN_VERSION "9" }}
+            {{- if eq .DEBIAN_VERSION "8" }}
+            libicu52 \
+            librpm3  \
+            librpmio3 \
+            librpmbuild3 \
+            librpmsign1 \
+            {{- else if eq .DEBIAN_VERSION "9" }}
             libicu57 \
             librpm3  \
             librpmio3 \
