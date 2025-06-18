@@ -14,15 +14,8 @@ with_mage
 
 make -C go -f "${MAKEFILE}" build"${is_arm}" GS_BUCKET_PATH=golang-crossbuild-ci-internal
 
-echo "--- List Docker images staging"xd
+echo "--- List Docker images staging"
 docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${STAGING_IMAGE}/golang-crossbuild"
 
-<<<<<<< HEAD
-echo ":: List Docker images production ::"
-docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="${DOCKER_REGISTRY}/beats-dev/golang-crossbuild"
-
-
-=======
 echo "--- List Docker images production"
 docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" --filter=reference="docker.elastic.co/beats-dev/golang-crossbuild"
->>>>>>> d64e748 (bk: use docker login plugin (#631))
