@@ -4,8 +4,7 @@ env:
   SETUP_GVM_VERSION: "v0.5.1"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
   IMAGE_UBUNTU_ARM_64: "core-ubuntu-2004-aarch64"
-  DOCKER_REGISTRY: "docker.elastic.co"
-  STAGING_IMAGE: "${DOCKER_REGISTRY}/observability-ci"
+  STAGING_IMAGE: "docker.elastic.co/observability-ci"
   MAKEFILE: "go/llvm-apple"
   BUILDX: "0"
 
@@ -19,6 +18,9 @@ common:
         lifetime: 10800 # seconds
         project-id: "elastic-observability-ci"
         project-number: "911195782929"
+  - docker_elastic_login_plugin: &docker_elastic_login_plugin
+      elastic/vault-docker-login#v0.6.0:
+        secret_path: 'kv/ci-shared/platform-ingest/elastic_docker_registry'
 
 steps:
   - label: ":linux: Build LLVM Apple / Ubuntu X86_64 - {{matrix.debianVersion}}"
@@ -39,6 +41,7 @@ steps:
       image: "${IMAGE_UBUNTU_X86_64}"
     plugins:
       - *gcp_oidc_plugin
+      - *docker_elastic_login_plugin
     matrix:
       setup:
         debianVersion:
@@ -65,6 +68,7 @@ steps:
       instanceType: "t4g.large"
     plugins:
       - *gcp_oidc_plugin
+      - *docker_elastic_login_plugin
     matrix:
       setup:
         debianVersion:
