@@ -34,17 +34,15 @@ MSFT_DOWNLOAD_METADATA=$(curl -s -L https://aka.ms/golang/release/latest/go${MAJ
 MSFT_DOWNLOAD_SHA256_ARM=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"arm64\") | .sha256")
 MSFT_DOWNLOAD_SHA256_AMD=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"amd64\") | .sha256")
 
-echo "Update go version ${GO_RELEASE_VERSION}"
-
 ## As long as https://golang.org/dl/?mode=json supports only 2 major versions
 ## and there is a new major release, then it's required to parse https://golang.org/dl
 ## see https://github.com/elastic/golang-crossbuild/pull/389/commits/d0af04f97a2381630ea5e8da5a99f50cf27856a0
 if [ -z "$GOLANG_DOWNLOAD_SHA256_ARM" ] ; then
-    GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl | grep go${GO_RELEASE_VERSION}.linux-arm64.tar.gz -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
+    GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl | grep "go${MAJOR_MINOR_PATCH_VERSION}.linux-arm64.tar.gz" -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
 fi
 
 if [ -z "$GOLANG_DOWNLOAD_SHA256_AMD" ] ; then
-    GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl | grep go${GO_RELEASE_VERSION}.linux-amd64.tar.gz -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
+    GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl | grep "go${MAJOR_MINOR_PATCH_VERSION}.linux-amd64.tar.gz" -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
 fi
 
 echo "Update go version ${GO_RELEASE_VERSION}"
