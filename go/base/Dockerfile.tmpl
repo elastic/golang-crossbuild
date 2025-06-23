@@ -84,6 +84,7 @@ RUN mkdir /libpcap \
 {{- if eq .FIPS "true"}}
 ENV GOEXPERIMENT systemcrypto
 ENV CGO_ENABLED 1
+ENV MS_GOTOOLCHAIN_TELEMETRY_ENABLED 0
 {{- end}}
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
