@@ -6,9 +6,5 @@ source .buildkite/scripts/common.sh
 
 unset_secrets
 
-if [[ ( "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" || "$BUILDKITE_PIPELINE_SLUG" == "llvm-apple" || "$BUILDKITE_PIPELINE_SLUG" == "fpm") && ( "$BUILDKITE_STEP_KEY" == build* ) ]]; then
-    docker logout "${DOCKER_REGISTRY}"
-fi
-
 # Ensure that any temporal files created during any step are removed
 cleanup
