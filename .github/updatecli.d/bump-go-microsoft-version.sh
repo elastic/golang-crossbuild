@@ -25,14 +25,18 @@ MSFT_DOWNLOAD_METADATA=$(curl -s -L https://aka.ms/golang/release/latest/go${MAJ
 MSFT_DOWNLOAD_SHA256_ARM=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"arm64\") | .sha256")
 MSFT_DOWNLOAD_SHA256_AMD=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"amd64\") | .sha256")
 
-echo "Update go version ${GO_RELEASE_VERSION}"
+find "go" -type f -name Dockerfile.tmpl -print0 | while IFS= read -r -d '' line; do
+    ${SED} -E -e "s#(ARG SECURITY_VERSION)=.*#\1=${SECURITY_VERSION}#g" "$line"
+    if echo "$line" | grep -q 'arm' ; then
+        ${SED} -E -e "s#(ARG MSFT_DOWNLOAD_SHA256)=.+#\1=${MSFT_DOWNLOAD_SHA256_ARM}#g" "$line"
+    else
+        ${SED} -E -e "s#(ARG MSFT_DOWNLOAD_SHA256)=.+#\1=${MSFT_DOWNLOAD_SHA256_AMD}#g" "$line"
+    fi
+done
 
-find "go" -type f -name Dockerfile.tmpl -print0 |
-    while IFS= read -r -d '' line; do
-        ${SED} -E -e "s#(ARG SECURITY_VERSION)=.*#\1=${SECURITY_VERSION}#g" "$line"
-        if echo "$line" | grep -q 'arm' ; then
-            ${SED} -E -e "s#(ARG MSFT_DOWNLOAD_SHA256)=.+#\1=${MSFT_DOWNLOAD_SHA256_ARM}#g" "$line"
-        else
-            ${SED} -E -e "s#(ARG MSFT_DOWNLOAD_SHA256)=.+#\1=${MSFT_DOWNLOAD_SHA256_AMD}#g" "$line"
-        fi
-    done
+if git diff --quiet ; then
+    # No modifications – exit successfully but keep stdout empty to that updatecli is happy
+    exit 0
+else
+    echo "Update Go version ${GO_RELEASE_VERSION}"
+fi
