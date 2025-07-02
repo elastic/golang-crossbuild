@@ -22,8 +22,8 @@ else
 fi
 
 # Process the GO_RELEASE_VERSION to extract major, minor, patch and security versions
-MAJOR_MINOR_PATCH_VERSION=$(echo "$GO_RELEASE_VERSION" | sed -E -e "s#([0-9]+\.[0-9]+\.[0-9]+).*#\1#g")
-SECURITY_VERSION=$(echo "$GO_RELEASE_VERSION" | sed -E -e "s#([0-9]+\.[0-9]+\.[0-9]+)(.+)#\2#g")
+MAJOR_MINOR_PATCH_VERSION=${GO_RELEASE_VERSION%-*}
+SECURITY_VERSION="-${GO_RELEASE_VERSION##*-}"
 
 # Gather golang/go sha256 values
 GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-arm64.tar.gz\")) | .sha256")
