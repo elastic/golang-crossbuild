@@ -16,7 +16,7 @@ scms:
 
 actions:
   default:
-    title: '[Automation] Bump Golang version to {{ source "latestMicrosotGoVersion" }}'
+    title: '[Automation] Bump Golang version to {{ source "latestMicrosoftGoVersion" }}'
     kind: github/pullrequest
     scmid: githubConfig
     spec:
@@ -39,7 +39,7 @@ sources:
     spec:
       command: echo {{ requiredEnv "GO_MINOR" }}
 
-  latestMicrosotGoVersion:
+  latestMicrosoftGoVersion:
     name: Get Latest Microsoft Go Release
     kind: githubrelease
     dependson:
@@ -58,14 +58,14 @@ sources:
   golangVersion:
     name: Get golang version
     dependson:
-      - latestMicrosotGoVersion
+      - latestMicrosoftGoVersion
     kind: shell
     transformers:
       - findsubmatch:
           pattern: '^(\d+.\d+.\d+)-(\d+)'
           captureindex: 1
     spec:
-      command: echo {{ source "latestMicrosotGoVersion" }}
+      command: echo {{ source "latestMicrosoftGoVersion" }}
 
 conditions:
   dockerTag:
@@ -115,9 +115,9 @@ targets:
       file: go/Makefile.common
       matchpattern: '\d+.\d+.\d+'
   update-go-versions:
-    name: 'Update go version {{ source "latestMicrosotGoVersion" }}'
+    name: 'Update go version {{ source "latestMicrosoftGoVersion" }}'
     kind: shell
-    sourceid: latestMicrosotGoVersion
+    sourceid: latestMicrosoftGoVersion
     scmid: githubConfig
     spec:
       command: .github/updatecli.d/bump-go-version.sh
