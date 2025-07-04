@@ -56,7 +56,8 @@ sources:
         pattern: v1\.{{ source "minor" }}\.(\d*)(-\d*)$
 
   golangVersion:
-    name: Get golang version
+    # NOTE: FIPS images need the Microsoft version.
+    name: Get the Microsoft version of Golang, as it comes out a little later
     dependson:
       - latestMicrosoftGoVersion
     kind: shell
