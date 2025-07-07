@@ -45,8 +45,6 @@ if [ -z "$GOLANG_DOWNLOAD_SHA256_AMD" ] ; then
     GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl | grep "go${MAJOR_MINOR_PATCH_VERSION}.linux-amd64.tar.gz" -A 5 | grep "<tt>" | sed 's#.*<tt>##g' | sed 's#</t.*##g')
 fi
 
-echo "Update go version ${GO_RELEASE_VERSION}"
-
 find "go" -type f -name Dockerfile.tmpl -print0 |
     while IFS= read -r -d '' line; do
         if echo "$line" | grep -q 'arm' ; then
@@ -64,3 +62,11 @@ find "go" -type f -name Dockerfile.tmpl -print0 |
             ${SED} -E -e "s#(ARG SECURITY_VERSION)=.*#\1=${SECURITY_VERSION}#g" "$line"
         fi
     done
+
+if git diff --quiet ; then
+    # No modifications – exit successfully but keep stdout empty to that updatecli is happy
+    exit 0
+else
+    echo "Update Go version ${GO_RELEASE_VERSION}"
+    git --no-pager diff
+fi
