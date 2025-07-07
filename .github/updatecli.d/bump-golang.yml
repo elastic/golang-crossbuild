@@ -93,8 +93,8 @@ conditions:
     disablesourceinput: true
     kind: shell
     spec:
-      command: grep 'VERSION        := {{ source `golangVersion` }}' go/Makefile.common && exit 1 || exit 0
-    failwhen: false
+      command: grep ':= {{ source `golangVersion` }}' go/Makefile.common && exit 1 || exit 0
+    failwhen: true
 
 targets:
   update-go-version:
