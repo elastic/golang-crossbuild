@@ -16,17 +16,17 @@ scms:
 
 actions:
   default:
-    title: '[Automation] Bump Golang version to {{ source "latestGoVersion" }}'
+    title: '[Automation] Bump Golang version to {{ source "latestMicrosoftGoVersion" }}'
     kind: github/pullrequest
     scmid: githubConfig
     spec:
-      automerge: true
+      automerge: false
       labels:
         - automation
         - dependencies
         - backport-skip
       description: |
-        See [changelog](https://github.com/golang/go/issues?q=milestone%3AGo{{ source "latestGoVersion" }}+label%3ACherryPickApproved) for {{ source "latestGoVersion" }}
+        See [changelog](https://github.com/golang/go/issues?q=milestone%3AGo{{ source "golangVersion" }}+label%3ACherryPickApproved) for {{ source "golangVersion" }}
 
 sources:
   minor:
@@ -39,75 +39,78 @@ sources:
     spec:
       command: echo {{ requiredEnv "GO_MINOR" }}
 
-  latestGoVersion:
-    name: Get Latest Go Release
+  latestMicrosoftGoVersion:
+    name: Get Latest Microsoft Go Release
     kind: githubrelease
     dependson:
       - minor
     transformers:
-      - trimprefix: go
+      - trimprefix: v
     spec:
-      owner: golang
+      owner: microsoft
       repository: go
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
       username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       versionfilter:
         kind: regex
-        pattern: go1\.{{ source "minor" }}(\.(\d*))?$
+        pattern: v1\.{{ source "minor" }}\.(\d*)(-\d*)$
+
+  golangVersion:
+    # NOTE: FIPS images need the Microsoft version.
+    name: Get the Microsoft version of Golang, as it comes out a little later
+    dependson:
+      - latestMicrosoftGoVersion
+    kind: shell
+    transformers:
+      - findsubmatch:
+          pattern: '^(\d+.\d+.\d+)-(\d+)'
+          captureindex: 1
+    spec:
+      command: echo {{ source "latestMicrosoftGoVersion" }}
 
 conditions:
   dockerTag:
-    name: Is docker image golang:{{ source "latestGoVersion" }} published
+    name: Is docker image golang:{{ source "golangVersion" }} published
     kind: dockerimage
     spec:
       image: golang
-      tag: '{{ source "latestGoVersion" }}'
-    sourceid: latestGoVersion
-## As long as there is a bug see https://github.com/updatecli/updatecli/issues/1849
-## Let's use the shell kind rather than the file kind.
-## When fixed then uncomment the code and remove is-already-updated
-#  is:
-#    name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
-#    disablesourceinput: true
-#    kind: file
-#    spec:
-#      file: go/Makefile.common
-#      line: 5
-#      content: VERSION        := {{ source `latestGoVersion` }}
-#    failwhen: true
-  is-already-updated:
-    name: Is version '{{ source "latestGoVersion" }}' not updated in 'go/Makefile.common'?
+      tag: '{{ source "golangVersion" }}'
+    sourceid: golangVersion
+  is:
+    name: Is version '{{ source "golangVersion" }}' not updated in 'go/Makefile.common'?
     disablesourceinput: true
-    kind: shell
+    kind: file
     spec:
-      command: grep 'VERSION        := {{ source `latestGoVersion` }}' go/Makefile.common && exit 1 || exit 0
-    failwhen: false
+      file: go/Makefile.common
+      line: 5
+      content: VERSION        := {{ source `golangVersion` }}
+    failwhen: true
 
 targets:
   update-go-version:
     name: "Update .go-version"
-    sourceid: latestGoVersion
+    sourceid: golangVersion
     scmid: githubConfig
     kind: file
     spec:
-      content: '{{ source "latestGoVersion" }}'
+      content: '{{ source "golangVersion" }}'
       file: .go-version
       matchpattern: '\d+.\d+.\d+'
   update-go-makefile.common:
     name: "Update go/Makefile.common"
-    sourceid: latestGoVersion
+    sourceid: golangVersion
     scmid: githubConfig
     kind: file
     spec:
-      content: '{{ source "latestGoVersion" }}'
+      content: '{{ source "golangVersion" }}'
       file: go/Makefile.common
       matchpattern: '\d+.\d+.\d+'
   update-go-versions:
-    name: 'Update go version {{ source "latestGoVersion" }}'
+    name: 'Update go version {{ source "latestMicrosoftGoVersion" }}'
     kind: shell
-    sourceid: latestGoVersion
+    sourceid: latestMicrosoftGoVersion
     scmid: githubConfig
     spec:
-      command: .github/updatecli.d/bump-go-release-version.sh
+      command: .github/updatecli.d/bump-go-version.sh
       environments:
         - name: PATH
