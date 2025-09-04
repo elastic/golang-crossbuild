@@ -4,3 +4,8 @@ linux:
   arm64:
     CC:  aarch64-linux-gnu-gcc
     CXX: aarch64-linux-gnu-g++
+
+windows:
+  arm64:
+    CC:  arm64-w64-mingw32-gcc
+    CXX: arm64-w64-mingw32-g++

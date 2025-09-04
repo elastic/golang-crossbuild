@@ -7,9 +7,6 @@ windows:
   amd64:
     CC:  x86_64-w64-mingw32-gcc
     CXX: x86_64-w64-mingw32-g++
-  arm64:
-    CC:  arm64-w64-mingw32-gcc
-    CXX: arm64-w64-mingw32-g++
 
 darwin:
   386:
