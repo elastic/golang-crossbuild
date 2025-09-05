@@ -2,6 +2,9 @@
 set -e
 set -o pipefail
 
+# XXX: TEMP
+set -x
+
 trap 'echo "$0: Error on line $LINENO" >&2' ERR
 
 src="$1"
@@ -31,6 +34,7 @@ find . -mindepth 1 -maxdepth 1 -type d ! -name . | while read -r subdir; do
     find "$subdir" -type f | while read -r file; do
         dst="$base_dir/${file/.\//}"
         mkdir -p "$(dirname "$dst")"
+        echo "COPYING $file to $dst"
         install -m $perm "$file" "$dst"
     done
 done

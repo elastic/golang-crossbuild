@@ -29,17 +29,19 @@ RUN \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
+COPY rootfs /
+
 WORKDIR /tmp
 COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
 RUN /tmp/setup-llvm-mingw64.sh
 
-COPY rootfs /
-
 COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
-RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
+RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64
+#&& rm -rf /tmp/*
 
 # Basic find
 RUN find / -type f -name "*gcc"
+RUN find /tmp -type f -name "*gcc"
 
 # Basic test
 RUN cd / \
