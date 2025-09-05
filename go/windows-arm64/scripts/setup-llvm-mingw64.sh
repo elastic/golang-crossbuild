@@ -22,6 +22,8 @@ if [ -z "$LLVM_MINGW64_VER" ]; then
     exit 1
 fi
 
+apt update && apt install xz-utils --yes
+
 case "$(uname -m)" in
 aarch64 | arm64)
     m_arch="aarch64"
