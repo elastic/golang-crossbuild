@@ -2,13 +2,13 @@ ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
 
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
+
 ARG LLVM_MINGW64_VER=20241030
 ARG LLVM_MINGW_UBUNTU_REL='22.04'
 ARG LLVM_MINGW64_SRC="https://github.com/mstorsjo/llvm-mingw/releases/download"
-ENV LLVM_MINGW64_VER="20241030"
+ENV LLVM_MINGW64_VER="${LLVM_MINGW64_VER}"
 ENV LLVM_MINGW64_SRC="$LLVM_MINGW64_SRC"
-
-FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
 
 {{- if ne .DEBIAN_VERSION "12"}}
 RUN echo "This Docker image will work only with Debian >12" && exit 1
