@@ -2,9 +2,10 @@ ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
 
+FROM golang:${VERSION}-trixie AS golang-builder
+
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
 
-#FROM golang:${VERSION}-trixie AS golang-builder
 
 ARG LLVM_MINGW64_VER=20250826
 ARG LLVM_MINGW_UBUNTU_REL='22.04'
@@ -37,30 +38,21 @@ RUN /tmp/setup-llvm-mingw64.sh
 
 COPY rootfs /
 
+COPY --from=golang-builder /tmp/llvm-mingw64 /tmp/llvm-mingw64
+
 COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
 RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
 
 # Basic test
 RUN cd / \
-  && o64-clang helloWorld.c -o helloWorld.x86_64 \
-  && file helloWorld.x86_64 \
-  && file helloWorld.x86_64 | grep -c 'Mach-O 64-bit x86_64'
-
-RUN cd / \
-  && oa64-clang helloWorld.c -o helloWorld.arm64 \
+  && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
   && file helloWorld.arm64 \
   && file helloWorld.arm64 | grep -c 'Mach-O 64-bit arm64'
 
 RUN cd / \
-  && oa64e-clang helloWorld.c -o helloWorld.arm64e \
+  && aarch64-w64-mingw32uwp-gcc helloWorld.c -o helloWorld.arm64e \
   && file helloWorld.arm64e \
   && file helloWorld.arm64e | grep -c 'Mach-O 64-bit arm64'
-
-RUN cd / \
-  && lipo -create -output helloWorld.universal helloWorld.x86_64 helloWorld.arm64e \
-  && file helloWorld.universal | grep 'Mach-O universal binary' \
-  && rm helloWorld.*
-
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
