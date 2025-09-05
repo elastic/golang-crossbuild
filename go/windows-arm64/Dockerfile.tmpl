@@ -38,6 +38,9 @@ COPY rootfs /
 COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
 RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
 
+# Basic find
+RUN find / -type f -name "*gcc"
+
 # Basic test
 RUN cd / \
   && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
