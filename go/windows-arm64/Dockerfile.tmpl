@@ -1,0 +1,72 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+
+ARG LLVM_MINGW64_VER=20241030
+ARG LLVM_MINGW_UBUNTU_REL='22.04'
+ARG LLVM_MINGW64_SRC="https://github.com/mstorsjo/llvm-mingw/releases/download"
+ENV LLVM_MINGW64_VER="${LLVM_MINGW64_VER}"
+ENV LLVM_MINGW64_SRC="$LLVM_MINGW64_SRC"
+
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
+
+{{- if ne .DEBIAN_VERSION "12"}}
+RUN echo "This Docker image will work only with Debian >12" && exit 1
+{{- end }}
+
+WORKDIR /tmp
+COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
+RUN /tmp/setup-llvm-mingw64.sh
+
+RUN \
+    apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
+        cmake \
+        patch \
+        libssl-dev \
+        libxml2-dev \
+        lzma-dev \
+        uuid-dev \
+        make \
+        mingw-w64 \
+        bash \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs /
+
+COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
+
+RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
+
+# Basic test
+RUN cd / \
+  && o64-clang helloWorld.c -o helloWorld.x86_64 \
+  && file helloWorld.x86_64 \
+  && file helloWorld.x86_64 | grep -c 'Mach-O 64-bit x86_64'
+
+RUN cd / \
+  && oa64-clang helloWorld.c -o helloWorld.arm64 \
+  && file helloWorld.arm64 \
+  && file helloWorld.arm64 | grep -c 'Mach-O 64-bit arm64'
+
+RUN cd / \
+  && oa64e-clang helloWorld.c -o helloWorld.arm64e \
+  && file helloWorld.arm64e \
+  && file helloWorld.arm64e | grep -c 'Mach-O 64-bit arm64'
+
+RUN cd / \
+  && lipo -create -output helloWorld.universal helloWorld.x86_64 helloWorld.arm64e \
+  && file helloWorld.universal | grep 'Mach-O universal binary' \
+  && rm helloWorld.*
+
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
