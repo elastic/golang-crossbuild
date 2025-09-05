@@ -2,8 +2,6 @@ ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
 
-FROM golang:${VERSION}-trixie AS golang-builder
-
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
 
 
@@ -37,6 +35,8 @@ COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
 RUN /tmp/setup-llvm-mingw64.sh
 
 COPY rootfs /
+
+FROM golang:${VERSION}-trixie AS golang-builder
 
 COPY --from=golang-builder /tmp/llvm-mingw64 /tmp/llvm-mingw64
 
