@@ -53,12 +53,12 @@ RUN cd / \
 RUN cd / \
   && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
   && file helloWorld.arm64 \
-  && file helloWorld.arm64 | grep -c 'Mach-O 64-bit arm64'
+  && file helloWorld.arm64 | grep -c 'PE32+ executable (console) Aarch64, for MS Windows'
 
 RUN cd / \
   && aarch64-w64-mingw32uwp-gcc helloWorld.c -o helloWorld.arm64e \
   && file helloWorld.arm64e \
-  && file helloWorld.arm64e | grep -c 'Mach-O 64-bit arm64'
+  && file helloWorld.arm64e | grep -c 'PE32+ executable (console) Aarch64, for MS Windows'
 
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
