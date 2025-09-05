@@ -14,10 +14,6 @@ ENV LLVM_MINGW64_SRC="$LLVM_MINGW64_SRC"
 RUN echo "This Docker image will work only with Debian >12" && exit 1
 {{- end }}
 
-WORKDIR /tmp
-COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
-RUN /tmp/setup-llvm-mingw64.sh
-
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
@@ -30,7 +26,12 @@ RUN \
         make \
         mingw-w64 \
         bash \
+        wget \
     && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp
+COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
+RUN /tmp/setup-llvm-mingw64.sh
 
 COPY rootfs /
 
