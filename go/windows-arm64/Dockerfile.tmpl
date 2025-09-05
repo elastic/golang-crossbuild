@@ -4,7 +4,9 @@ ARG TAG_EXTENSION=''
 
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
 
-ARG LLVM_MINGW64_VER=20241030
+FROM golang:${VERSION}-trixie AS golang-builder
+
+ARG LLVM_MINGW64_VER=20250826
 ARG LLVM_MINGW_UBUNTU_REL='22.04'
 ARG LLVM_MINGW64_SRC="https://github.com/mstorsjo/llvm-mingw/releases/download"
 ENV LLVM_MINGW64_VER="${LLVM_MINGW64_VER}"
@@ -27,6 +29,7 @@ RUN \
         mingw-w64 \
         bash \
         wget \
+        xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
