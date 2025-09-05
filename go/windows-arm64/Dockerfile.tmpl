@@ -2,9 +2,7 @@ ARG REPOSITORY
 ARG VERSION
 ARG TAG_EXTENSION=''
 
-FROM golang:${VERSION}-trixie AS golang-builder
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
-
 
 ARG LLVM_MINGW64_VER=20250826
 ARG LLVM_MINGW_UBUNTU_REL='22.04'
@@ -36,10 +34,6 @@ COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
 RUN /tmp/setup-llvm-mingw64.sh
 
 COPY rootfs /
-
-#FROM golang:${VERSION}-trixie
-
-COPY --from=golang-builder /tmp/llvm-mingw64 /tmp/llvm-mingw64
 
 COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
 RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
