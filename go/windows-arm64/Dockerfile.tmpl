@@ -4,7 +4,7 @@ ARG TAG_EXTENSION=''
 
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
 
-FROM golang:${VERSION}-trixie AS golang-builder
+#FROM golang:${VERSION}-trixie AS golang-builder
 
 ARG LLVM_MINGW64_VER=20250826
 ARG LLVM_MINGW_UBUNTU_REL='22.04'
