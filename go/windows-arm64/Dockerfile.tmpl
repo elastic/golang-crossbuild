@@ -36,20 +36,9 @@ COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
 RUN /tmp/setup-llvm-mingw64.sh
 
 COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
-RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64
-#&& rm -rf /tmp/*
-
-# Basic find
-RUN find / -type f -name "*gcc"
-RUN find / -type s -name "*gcc"
-RUN which clang-target-wrapper.sh || true
-RUN which aarch64-w64-mingw32-gcc
+RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
 
 # Basic test
-RUN cd / \
-  && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
-  && file helloWorld.arm64
-
 RUN cd / \
   && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
   && file helloWorld.arm64 \
