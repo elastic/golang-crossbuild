@@ -58,12 +58,7 @@ RUN dpkg --add-architecture arm64 \
         build-essential \
         libc-dev \
         libpopt-dev \
-        linux-libc-dev \
-        mingw-w64 \
-        mingw-w64-tools \
-        patch \
-        xz-utils \
-        unzip
+        linux-libc-dev
 
 {{- if eq .DEBIAN_VERSION "9"}}
 # librpm-dev
