@@ -5,9 +5,6 @@
 set -e
 set -o pipefail
 
-# XXX: TEMP
-set -x
-
 trap 'echo "$0: Error on line $LINENO" >&2' ERR
 
 src="$1"
