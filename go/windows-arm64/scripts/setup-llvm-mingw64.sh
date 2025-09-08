@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Copied from: https://github.com/x1unix/docker-go-mingw/tree/20dfaff6efe8fe3a4ff588a58ccb31646cd2fd60
+#
 set -e
 set -o pipefail
 

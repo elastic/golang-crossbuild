@@ -66,6 +66,7 @@ template: |
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-mips-debian12(-fips)?`   - linux/mips64, linux/mips64el
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-ppc-debian12(-fips)?`    - linux/ppc64, linux/ppc64le
   - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-s390x-debian12(-fips)?`  - linux/s390x
+  - `docker.elastic.co/beats-dev/golang-crossbuild:$RESOLVED_VERSION-windows-arm64-debian12(-fips)?`   - linux/arm64, windows/arm64
 
   ### Changes
 
