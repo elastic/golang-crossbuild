@@ -45,22 +45,12 @@ RUN \
             librpmio8 \
             librpmbuild8 \
             librpmsign8 \
-            mingw-w64 \
-            mingw-w64-tools \
-            patch \
-            xz-utils \
-            unzip \
             {{- else if eq .DEBIAN_VERSION "11" }}
             libicu67 \
             librpm9  \
             librpmio9 \
             librpmbuild9 \
             librpmsign9 \
-            mingw-w64 \
-            mingw-w64-tools \
-            patch \
-            xz-utils \
-            unzip \
             {{- else }}
             libicu72 \
             librpm9  \
