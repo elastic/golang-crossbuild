@@ -24,7 +24,6 @@ RUN \
         lzma-dev \
         uuid-dev \
         make \
-        mingw-w64 \
         bash \
         wget \
     && rm -rf /var/lib/apt/lists/*
@@ -52,6 +51,8 @@ RUN cd / \
   && file helloWorld.arm64e | grep -c 'PE32+ executable (console) Aarch64, for MS Windows'
 
 ENV CGO_ENABLED 1
+ENV CC aarch64-w64-mingw32-gcc
+ENV CXX aarch64-w64-mingw32-g++
 
 RUN go env
 
