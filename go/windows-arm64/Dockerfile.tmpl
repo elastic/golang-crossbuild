@@ -53,6 +53,12 @@ RUN cd / \
 
 ENV CGO_ENABLED 1
 
+RUN go env
+
+RUN aarch64-w64-mingw32-gcc --version
+
+RUN go clean -cache -modcache -i -r
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE
