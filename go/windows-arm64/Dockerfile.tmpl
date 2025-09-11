@@ -51,6 +51,8 @@ RUN cd / \
   && file helloWorld.arm64e \
   && file helloWorld.arm64e | grep -c 'PE32+ executable (console) Aarch64, for MS Windows'
 
+ENV CGO_ENABLED 1
+
 # Build-time metadata as defined at http://label-schema.org.
 ARG BUILD_DATE
 ARG IMAGE
