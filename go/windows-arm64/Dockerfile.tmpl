@@ -29,14 +29,14 @@ RUN \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
-COPY rootfs /
-
 WORKDIR /tmp
 COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
 RUN /tmp/setup-llvm-mingw64.sh
 
 COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
 RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
+
+COPY rootfs /
 
 # Basic test
 RUN which aarch64-w64-mingw32-gcc
