@@ -54,7 +54,8 @@ RUN cd / \
 ENV CGO_ENABLED 1
 #ENV CC aarch64-w64-mingw32-gcc
 #ENV CXX aarch64-w64-mingw32-g++
-ENV CGO_FLAGS="$CGO_FLAGS -I/usr/generic-w64-mingw32/include -fno-addrsig"
+ENV CGO_FLAGS="$CGO_FLAGS -I/usr/generic-w64-mingw32/include"
+ENV CGO_CFLAGS="-fno-addrsig"
 RUN go env
 
 RUN aarch64-w64-mingw32-gcc --version
