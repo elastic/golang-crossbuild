@@ -1,0 +1,7 @@
+---
+
+windows:
+  arm64:
+    CC:  aarch64-w64-mingw32-gcc
+    CXX: aarch64-w64-mingw32-g++
+
