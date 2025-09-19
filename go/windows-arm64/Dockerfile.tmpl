@@ -1,0 +1,74 @@
+ARG REPOSITORY
+ARG VERSION
+ARG TAG_EXTENSION=''
+
+FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base-arm${TAG_EXTENSION}
+
+#ARG LLVM_MINGW64_VER=20250826
+ARG LLVM_MINGW64_VER=20250910
+ARG LLVM_MINGW_UBUNTU_REL='22.04'
+ARG LLVM_MINGW64_SRC="https://github.com/mstorsjo/llvm-mingw/releases/download"
+ENV LLVM_MINGW64_VER="${LLVM_MINGW64_VER}"
+ENV LLVM_MINGW64_SRC="$LLVM_MINGW64_SRC"
+
+{{- if ne .DEBIAN_VERSION "12"}}
+RUN echo "This Docker image will work only with Debian >12" && exit 1
+{{- end }}
+
+RUN \
+    apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
+        cmake \
+        patch \
+        libssl-dev \
+        libxml2-dev \
+        lzma-dev \
+        uuid-dev \
+        make \
+        bash \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp
+COPY --chmod=0755 scripts/setup-llvm-mingw64.sh /tmp/
+RUN /tmp/setup-llvm-mingw64.sh
+
+COPY --chmod=0755 scripts/install-llvm-mingw64.sh /tmp/install-llvm-mingw64.sh
+RUN /tmp/install-llvm-mingw64.sh /tmp/llvm-mingw64 && rm -rf /tmp/*
+
+COPY rootfs /
+
+# Basic test
+RUN which aarch64-w64-mingw32-gcc
+
+RUN cd / \
+  && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
+  && file helloWorld.arm64 \
+  && file helloWorld.arm64 | grep -c 'PE32+ executable (console) Aarch64, for MS Windows'
+
+RUN cd / \
+  && aarch64-w64-mingw32uwp-gcc helloWorld.c -o helloWorld.arm64e \
+  && file helloWorld.arm64e \
+  && file helloWorld.arm64e | grep -c 'PE32+ executable (console) Aarch64, for MS Windows'
+
+ENV CGO_ENABLED 1
+#ENV CC aarch64-w64-mingw32-gcc
+#ENV CXX aarch64-w64-mingw32-g++
+ENV CGO_FLAGS="$CGO_FLAGS -I/usr/generic-w64-mingw32/include"
+ENV CGO_CFLAGS="-fno-addrsig"
+RUN go env
+
+RUN aarch64-w64-mingw32-gcc --version
+
+RUN go clean -cache -modcache -i -r
+
+# Build-time metadata as defined at http://label-schema.org.
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name=$IMAGE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.schema-version="1.0"
