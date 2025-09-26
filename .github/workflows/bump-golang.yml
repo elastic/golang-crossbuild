@@ -21,7 +21,7 @@ jobs:
         with:
           branch: 'main'
           # NOTE: when a new golang version please update me with 1.<go-version>
-          go-minor: '1.24'
+          go-minor: '1.25'
           command: '--experimental apply'
           slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
