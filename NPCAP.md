@@ -16,7 +16,7 @@ Credentials to the artifact service can be found in the `APM-Shared` folder in t
 
 If you'd like to backport any NCAP_VERSION to any existing golang-crosbuild version, then you need to:
 
-* Create a branch called `major.minor.patch.x` for the `vmajor.minor.patch` tag
+* Create a branch called `major.minor.patch.x` for the `vmajor.minor.patch` tag (where `x` is a literal "x" character, not a number placeholder)
 * Cherry-pick your PR, you can use `Mergifyio`, with `@mergifyio backport major.minor.path.x`
 * Then the new PR that has been created can be merged when all the GitHub checks have passed.
 
