@@ -1,6 +1,10 @@
 ARG DEBIAN_VERSION
 FROM debian:${DEBIAN_VERSION} as BUILD_LLVM_APPLE
 
+ARG DEBIAN_VERSION
+# Replace sources.list in order to use archive.debian.org.
+COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
+
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommends --allow-unauthenticated \
         && apt-get upgrade -y --no-install-recommends --allow-unauthenticated \
         && apt-get dist-upgrade -y --no-install-recommends --allow-unauthenticated \
