@@ -48,7 +48,7 @@ RUN mkdir -p /tmp/llvm-project && cd /tmp/llvm-project \
     && tar -xzf LLVM-*-Linux.tar.gz --strip 1 -C /usr/local
 
 # TODO think about replace this with the Docker image already created at https://github.com/crazy-max/docker-osxcross
-ARG OSX_SDK="MacOSX11.3.sdk"
+ARG OSX_SDK="MacOSX12.3.sdk"
 # Packaging the SDK on macOS https://github.com/tpoechtrager/osxcross#packaging-the-sdk
 # alternative SDK already generated
 ARG OSXCROSS_PATH=/usr/local/osxcross
