@@ -63,7 +63,7 @@ RUN mkdir -p /tmp/osxcross
 # https://raw.githubusercontent.com/crazy-max/docker-osxcross/main/patches/lcxx.patch
 COPY lcxx.patch /tmp/osxcross/lcxx.patch
 
-COPY sdks/${OSX_SDK}.tar.xz tarballs/${OSX_SDK}.tar.xz
+COPY sdks/${OSX_SDK}.tar.xz /tmp/osxcross/tarballs/${OSX_SDK}.tar.xz
 RUN \
     cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
