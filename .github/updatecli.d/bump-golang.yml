@@ -79,6 +79,7 @@ conditions:
   is:
     name: Is version '{{ source "golangVersion" }}' not updated in 'go/Makefile.common'?
     disablesourceinput: true
+    scmid: githubConfig
     kind: file
     spec:
       file: go/Makefile.common
