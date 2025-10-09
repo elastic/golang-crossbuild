@@ -1,0 +1,3 @@
+# see https://wiki.debian.org/CrossToolchains
+deb http://archive.debian.org/debian buster main
+deb http://archive.debian.org/debian-security buster/updates main
