@@ -1,6 +1,10 @@
 ARG DEBIAN_VERSION
 FROM debian:${DEBIAN_VERSION} as BUILD_LLVM_APPLE
 
+ARG DEBIAN_VERSION
+# Replace sources.list in order to use archive.debian.org.
+COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
+
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommends --allow-unauthenticated \
         && apt-get upgrade -y --no-install-recommends --allow-unauthenticated \
         && apt-get dist-upgrade -y --no-install-recommends --allow-unauthenticated \
@@ -48,18 +52,18 @@ RUN mkdir -p /tmp/llvm-project && cd /tmp/llvm-project \
     && tar -xzf LLVM-*-Linux.tar.gz --strip 1 -C /usr/local
 
 # TODO think about replace this with the Docker image already created at https://github.com/crazy-max/docker-osxcross
-ARG OSX_SDK="MacOSX11.3.sdk"
+ARG OSX_SDK="MacOSX12.3.sdk"
 # Packaging the SDK on macOS https://github.com/tpoechtrager/osxcross#packaging-the-sdk
 # alternative SDK already generated
 ARG OSXCROSS_PATH=/usr/local/osxcross
-ARG OSXCROSS_REV=062922bbb81ac52787d8e53fa4af190acb552ec7
+ARG OSXCROSS_REV=f873f534c6cdb0776e457af8c7513da1e02abe59
 ARG OSX_VERSION_MIN=10.10
 
 RUN mkdir -p /tmp/osxcross
 # https://raw.githubusercontent.com/crazy-max/docker-osxcross/main/patches/lcxx.patch
 COPY lcxx.patch /tmp/osxcross/lcxx.patch
 
-COPY sdks/${OSX_SDK}.tar.xz tarballs/${OSX_SDK}.tar.xz
+COPY sdks/${OSX_SDK}.tar.xz /tmp/osxcross/tarballs/${OSX_SDK}.tar.xz
 RUN \
     cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \

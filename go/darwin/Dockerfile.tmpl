@@ -31,8 +31,13 @@ RUN tar -xzf /tmp/osxcross.tar.gz -C / \
   && rm /tmp/osxcross.tar.gz
 {{- else }}
 ARG OSXCROSS_PATH=/usr/osxcross
+{{- if or (eq .DEBIAN_VERSION "8") (eq .DEBIAN_VERSION "9") }}
 ARG OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa
 ARG SDK_VERSION=10.11
+{{- else }}
+ARG OSXCROSS_REV=f873f534c6cdb0776e457af8c7513da1e02abe59
+ARG SDK_VERSION=12.3
+{{- end }}
 ARG DARWIN_VERSION=15
 ARG OSX_VERSION_MIN=10.10
 
