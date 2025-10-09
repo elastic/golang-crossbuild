@@ -30,7 +30,7 @@ GOLANG_DOWNLOAD_SHA256_ARM=$(curl -s -L https://golang.org/dl/\?mode\=json | jq 
 GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl/\?mode\=json | jq -r ".[] | select( .version | contains(\"go${GO_RELEASE_VERSION}\")) | .files[] | select (.filename | contains(\"go${GO_RELEASE_VERSION}.linux-amd64.tar.gz\")) | .sha256")
 
 # Gather microsoft/go sha256 values
-MSFT_DOWNLOAD_METADATA=$(curl -s -L https://aka.ms/golang/release/latest/go${MAJOR_MINOR_PATCH_VERSION}.assets.json)
+MSFT_DOWNLOAD_METADATA=$(curl -s -L https://github.com/microsoft/go/releases/download/v${GO_RELEASE_VERSION}/assets.json)
 MSFT_DOWNLOAD_SHA256_ARM=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"arm64\") | .sha256")
 MSFT_DOWNLOAD_SHA256_AMD=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"amd64\") | .sha256")
 
