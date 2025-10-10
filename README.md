@@ -1,8 +1,8 @@
-|                   | main | 1.23 |
+|                   | main | 1.24 |
 |-------------------|------|-|
-| golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.23)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.23)|
-| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.23)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.23)|
-| fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.23)](https://buildkite.com/elastic/fpm/builds?branch=1.23)|
+| golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.24)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.24)|
+| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.24)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.24)|
+| fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.24)](https://buildkite.com/elastic/fpm/builds?branch=1.24)|
 
 
 # golang-crossbuild Docker images
