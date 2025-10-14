@@ -34,7 +34,6 @@ steps:
           context: "Build LLVM Apple / Ubuntu X86_64"
     env:
       TAG_EXTENSION: "-debian{{matrix.debianVersion}}-amd64"
-      REPOSITORY: "${STAGING_IMAGE}"
       DEBIAN_VERSION: "{{matrix.debianVersion}}"
     agents:
       provider: "gcp"
@@ -60,7 +59,6 @@ steps:
           context: "Build LLVM Apple / Ubuntu ARM"
     env:
       TAG_EXTENSION: "-debian{{matrix.debianVersion}}-arm64"
-      REPOSITORY: "${STAGING_IMAGE}"
       DEBIAN_VERSION: "{{matrix.debianVersion}}"
     agents:
       provider: "aws"
