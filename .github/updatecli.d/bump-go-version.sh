@@ -7,6 +7,7 @@
 # NOTE: 
 #   * sha256 is retrieved from https://pkg.go.dev/golang.org/x/website/internal/dl?utm_source=godoc
 #   * sha256 is retrieved from https://github.com/microsoft/go/releases/download/v${GO_RELEASE_VERSION}/assets.json
+#   * https://aka.ms/golang/release/latest/go${MAJOR_MINOR_PATCH_VERSION}.assets.json is not used because it does not fail if version is not available
 #
 # Parameters:
 #	$1 -> the Microsoft Golang release version to be bumped. Mandatory.
@@ -31,10 +32,11 @@ GOLANG_DOWNLOAD_SHA256_AMD=$(curl -s -L https://golang.org/dl/\?mode\=json | jq 
 
 # Gather microsoft/go sha256 values
 MSFT_URL="https://github.com/microsoft/go/releases/download/v${GO_RELEASE_VERSION}/assets.json"
-if ! curl -f -s -L --head "$MSFT_URL"; then
+if ! curl --output /dev/null -L --silent --head --fail "$MSFT_URL"; then
   echo "No Microsoft Golang release found for version ${GO_RELEASE_VERSION}"
   exit 1
 fi
+
 MSFT_DOWNLOAD_METADATA=$(curl -s -L "$MSFT_URL")
 MSFT_DOWNLOAD_SHA256_ARM=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"arm64\") | .sha256")
 MSFT_DOWNLOAD_SHA256_AMD=$(echo $MSFT_DOWNLOAD_METADATA | jq -r ".arches[] | select( .env.GOOS == \"linux\") | select( .env.GOARCH == \"amd64\") | .sha256")
