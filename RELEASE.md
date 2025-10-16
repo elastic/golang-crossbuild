@@ -63,8 +63,9 @@ Execute the automated version bump script:
   - Create new label at: https://github.com/elastic/golang-crossbuild/labels
   - Label name: `backport-v1.24` (using previous version)
 
-#### 7. Commit and Create Pull Request
+#### 7. Commit and Create Pull Request in the `main` branch
 ```bash
+git checkout main
 git add -u
 git commit -m "Update to Go 1.25.0"  # Use actual version
 ```
