@@ -6,19 +6,32 @@ This document provides step-by-step instructions for releasing new versions of t
 
 This project follows the Golang versioning scheme, creating a GitHub Release for each specific Golang version. The release process ensures backward compatibility by maintaining separate branches for different Go versions.
 
-## 🚀 Primary Release Process: New Go Version
+We support the last two newer major versions, the same as the official Golang release [policy](https://go.dev/doc/devel/release#policy):
 
-This is the most common release scenario. Follow these steps when a new Go version is released.
+> Each major Go release is supported until there are two newer major releases. For example, Go 1.5 was supported until the Go 1.7 release, and Go 1.6 was supported until the Go 1.8 release. We fix critical problems, including critical security problems, in supported releases as needed by issuing minor revisions (for example, Go 1.6.1, Go 1.6.2, and so on).
+
+## 🤖 Primary Release Process: New Minor Go Version
+
+This is the most common release scenario and it's fully automated using [updatecli](https://www.updatecli.io/docs/prologue/quick-start/).
+
+The updatecli manifest can be found at:
+* [.github/updatecli.d/bump-golang.yml](.github/updatecli.d/bump-golang.yml)
+
+---
+
+## 🚀 New Major Go Version
+
+Follow these steps when a new major Go version is [released](https://go.dev/doc/devel/release).
 
 ### Prerequisites
-- New Go version has been officially released
+- New Major Go version has been officially released or even for RCs.
 - You have write access to the repository
 - You're familiar with the current Go version in use
 
 ### Step-by-Step Instructions
 
 #### 1. Prepare Version Branch
-Create a branch for the previous Go version to maintain backward compatibility.
+Create a branch for the previous major Go version to maintain backward compatibility.
 
 **Example**: If upgrading from Go 1.24 to Go 1.25:
 ```bash
