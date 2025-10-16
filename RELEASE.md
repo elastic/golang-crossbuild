@@ -17,6 +17,10 @@ This is the most common release scenario and it's fully automated using [updatec
 The updatecli manifest can be found at:
 * [.github/updatecli.d/bump-golang.yml](.github/updatecli.d/bump-golang.yml)
 
+There are two GitHub workflows:
+* [.github/workflows/bump-golang.yml](.github/workflows/bump-golang.yml) for updating the `main` branch.
+* [.github/workflows/bump-golang-previous.yml](.github/workflows/bump-golang-previous.yml) for updating the previous active major Go version.
+
 ---
 
 ## 🚀 New Major Go Version
