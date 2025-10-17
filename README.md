@@ -211,24 +211,9 @@ stateDiagram-v2
     base --> s390x
 ```
 
-## Releasing images for a new Go version
+## Releasing
 
-With every new version of `go` we made a new branch with the name of the previous version to allow us to continue building the Docker images for the previous version of `go`. So if we are in go `1.21` and go `1.22` is released, we create a new branch `1.21`, then we update the `main` branch to install go `1.22` as explained in the below steps:
-
-1. Update the Go version in [.go-version](https://github.com/elastic/golang-crossbuild/blob/main/.go-version).
-1. Update the Docker tag in
-   [Makefile.common](https://github.com/elastic/golang-crossbuild/blob/main/go/Makefile.common#L5).
-1. Run `.github/updatecli.d/bump-go-release-version.sh "$(cat .go-version)"`
-1. Update the versions listed in this README.md.
-1. Update the `go-minor` value in [bump-golang.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang.yml) with the new minor go version, i.e: `1.22`.
-1. Update the `go-minor` and `branch` values in [bump-golang-previous.yml](https://github.com/elastic/golang-crossbuild/blob/main/github/workflows/bump-golang-previous.yml) with the old minor go version, i.e: `1.21`.
-1. Add an entry in the `.mergify.yml` file to support the label backport for `backport-v1.x-1`, i.e: `backport-v1.21`.
-1. Create the GitHub label backport for `backport-v1.x-1` in https://github.com/elastic/golang-crossbuild/labels, i.e: `backport-v1.21`.
-1. Commit the changes. `git add -u && git commit -m 'Update to Go 1.x.y'`.
-1. Create a Pull Request with the description `'Update to Go 1.x.y'`.
-1. When merging the PR, the automation will release those docker images.
-
-**NOTE**: Due to the changes in the Debian packages repositories, there are no guarantees that the Docker images for the previous version of `go` will continue to work after some time.
+See [RELEASE.md](RELEASE.md) for the release process.
 
 ## Releasing images for a LLVM
 
