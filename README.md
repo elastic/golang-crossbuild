@@ -215,11 +215,6 @@ stateDiagram-v2
 
 See [RELEASE.md](RELEASE.md) for the release process.
 
-## Releasing images for a LLVM
-
-1. Run https://buildkite.com/elastic/llvm-apple from `main` and set `RELEASE=true`
-2. Wait for a few hours and container images will be available at `docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple*`
-
 ## FIPS Build
 
 [Makefile.common](./go/Makefile.common) has an env var that can be used to create a FIPS compliant golang-crossbuild image:

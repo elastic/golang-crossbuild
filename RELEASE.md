@@ -172,6 +172,89 @@ Steps:
 
 ---
 
+## 🍎 LLVM Apple Containers Release Process
+
+> **📋 Status**: Infrequent releases (approximately every 3 years)
+> **Use Case**: Cross-compilation for macOS targets from Linux environments
+
+### When to Release LLVM Containers
+- New Xcode/macOS SDK versions are available
+- Security updates for LLVM toolchain
+- Compatibility requirements for new macOS targets
+- Critical bug fixes in the cross-compilation toolchain
+
+### Prerequisites
+- Access to Buildkite pipeline: https://buildkite.com/elastic/llvm-apple
+- Understanding of LLVM/Clang toolchain versions
+- Knowledge of macOS SDK compatibility requirements
+
+### Step-by-Step Instructions
+
+#### 1. Prepare for Release
+- Verify the current LLVM/Clang version in the containers
+- Check for any pending updates or security patches
+- Review macOS SDK compatibility requirements
+
+#### 2. Trigger Release Build
+1. Navigate to the Buildkite pipeline: https://buildkite.com/elastic/llvm-apple
+2. Click "New Build" button
+3. Select branch: `main`
+4. Set environment variable: `RELEASE=true`
+5. Add build message: "Release LLVM Apple containers - [reason/version]"
+6. Click "Create Build"
+
+#### 3. Monitor Build Process
+- Monitor the build progress in Buildkite console
+- Expected build time: 4-5 hours (due to LLVM compilation)
+- Watch for any compilation or packaging errors
+- Verify all target architectures are built successfully
+
+#### 4. Verify Release
+After successful build completion:
+```bash
+# Check available container images
+docker pull docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian11-arm64
+docker inspect docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian11-arm64 | grep org.label-schema.build-date
+```
+
+Expected image tags:
+- `docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian<version>(-arm64)?`
+
+#### 5. Test Cross-Compilation
+Verify the containers work correctly.
+
+#### 6. Update Documentation
+- Update any version references in README.md
+- Document any breaking changes or new features
+- Update compatibility matrix if applicable
+
+### Container Image Locations
+After successful release, images are available at:
+- **Registry**: `docker.elastic.co/beats-dev/golang-crossbuild`
+- **Tags**: `llvm-apple-debian<version>`, `llvm-apple-debian<version>-arm64`
+- **Architectures**: `linux/amd64`, `linux/arm64`
+
+### Supported Cross-Compilation Targets
+- **macOS**: `darwin/amd64`, `darwin/arm64`
+- **iOS**: `ios/amd64`, `ios/arm64` (if configured)
+
+### Troubleshooting LLVM Releases
+
+#### Common Issues
+1. **Build Timeouts**: LLVM compilation is resource-intensive
+   - **Solution**: Retry build or check Buildkite agent resources
+
+2. **SDK Download Failures**: Xcode SDK downloads may fail
+   - **Solution**: Verify SDK availability and download URLs
+
+3. **Cross-compilation Errors**: Target-specific compilation issues
+   - **Solution**: Test with sample projects before full release
+
+4. **Container Registry Issues**: Push failures to docker.elastic.co
+   - **Solution**: Check registry credentials and network connectivity
+
+---
+
 ## 📚 Quick Reference
 
 ### File Locations
