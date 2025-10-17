@@ -205,6 +205,6 @@ Steps:
 4. **Missing Labels**: Create GitHub labels before using backport commands
 
 ### Support
-- Check existing GitHub issues for similar problems
+- Check existing GitHub issues and PRs for similar problems
 - Review CI logs for specific error messages
 - Consult team members for complex release scenarios
