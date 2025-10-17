@@ -272,7 +272,7 @@ In the folder you can find the `sources.list` file that contains the list of rep
 this file is different for each Debian version. In some cases, this file must point to `http://archive.debian.org/debian` instead of `http://deb.debian.org/debian` to be able to install the packages, this happens when the Debian version reach the end of life.
 
 The base image is the one that install the `go` compiler, and the build tools for the rest of Docker images.
-When a new version of go is released, the aDockerimage.tmpla files must be updated to install the new version.
+When a new version of go is released, the *Dockerimage.tmpl* files must be updated to install the new version.
 
 ## go/base-arm Docker image
 
