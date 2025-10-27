@@ -20,6 +20,9 @@ common:
   - docker_elastic_login_plugin: &docker_elastic_login_plugin
       elastic/vault-docker-login#v0.6.0:
         secret_path: 'kv/ci-shared/platform-ingest/elastic_docker_registry'
+  - dockerhub_login_plugin: &dockerhub_login_plugin
+      elastic/vault-docker-login#v0.6.0:
+        secret_path: 'kv/ci-shared/observability-github-secrets/shared/docker/dockerhub/observabilityrobots'
 
 steps:
   - label: ":linux: multiarch Linux x86_64/arm64 FPM docker image"
@@ -38,3 +41,4 @@ steps:
     plugins:
       - *gcp_oidc_plugin
       - *docker_elastic_login_plugin
+      - *dockerhub_login_plugin
