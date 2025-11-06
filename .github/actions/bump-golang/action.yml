@@ -28,10 +28,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ inputs.branch }}
-
       - uses: elastic/oblt-actions/updatecli/run@v1
         with:
           command: ${{ env.COMMAND }} --config ./.github/updatecli.d/
