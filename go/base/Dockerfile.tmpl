@@ -36,11 +36,11 @@ ARG VERSION
 ARG SECURITY_VERSION=-1
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-amd64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
-ARG MSFT_DOWNLOAD_SHA256=304d4ce3aeee2d5ce3cca73aebeb97ea238d0dadf5c2cc7e59aeab9ff08ab7e9
+ARG MSFT_DOWNLOAD_SHA256=c728dc46225d7a73e90414097015eeecce8fa63643d0c28be6a98d511e04e60d
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-amd64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=0335f314b6e7bfe08c3d0cfaa7c19db961b7b99fb20be62b0a826c992ad14e0f
+ARG GOLANG_DOWNLOAD_SHA256=9fa5ffeda4170de60f67f3aa0f824e426421ba724c21e133c1e35d6159ca1bec
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end }}
 
