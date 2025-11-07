@@ -32,17 +32,19 @@ runs:
         with:
           ref: ${{ inputs.branch }}
 
-      - uses: elastic/oblt-actions/updatecli/run-and-notify@v1
+      - uses: elastic/oblt-actions/updatecli/run@v1
         with:
           command: ${{ env.COMMAND }} --config ./.github/updatecli.d/
-          slack-bot-token: ${{ inputs.slack-bot-token }}
-          slack-channel-id: ${{ inputs.slack-channel-id }}
-          slack-message: ${{ inputs.slack-message }}
-          slack-send-when: "failure"
-          # TODO: automate the bump for this version.
-          version: v0.81.1
+          version-file: .updatecli-version
         env:
           COMMAND: ${{ inputs.command }}
           BRANCH: ${{ inputs.branch }}
           GO_MINOR: ${{ inputs.go-minor }}
           GITHUB_TOKEN: ${{ inputs.github-token }}
+
+      - uses: elastic/oblt-actions/slack/send@v1
+        if: failure()
+        with:
+          bot-token: ${{ inputs.slack-bot-token }}
+          channel-id: ${{ inputs.slack-channel-id }}
+          message: ${{ inputs.slack-message }}
