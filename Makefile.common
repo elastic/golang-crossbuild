@@ -8,7 +8,7 @@ NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 GS_BUCKET_PATH ?= golang-crossbuild-ci-internal
-PYTHON_VERSION := $(shell asdf latest python)
+PYTHON_VERSION := $(shell asdf list python)
 
 # Requires login at google storage.
 copy-npcap:
