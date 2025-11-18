@@ -8,7 +8,6 @@ NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
 GS_BUCKET_PATH ?= golang-crossbuild-ci-internal
-PYTHON_VERSION := 3.10.9
 
 # Requires login at google storage.
 copy-npcap:
@@ -21,7 +20,6 @@ endif
 # Requires login at google storage.
 copy-sdks:
 ifeq ($(CI),true)
-	@export CLOUDSDK_PYTHON=$(which python$(PYTHON_VERSION))
 	@gcloud storage cp gs://$(GS_BUCKET_PATH)/sdks . --recursive
 else
 	@echo 'Only available if running in the CI'

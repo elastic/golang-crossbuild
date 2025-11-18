@@ -14,7 +14,6 @@ endif
 
 copy-npcap:
 	@echo "NOOP"
-	@echo $(which python3.10)
 
 build:
 	@echo ">> Building $(TAG)"
