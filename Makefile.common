@@ -19,6 +19,7 @@ endif
 
 # Requires login at google storage.
 copy-sdks:
+	asdf global python 3.10.9
 ifeq ($(CI),true)
 	@gcloud storage cp gs://$(GS_BUCKET_PATH)/sdks . --recursive
 else
