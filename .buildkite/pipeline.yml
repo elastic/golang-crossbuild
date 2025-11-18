@@ -4,7 +4,7 @@ env:
   SETUP_GVM_VERSION: "v0.5.1"
   IMAGE_UBUNTU_X86_64: "family/core-ubuntu-2204"
   INSTANCE_TYPE_X86_64: "n2-standard-4"
-  IMAGE_UBUNTU_ARM_64: "platform-ingest-beats-2404-aarch64"
+  IMAGE_UBUNTU_ARM_64: "platform-ingest-beats-2204-aarch64"
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
   BUILDX: 1
 
