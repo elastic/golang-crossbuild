@@ -22,7 +22,7 @@ if [[ -z "${RELEASE:-}" ]]; then
 fi
 
 echo "Checking python installation"
-echo $(which python3.10)
+echo $(which python3)
 
 retry 3 make -C "${makefile}" build GS_BUCKET_PATH=golang-crossbuild-ci-internal
 
