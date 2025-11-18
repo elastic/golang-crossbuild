@@ -21,9 +21,6 @@ if [[ -z "${RELEASE:-}" ]]; then
   export REPOSITORY="${STAGING_IMAGE}"
 fi
 
-echo "Checking python installation"
-echo $(which python3)
-
 retry 3 make -C "${makefile}" build GS_BUCKET_PATH=golang-crossbuild-ci-internal
 
 echo "--- List Docker images"
