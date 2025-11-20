@@ -21,8 +21,8 @@ endif
 # Requires login at google storage.
 copy-sdks:
 ifeq ($(CI),true)
-	@echo "The last asdf installed python version is $(PYTHON_VERSION)"
-	@asdf global python $(PYTHON_VERSION)
+	@echo "The most recent installed python version is $(PYTHON_VERSION)"
+	# @asdf global python $(PYTHON_VERSION)
 	@gcloud storage cp gs://$(GS_BUCKET_PATH)/sdks . --recursive
 else
 	@echo 'Only available if running in the CI'
