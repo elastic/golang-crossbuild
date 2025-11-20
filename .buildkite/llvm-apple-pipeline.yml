@@ -41,8 +41,9 @@ steps:
       DEBIAN_VERSION: "{{matrix.debianVersion}}"
     agents:
       # provider: "gcp"
+      # image: "${IMAGE_UBUNTU_X86_64}"
       provider: "aws"
-      image: "${IMAGE_UBUNTU_X86_64}"
+      imagePrefix: "${IMAGE_UBUNTU_X86_64}"
       instanceType: "t4g.large"
     plugins:
       - *gcp_oidc_plugin
