@@ -2,9 +2,9 @@
 
 env:
   SETUP_GVM_VERSION: "v0.5.1"
-  # IMAGE_UBUNTU_X86_64: "family/platform-ingest-beats-ubuntu-2204"
-  IMAGE_UBUNTU_X86_64: "platform-ingest-beats-ubuntu-2204"
-  IMAGE_UBUNTU_ARM_64: "platform-ingest-beats-ubuntu-2204-aarch64"
+  IMAGE_UBUNTU_X86_64: "family/platform-ingest-eng-prod-base-ubuntu-2204"
+  IMAGE_UBUNTU_ARM_64: "platform-ingest-eng-prod-base-ubuntu-2204-aarch64"
+  INSTANCE_TYPE_ARM_64: "t4g.large"
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
   MAKEFILE: "go/llvm-apple"
   BUILDX: "0"
@@ -40,11 +40,8 @@ steps:
       TAG_EXTENSION: "-debian{{matrix.debianVersion}}-amd64"
       DEBIAN_VERSION: "{{matrix.debianVersion}}"
     agents:
-      # provider: "gcp"
-      # image: "${IMAGE_UBUNTU_X86_64}"
-      provider: "aws"
-      imagePrefix: "${IMAGE_UBUNTU_X86_64}"
-      instanceType: "t3.large"
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
     plugins:
       - *gcp_oidc_plugin
       - *docker_elastic_login_plugin
@@ -71,7 +68,7 @@ steps:
     agents:
       provider: "aws"
       imagePrefix: "${IMAGE_UBUNTU_ARM_64}"
-      instanceType: "t4g.large"
+      instanceType: "${INSTANCE_TYPE_ARM_64}"
     plugins:
       - *gcp_oidc_plugin
       - *docker_elastic_login_plugin
