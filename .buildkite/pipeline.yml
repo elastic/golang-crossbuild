@@ -5,7 +5,7 @@ env:
   IMAGE_UBUNTU_X86_64: "family/platform-ingest-eng-prod-base-ubuntu-2204"
   INSTANCE_TYPE_X86_64: "n2-standard-4"
   IMAGE_UBUNTU_ARM_64: "platform-ingest-eng-prod-base-ubuntu-2204-aarch64"
-  INSTANCE_TYPE_ARM_64: "t4g.large"
+  INSTANCE_TYPE_ARM_64: "t3.large"
   STAGING_IMAGE: "docker.elastic.co/observability-ci"
   BUILDX: 1
 
