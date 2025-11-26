@@ -40,18 +40,24 @@ done
 
 echo ":: Restoring symlinks..."
 while IFS= read -r line; do
-    src=$(echo "$line" | awk '{print $1}')
-    src="$base_dir/$src"
+    link_src=$(echo "$line" | awk '{print $1}')
+    link_src="$base_dir/$link_src"
 
-    dest=$(echo "$line" | awk '{print $2}')
-    dest="$(realpath "$base_dir/$dest")"
-    ln -s "$dest" "$src"
+    link_dest=$(echo "$line" | awk '{print $2}')
+    link_dest="$(realpath "$base_dir/$link_dest")"
+    ln -s "$link_dest" "$link_src"
 done <symlinks.txt
 
 echo ":: Creating symlink for aarch64-w64-mingw32 headers..."
 if [ ! -d "$base_dir/aarch64-w64-mingw32/include" ]; then
-    ln -s "$base_dir/generic-w64-mingw32/include" "$base_dir/aarch64-w64-mingw32/include"
-    echo "Created symlink: $base_dir/aarch64-w64-mingw32/include -> $base_dir/generic-w64-mingw32/include"
+    if [ -d "$base_dir/generic-w64-mingw32/include" ]; then
+        ln -s "$base_dir/generic-w64-mingw32/include" "$base_dir/aarch64-w64-mingw32/include"
+        echo "Created symlink: $base_dir/aarch64-w64-mingw32/include -> $base_dir/generic-w64-mingw32/include"
+    else
+        echo "Warning: $base_dir/generic-w64-mingw32/include does not exist"
+    fi
+else
+    echo "Include directory already exists, skipping symlink creation"
 fi
 
 echo ":: Cleanup"
