@@ -41,14 +41,6 @@ COPY rootfs /
 # Basic test
 RUN which aarch64-w64-mingw32-gcc
 
-# Debug: Verify symlink and directory structure
-RUN echo "=== Checking aarch64-w64-mingw32 directory ===" \
-  && ls -la /usr/aarch64-w64-mingw32/ \
-  && echo "=== Checking if include is a symlink ===" \
-  && file /usr/aarch64-w64-mingw32/include \
-  && echo "=== Checking generic-w64-mingw32 include ===" \
-  && ls -la /usr/generic-w64-mingw32/include/ | head -20
-
 RUN cd / \
   && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
   && file helloWorld.arm64 \
