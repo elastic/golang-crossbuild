@@ -41,6 +41,13 @@ COPY rootfs /
 # Basic test
 RUN which aarch64-w64-mingw32-gcc
 
+# Debug: Check what directories and headers are available
+RUN echo "=== Checking installed files ===" \
+  && ls -la /usr/aarch64-w64-mingw32* || true \
+  && ls -la /usr/generic-w64-mingw32* || true \
+  && find /usr -name "stdio.h" 2>/dev/null || true \
+  && aarch64-w64-mingw32-gcc -v 2>&1 | grep -i "search starts here" -A 10 || true
+
 RUN cd / \
   && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
   && file helloWorld.arm64 \
