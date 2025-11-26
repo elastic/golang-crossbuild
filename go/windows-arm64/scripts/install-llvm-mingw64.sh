@@ -48,6 +48,12 @@ while IFS= read -r line; do
     ln -s "$dest" "$src"
 done <symlinks.txt
 
+echo ":: Creating symlink for aarch64-w64-mingw32 headers..."
+if [ ! -d "$base_dir/aarch64-w64-mingw32/include" ]; then
+    ln -s "$base_dir/generic-w64-mingw32/include" "$base_dir/aarch64-w64-mingw32/include"
+    echo "Created symlink: $base_dir/aarch64-w64-mingw32/include -> $base_dir/generic-w64-mingw32/include"
+fi
+
 echo ":: Cleanup"
 cd ..
 rm -rf "$src"

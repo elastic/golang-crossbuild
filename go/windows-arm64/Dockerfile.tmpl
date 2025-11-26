@@ -41,12 +41,6 @@ COPY rootfs /
 # Basic test
 RUN which aarch64-w64-mingw32-gcc
 
-# Create symlink for headers if aarch64-w64-mingw32/include doesn't exist
-RUN if [ ! -d "/usr/aarch64-w64-mingw32/include" ]; then \
-      echo "Creating symlink for aarch64-w64-mingw32 headers..." \
-      && ln -s /usr/generic-w64-mingw32/include /usr/aarch64-w64-mingw32/include; \
-    fi
-
 RUN cd / \
   && aarch64-w64-mingw32-gcc helloWorld.c -o helloWorld.arm64 \
   && file helloWorld.arm64 \
