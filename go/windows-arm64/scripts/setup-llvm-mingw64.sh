@@ -62,8 +62,24 @@ mv "$pkg_dir" llvm-mingw64
 cd llvm-mingw64
 
 # Keep llvm-mingw64 only for arm target to avoid conflict with gcc-mingw64
-rm bin/x86_64* bin/i686*
-rm -rf i686-w64-mingw32 x86_64-w64-mingw32
+# Remove x86_64 and i686 binaries but keep the generic headers
+rm -f bin/x86_64* bin/i686*
+rm -rf i686-w64-mingw32/bin i686-w64-mingw32/lib
+rm -rf x86_64-w64-mingw32/bin x86_64-w64-mingw32/lib
+# Keep the include directories as they contain shared headers
+# Only remove the i686 and x86_64 directories if they don't contain needed includes
+if [ -d "i686-w64-mingw32" ]; then
+    find i686-w64-mingw32 -mindepth 1 ! -path "*/include/*" -delete
+    if [ -z "$(ls -A i686-w64-mingw32)" ]; then
+        rm -rf i686-w64-mingw32
+    fi
+fi
+if [ -d "x86_64-w64-mingw32" ]; then
+    find x86_64-w64-mingw32 -mindepth 1 ! -path "*/include/*" -delete
+    if [ -z "$(ls -A x86_64-w64-mingw32)" ]; then
+        rm -rf x86_64-w64-mingw32
+    fi
+fi
 
 # Backup symlinks
 find . -type l | while read -r symlink; do
