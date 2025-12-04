@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 
 env:
-  SETUP_GVM_VERSION: "v0.5.1"
   IMAGE_UBUNTU_X86_64: "family/platform-ingest-eng-prod-base-ubuntu-2204"
   IMAGE_UBUNTU_ARM_64: "platform-ingest-eng-prod-base-ubuntu-2204-aarch64"
   INSTANCE_TYPE_ARM_64: "t4g.large"
