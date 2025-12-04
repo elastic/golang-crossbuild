@@ -68,7 +68,7 @@ find "go" -type f -name Dockerfile.tmpl -print0 |
         if [ -n "$SECURITY_VERSION" ]; then
             ${SED} -E -e "s#(ARG SECURITY_VERSION)=.*#\1=${SECURITY_VERSION}#g" "$line"
         fi
-        ${SED} -E -e "s#(ARG VERSION)=.+#\1=${GO_RELEASE_VERSION}#g" "$line"
+        ${SED} -E -e "s#(ARG VERSION)=.+#\1=${MAJOR_MINOR_PATCH_VERSION}#g" "$line"
     done
 
 if git diff --quiet ; then
