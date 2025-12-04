@@ -1,5 +1,5 @@
-ARG DEBIAN_VERSION
-FROM debian:${DEBIAN_VERSION} as BUILD_LLVM_APPLE
+ARG DEBIAN_VERSION=9
+FROM debian:${DEBIAN_VERSION} AS BUILD_LLVM_APPLE
 
 ARG DEBIAN_VERSION
 # Replace sources.list in order to use archive.debian.org.
