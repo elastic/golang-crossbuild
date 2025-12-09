@@ -1,5 +1,5 @@
-ARG REPOSITORY
-ARG VERSION
+ARG REPOSITORY=docker.elastic.co/beats-dev
+ARG VERSION=1.25.5
 ARG TAG_EXTENSION=''
 
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
@@ -46,9 +46,9 @@ RUN \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
 {{- end }}
 
-ENV PATH $PATH:$OSXCROSS_PATH/bin
+ENV PATH=$PATH:$OSXCROSS_PATH/bin
 # Add osxcross libraries to the library PATH
-ENV LD_LIBRARY_PATH $OSXCROSS_PATH/lib:/lib:/usr/lib:/usr/local/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=$OSXCROSS_PATH/lib:/lib:/usr/lib:/usr/local/lib:$LD_LIBRARY_PATH
 
 COPY rootfs /
 
