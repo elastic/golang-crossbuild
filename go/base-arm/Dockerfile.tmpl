@@ -1,4 +1,4 @@
-ARG DEBIAN_VERSION
+ARG DEBIAN_VERSION=9
 FROM arm64v8/debian:${DEBIAN_VERSION}
 
 ARG DEBIAN_VERSION
@@ -82,8 +82,8 @@ RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& tar -C /usr/local -xzf golang.tar.gz \
 	&& rm golang.tar.gz
 
-ENV GOPATH /go
-ENV PATH $PATH:/usr/local/go/bin
+ENV GOPATH=/go
+ENV PATH=$PATH:/usr/local/go/bin
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
@@ -100,7 +100,7 @@ RUN ldd --version
 WORKDIR /
 
 RUN mkdir -p /root/.config/go/telemetry && echo "off 2024-08-23" > /root/.config/go/telemetry/mode
-ENV GOTOOLCHAIN local
+ENV GOTOOLCHAIN=local
 RUN go mod init github.com/elastic/golang-crossbuild-$VERSION-arm \
     && go get . \
     && go env \
@@ -116,9 +116,9 @@ RUN mkdir /libpcap \
   && make
 
 {{- if eq .FIPS "true"}}
-ENV GOEXPERIMENT systemcrypto
-ENV CGO_ENABLED 1
-ENV MS_GOTOOLCHAIN_TELEMETRY_ENABLED 0
+ENV GOEXPERIMENT=systemcrypto
+ENV CGO_ENABLED=1
+ENV MS_GOTOOLCHAIN_TELEMETRY_ENABLED=0
 {{- end}}
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app

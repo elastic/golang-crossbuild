@@ -1,7 +1,7 @@
-ARG REPOSITORY
-ARG VERSION
+ARG REPOSITORY=docker.elastic.co/beats-dev
+ARG VERSION=1.24.11
 ARG TAG_EXTENSION=''
-FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-amd64
+FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-amd64
 
 RUN dpkg --add-architecture arm64 \
         && apt update -y --no-install-recommends \
@@ -45,10 +45,10 @@ RUN apt install -y \
         libsystemd-dev:arm64
 {{- end }}
 
-ARG REPOSITORY
-ARG VERSION
+ARG REPOSITORY=docker.elastic.co/beats-dev
+ARG VERSION=1.24.11
 ARG TAG_EXTENSION=''
-FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} as stage-arm64
+FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-arm64
 
 RUN dpkg --add-architecture arm64 \
         && apt update -y --no-install-recommends \
@@ -93,7 +93,7 @@ RUN apt install -y  \
 # Declare TARGETARCH to make it available
 ARG TARGETARCH=amd64
 # Select final stage based on TARGETARCH ARG
-FROM stage-${TARGETARCH} as final
+FROM stage-${TARGETARCH} AS final
 
 RUN rm -rf /var/lib/apt/lists/*
 

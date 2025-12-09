@@ -1,5 +1,5 @@
-ARG DEBIAN_VERSION
-FROM debian:${DEBIAN_VERSION} as BUILD_LLVM_APPLE
+ARG DEBIAN_VERSION=9
+FROM debian:${DEBIAN_VERSION} AS BUILD_LLVM_APPLE
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommends --allow-unauthenticated \
         && apt-get upgrade -y --no-install-recommends --allow-unauthenticated \
