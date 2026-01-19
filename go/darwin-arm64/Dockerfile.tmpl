@@ -1,5 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-ARG VERSION=1.25.5
+ARG VERSION=1.25.6
 ARG TAG_EXTENSION=''
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
 FROM --platform=linux/arm64  docker.elastic.co/beats-dev/golang-crossbuild:llvm-apple-debian{{ .DEBIAN_VERSION }}-arm64 AS build-llvm-apple
