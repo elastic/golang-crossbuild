@@ -1,5 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-ARG VERSION=1.25.7
+ARG VERSION=1.26.0
 ARG TAG_EXTENSION=''
 FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-amd64
 
@@ -46,7 +46,7 @@ RUN apt install -y \
 {{- end }}
 
 ARG REPOSITORY=docker.elastic.co/beats-dev
-ARG VERSION=1.25.7
+ARG VERSION=1.26.0
 ARG TAG_EXTENSION=''
 FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-arm64
 

@@ -37,27 +37,29 @@ Follow these steps when a new major Go version is [released](https://go.dev/doc/
 #### 1. Prepare Version Branch
 Create a branch for the previous major Go version to maintain backward compatibility.
 
-**Example**: If upgrading from Go 1.24 to Go 1.25:
+**Example**: If upgrading from Go 1.25 to Go 1.26:
 ```bash
-# Create branch for previous version (1.24)
+# Create branch for previous version (1.25)
 git checkout main
-git checkout -b 1.24
-git push origin 1.24
+git checkout -b 1.25
+git push origin 1.25
 ```
 
 #### 2. Update Core Version Files
 Update the Go version in the main configuration files:
 
 - **File**: `.go-version`
-  - Update to the new Go version (e.g., `1.25.0`)
+  - Update to the new Go version (e.g., `1.26.0`)
 
 - **File**: `go/Makefile.common` (line 5)
   - Update the Docker tag to match the new version
 
 #### 3. Run Version Bump Script
 Execute the automated version bump script:
+
 ```bash
-.github/updatecli.d/bump-go-release-version.sh "$(cat .go-version)"
+# Use Microsoft Golang release versioning normally 1.26.0-1
+.github/updatecli.d/bump-go-version.sh "$(cat .go-version)-1"
 ```
 
 #### 4. Update Documentation
@@ -66,29 +68,29 @@ Execute the automated version bump script:
 
 #### 5. Update GitHub Workflows
 - **File**: `.github/workflows/bump-golang.yml`
-  - Update `go-minor` value to new minor version (e.g., `1.25`)
+  - Update `go-minor` value to new minor version (e.g., `1.26`)
 
 - **File**: `.github/workflows/bump-golang-previous.yml`
-  - Update `go-minor` to previous minor version (e.g., `1.24`)
-  - Update `branch` value to previous minor version (e.g., `1.24`)
+  - Update `go-minor` to previous minor version (e.g., `1.25`)
+  - Update `branch` value to previous minor version (e.g., `1.25`)
 
 #### 6. Configure Backport Support
 - **File**: `.mergify.yml`
-  - Add entry for new backport label: `backport-v1.24` (using previous version)
+  - Add entry for new backport label: `backport-v1.25` (using previous version)
 
 - **GitHub Labels**
   - Create new label at: https://github.com/elastic/golang-crossbuild/labels
-  - Label name: `backport-v1.24` (using previous version)
+  - Label name: `backport-v1.25` (using previous version)
 
 #### 7. Commit and Create Pull Request in the `main` branch
 ```bash
 git checkout main
 git add -u
-git commit -m "Update to Go 1.25.0"  # Use actual version
+git commit -m "Update to Go 1.26.0"  # Use actual version
 ```
 
 Create a Pull Request with:
-- **Title**: `Update to Go 1.25.0`
+- **Title**: `Update to Go 1.26.0`
 - **Description**: Brief summary of the Go version update
 
 #### 8. Merge and Release
