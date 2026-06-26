@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+
+env:
+  IMAGE_UBUNTU_X86_64: "family/platform-ingest-eng-prod-base-ubuntu-2204"
+  INSTANCE_TYPE_X86_64: "n2-standard-4"
+
+# This section is used to define the plugins that will be used in the pipeline.
+# See https://buildkite.com/docs/pipelines/integrations/plugins/using#using-yaml-anchors-with-plugins
+common:
+  - oblt_google_auth_plugin: &gcp_oidc_plugin
+      # See https://github.com/elastic/oblt-infra/blob/main/conf/resources/repos/golang-crossbuild/01-gcp-buildkite-oidc.tf
+      # This plugin authenticates to Google Cloud using the OIDC token.
+      elastic/oblt-google-auth#v1.3.0:
+        lifetime: 3600
+        project-id: "elastic-observability-ci"
+        project-number: "911195782929"
+
+steps:
+
+  - label: ":package: Check and upload npcap"
+    key: "npcap-check-upload"
+    command: ".buildkite/scripts/bump-npcap.sh"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+      instanceType: "${INSTANCE_TYPE_X86_64}"
+    plugins:
+      - *gcp_oidc_plugin
+
+  - wait: ~
+
+  - label: ":golang: Bump npcap in golang-crossbuild"
+    key: "npcap-bump-crossbuild"
+    command: ".buildkite/scripts/bump-crossbuild-npcap.sh"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+      instanceType: "${INSTANCE_TYPE_X86_64}"
+
+  - label: ":beats: Bump npcap in elastic/beats"
+    key: "npcap-bump-beats"
+    command: ".buildkite/scripts/bump-beats-npcap.sh"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+      instanceType: "${INSTANCE_TYPE_X86_64}"
+
+notify:
+  - slack: "#ingest-notifications"
+    if: build.state == "failed"
