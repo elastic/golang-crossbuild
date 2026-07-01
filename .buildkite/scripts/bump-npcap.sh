@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 # Downloads the latest npcap OEM installer from npcap.com and uploads it to the
 # private GCS bucket, if a newer version than what is pinned in Makefile.common
-# is available. Publishes the new and previous version via Buildkite meta-data
-# for use by the downstream bump-crossbuild-npcap.sh and bump-beats-npcap.sh steps.
+# is available. The follow-up Makefile.common bump runs as an independent
+# updatecli step (see .github/updatecli.d/bump-npcap.yml) that re-derives the
+# latest version itself, so no state needs to be passed between the two steps.
 #
 # Required environment:
-#   VAULT_ADDR (set by the Buildkite agent)
+#   NPCAP_USERNAME / NPCAP_PASSWORD (provided by the elastic/vault-secrets
+#     Buildkite plugin, which also registers them with the log redactor)
 #   gcloud authenticated via the elastic/oblt-google-auth Buildkite plugin
-#
-# The NPCAP OEM credentials are read from Vault at runtime; they are NOT passed
-# in as environment variables because they cannot be acquired locally without
-# Vault access.
 set -euo pipefail
 
 source "$(dirname "$0")/common.sh"
@@ -32,7 +30,6 @@ echo "Latest  npcap version: ${LATEST}"
 
 if [ "$LATEST" = "$CURRENT" ]; then
   echo "Already up-to-date at ${CURRENT}. Nothing to do."
-  buildkite-agent meta-data set "npcap-new-version" ""
   exit 0
 fi
 
@@ -47,14 +44,6 @@ if gcloud storage ls "$GCS_PATH" 2>/dev/null; then
   echo "Artifact already present: ${GCS_PATH}"
 else
   echo "--- Downloading ${OEM_FILE} from npcap.com"
-
-  # Read OEM credentials from Vault.
-  # Path populated by: https://github.com/elastic/observability-github-secrets/pull/585
-  NPCAP_USERNAME=$(vault kv get -field=data \
-    "kv/ci-shared/observability-github-secrets/golang-crossbuild/NPCAP_USERNAME")
-  NPCAP_PASSWORD=$(vault kv get -field=data \
-    "kv/ci-shared/observability-github-secrets/golang-crossbuild/NPCAP_PASSWORD")
-
   retry 3 curl -fL -O --digest -u "${NPCAP_USERNAME}:${NPCAP_PASSWORD}" \
     "https://npcap.com/oem/dist/${OEM_FILE}"
 
@@ -64,9 +53,6 @@ else
   echo "Upload complete."
 fi
 
-echo "--- Publishing version metadata for downstream steps"
-buildkite-agent meta-data set "npcap-new-version" "${LATEST}"
-buildkite-agent meta-data set "npcap-prev-version" "${CURRENT}"
 buildkite-agent annotate \
   "New npcap version detected: **${CURRENT}** → **${LATEST}**" \
   --style "info" --context "npcap-version"

@@ -1,0 +1,75 @@
+---
+name: Bump npcap version in Makefile.common
+pipelineid: 'bump-npcap-version'
+
+# NOTE: this pipeline is applied from a Buildkite step
+# (.buildkite/scripts/run-updatecli.sh), not from GitHub Actions like the
+# other updatecli.d/ configs in this repo. GITHUB_TOKEN is provided by the
+# elastic/vault-github-token Buildkite plugin, which also configures the
+# elastic-ci[bot] git identity used below.
+
+scms:
+  githubConfig:
+    kind: github
+    spec:
+      user: 'elastic-ci[bot]'
+      username: 'elastic-ci[bot]'
+      owner: elastic
+      repository: golang-crossbuild
+      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
+      branch: main
+      commitusingapi: true
+
+actions:
+  default:
+    title: 'Bump npcap to version {{ source "latestNpcapVersion" }}'
+    kind: github/pullrequest
+    scmid: githubConfig
+    spec:
+      automerge: false
+      labels:
+        - automation
+        - dependencies
+        - backport-skip
+      description: |
+        Bumps the npcap OEM installer to v{{ source "latestNpcapVersion" }}.
+        The artifact has been uploaded to the private GCS store by this automation.
+
+        https://github.com/nmap/npcap/releases/tag/v{{ source "latestNpcapVersion" }}
+
+sources:
+  latestNpcapVersion:
+    name: Get latest npcap release
+    kind: githubrelease
+    transformers:
+      - trimprefix: v
+    spec:
+      owner: nmap
+      repository: npcap
+      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
+      username: 'elastic-ci[bot]'
+      versionfilter:
+        kind: latest
+
+conditions:
+  isNewVersion:
+    name: 'Is NPCAP_VERSION already {{ source "latestNpcapVersion" }} in Makefile.common?'
+    disablesourceinput: true
+    scmid: githubConfig
+    kind: file
+    spec:
+      file: Makefile.common
+      line: 6
+      content: 'NPCAP_VERSION := {{ source "latestNpcapVersion" }}'
+    failwhen: true
+
+targets:
+  update-makefile-common:
+    name: "Update NPCAP_VERSION in Makefile.common"
+    sourceid: latestNpcapVersion
+    scmid: githubConfig
+    kind: file
+    spec:
+      file: Makefile.common
+      matchpattern: 'NPCAP_VERSION := \d+\.\d+'
+      content: 'NPCAP_VERSION := {{ source "latestNpcapVersion" }}'

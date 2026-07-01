@@ -3,6 +3,7 @@
 env:
   IMAGE_UBUNTU_X86_64: "family/platform-ingest-eng-prod-base-ubuntu-2204"
   INSTANCE_TYPE_X86_64: "n2-standard-4"
+  UPDATECLI_CONFIG: ".github/updatecli.d/bump-npcap.yml"
 
 # This section is used to define the plugins that will be used in the pipeline.
 # See https://buildkite.com/docs/pipelines/integrations/plugins/using#using-yaml-anchors-with-plugins
@@ -10,10 +11,28 @@ common:
   - oblt_google_auth_plugin: &gcp_oidc_plugin
       # See https://github.com/elastic/oblt-infra/blob/main/conf/resources/repos/golang-crossbuild/01-gcp-buildkite-oidc.tf
       # This plugin authenticates to Google Cloud using the OIDC token.
-      elastic/oblt-google-auth#v1.3.0:
+      elastic/oblt-google-auth#v1.3.1:
         lifetime: 3600
         project-id: "elastic-observability-ci"
         project-number: "911195782929"
+  - npcap_username_plugin: &npcap_username_plugin
+      # Maps the NPCAP OEM username from Vault to the NPCAP_USERNAME env var.
+      # The plugin registers the value with the Buildkite log redactor.
+      elastic/vault-secrets#v0.1.0:
+        path: "kv/ci-shared/observability-github-secrets/golang-crossbuild/NPCAP_USERNAME"
+        field: "data"
+        env_var: "NPCAP_USERNAME"
+  - npcap_password_plugin: &npcap_password_plugin
+      # Maps the NPCAP OEM password from Vault to the NPCAP_PASSWORD env var.
+      elastic/vault-secrets#v0.1.0:
+        path: "kv/ci-shared/observability-github-secrets/golang-crossbuild/NPCAP_PASSWORD"
+        field: "data"
+        env_var: "NPCAP_PASSWORD"
+  - vault_github_token_plugin: &vault_github_token_plugin
+      # Provides an ephemeral GITHUB_TOKEN and configures the elastic-ci[bot]
+      # git identity used by updatecli to open the version-bump PR.
+      elastic/vault-github-token#v0.2.1:
+        configure-git-user: true
 
 steps:
 
@@ -26,24 +45,20 @@ steps:
       instanceType: "${INSTANCE_TYPE_X86_64}"
     plugins:
       - *gcp_oidc_plugin
+      - *npcap_username_plugin
+      - *npcap_password_plugin
 
   - wait: ~
 
-  - label: ":golang: Bump npcap in golang-crossbuild"
+  - label: ":golang: Bump NPCAP_VERSION in Makefile.common"
     key: "npcap-bump-crossbuild"
-    command: ".buildkite/scripts/bump-crossbuild-npcap.sh"
+    command: ".buildkite/scripts/run-updatecli.sh ${UPDATECLI_CONFIG}"
     agents:
       provider: "gcp"
       image: "${IMAGE_UBUNTU_X86_64}"
       instanceType: "${INSTANCE_TYPE_X86_64}"
-
-  - label: ":beats: Bump npcap in elastic/beats"
-    key: "npcap-bump-beats"
-    command: ".buildkite/scripts/bump-beats-npcap.sh"
-    agents:
-      provider: "gcp"
-      image: "${IMAGE_UBUNTU_X86_64}"
-      instanceType: "${INSTANCE_TYPE_X86_64}"
+    plugins:
+      - *vault_github_token_plugin
 
 notify:
   - slack: "#ingest-notifications"

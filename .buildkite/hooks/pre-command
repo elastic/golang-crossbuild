@@ -9,8 +9,3 @@ if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild" && "$BUILDKITE_STEP_KEY"
     export GITHUB_EMAIL="elasticmachine@elastic.co"
     export GITHUB_TOKEN_SECRET=$VAULT_GITHUB_TOKEN
 fi
-
-if [[ "$BUILDKITE_PIPELINE_SLUG" == "golang-crossbuild-bump-npcap" ]]; then
-    export GITHUB_USERNAME="elasticmachine"
-    export GITHUB_EMAIL="elasticmachine@elastic.co"
-fi
