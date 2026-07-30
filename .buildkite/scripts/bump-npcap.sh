@@ -39,12 +39,12 @@ GCS_PATH="gs://${GCS_BUCKET}/private/${OEM_FILE}"
 echo "--- Checking GCS bucket for existing artifact"
 
 # Skip the download/upload if the artifact is already in the bucket (idempotent
-# in case the pipeline is re-run after a failure). The ls check is safe because
-# gcloud storage cp uses resumable uploads by default, which only make an object
-# visible after a successful completion — a partial/interrupted upload leaves no
-# addressable object behind. --no-parallel-composite-upload enforces this
-# guarantee; without it, gcloud could split large files into temporary component
-# objects that are visible before the final compose step.
+# in case the pipeline is re-run after a failure). The ls check is safe: gcloud
+# storage cp uses resumable uploads by default, which only make an object visible
+# after a successful completion — a partial/interrupted upload leaves no
+# addressable object behind. Parallel composite upload (which can leave temporary
+# component objects visible) only triggers for large files; the npcap installer
+# is ~1–2 MB, well below any composite-upload threshold.
 if gcloud storage ls "$GCS_PATH" 2>/dev/null; then
   echo "Artifact already present: ${GCS_PATH}"
 else
@@ -53,7 +53,7 @@ else
     "https://npcap.com/oem/dist/${OEM_FILE}"
 
   echo "--- Uploading to ${GCS_PATH}"
-  gcloud storage cp --no-parallel-composite-upload "./${OEM_FILE}" "$GCS_PATH"
+  gcloud storage cp "./${OEM_FILE}" "$GCS_PATH"
   rm "./${OEM_FILE}"
   echo "Upload complete."
 fi
