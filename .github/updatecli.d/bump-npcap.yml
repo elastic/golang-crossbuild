@@ -1,6 +1,6 @@
 ---
 name: Bump npcap version in Makefile.common
-pipelineid: 'bump-npcap-version'
+pipelineid: 'bump-npcap-{{ source "latestNpcapVersion" }}'
 
 # NOTE: this pipeline is applied from a Buildkite step
 # (.buildkite/scripts/run-updatecli.sh), not from GitHub Actions like the
