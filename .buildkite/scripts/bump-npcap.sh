@@ -52,6 +52,14 @@ else
   retry 3 curl -fL -O --digest -u "${NPCAP_USERNAME}:${NPCAP_PASSWORD}" \
     "https://npcap.com/oem/dist/${OEM_FILE}"
 
+  echo "--- Verifying download"
+  file_type=$(file --brief "${OEM_FILE}")
+  echo "File type: ${file_type}"
+  if ! grep -q "PE32" <<< "${file_type}"; then
+    echo "ERROR: expected a PE32 executable, got: ${file_type}"
+    exit 1
+  fi
+
   echo "--- Uploading to ${GCS_PATH}"
   gcloud storage cp "./${OEM_FILE}" "$GCS_PATH"
   rm "./${OEM_FILE}"
