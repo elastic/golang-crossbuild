@@ -8,7 +8,7 @@ metadata:
 
 spec:
   type: tool
-  owner: group:ingest-fp
+  owner: group:Streams
   system: platform-ingest
   lifecycle: production
 
@@ -25,7 +25,7 @@ metadata:
 
 spec:
   type: buildkite-pipeline
-  owner: group:ingest-fp
+  owner: group:Streams
   system: buildkite
   implementation:
     apiVersion: buildkite.elastic.dev/v1
@@ -53,7 +53,7 @@ spec:
       env:
          ELASTIC_PR_COMMENTS_ENABLED: 'true'
       teams:
-        ingest-fp:
+        Streams:
           access_level: MANAGE_BUILD_AND_READ
         observablt-robots:
           access_level: BUILD_AND_READ
@@ -78,7 +78,7 @@ metadata:
 
 spec:
   type: buildkite-pipeline
-  owner: group:ingest-fp
+  owner: group:Streams
   system: buildkite
   implementation:
     apiVersion: buildkite.elastic.dev/v1
@@ -106,7 +106,7 @@ spec:
       env:
         ELASTIC_PR_COMMENTS_ENABLED: 'false'
       teams:
-        ingest-fp:
+        Streams:
           access_level: MANAGE_BUILD_AND_READ
         observablt-robots:
           access_level: BUILD_AND_READ
@@ -126,7 +126,7 @@ metadata:
 
 spec:
   type: buildkite-pipeline
-  owner: group:ingest-fp
+  owner: group:Streams
   system: buildkite
   implementation:
     apiVersion: buildkite.elastic.dev/v1
@@ -150,7 +150,7 @@ spec:
       env:
         ELASTIC_PR_COMMENTS_ENABLED: 'false'
       teams:
-        ingest-fp:
+        Streams:
           access_level: MANAGE_BUILD_AND_READ
         observablt-robots:
           access_level: BUILD_AND_READ
@@ -177,7 +177,7 @@ metadata:
 
 spec:
   type: buildkite-pipeline
-  owner: group:ingest-fp
+  owner: group:Streams
   system: buildkite
   implementation:
     apiVersion: buildkite.elastic.dev/v1
@@ -205,7 +205,7 @@ spec:
       env:
         ELASTIC_PR_COMMENTS_ENABLED: 'false'
       teams:
-        ingest-fp:
+        Streams:
           access_level: MANAGE_BUILD_AND_READ
         observablt-robots:
           access_level: BUILD_AND_READ
