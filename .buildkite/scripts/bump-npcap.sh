@@ -44,7 +44,9 @@ echo "--- Checking GCS bucket for existing artifact"
 # after a successful completion — a partial/interrupted upload leaves no
 # addressable object behind. Parallel composite upload (which can leave temporary
 # component objects visible) only triggers for large files; the npcap installer
-# is ~1–2 MB, well below any composite-upload threshold.
+# is ~1–2 MB, well below any composite-upload threshold. Upload integrity is
+# verified via MD5 before the local copy is removed, so a present object can be
+# trusted on re-runs.
 if gcloud storage ls "$GCS_PATH" 2>/dev/null; then
   echo "Artifact already present: ${GCS_PATH}"
 else
@@ -60,10 +62,28 @@ else
     exit 1
   fi
 
+  LOCAL_MD5=$(md5sum "./${OEM_FILE}" | awk '{print $1}')
+  echo "MD5 (local): ${LOCAL_MD5}"
+
   echo "--- Uploading to ${GCS_PATH}"
   gcloud storage cp "./${OEM_FILE}" "$GCS_PATH"
   rm "./${OEM_FILE}"
-  echo "Upload complete."
+
+  echo "--- Verifying upload integrity"
+  # GCS records an MD5 in object metadata computed at ingest time. Retrieve it
+  # without re-downloading the file and compare it against the local hash to
+  # confirm the stored object is byte-for-byte identical to what was fetched
+  # from npcap.com. On mismatch, remove the object so a re-run can retry cleanly.
+  GCS_MD5=$(gcloud storage hash --hex "$GCS_PATH" | awk '/^md5_hash:/{print $2}')
+  echo "MD5 (GCS):   ${GCS_MD5}"
+  if [ "$LOCAL_MD5" != "$GCS_MD5" ]; then
+    echo "ERROR: MD5 mismatch — the uploaded object may be corrupt."
+    echo "  Local: ${LOCAL_MD5}"
+    echo "  GCS:   ${GCS_MD5}"
+    gcloud storage rm "$GCS_PATH" 2>/dev/null || true
+    exit 1
+  fi
+  echo "Upload integrity verified (MD5 ${LOCAL_MD5})."
 fi
 
 buildkite-agent annotate \
