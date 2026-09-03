@@ -223,7 +223,7 @@ FIPS           ?=
 ```
 
 When this var is set to `"true"` the [microsoft/go](https://github.com/microsoft/go) will be used instead of the regular upstream go release.
-Additionally the docker image will have the env vars `CGO_ENABLED=1` and `GOEXPERIMENT=systemcrypto` set to ensure binaries built within the crossbuild image are FIPS compliant by default.
+Additionally the docker image will have the env var `CGO_ENABLED=1` set to ensure binaries built within the crossbuild image are FIPS compliant by default.
 
 ## Packaging MacOS SDK
 
