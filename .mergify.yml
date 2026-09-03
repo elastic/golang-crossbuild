@@ -217,3 +217,16 @@ pull_request_rules:
         labels:
           - "backport"
         title: "[{{ destination_branch }}](backport #{{ number }}) {{ title }}"
+  - name: backport patches to 1.26 branch
+    conditions:
+      - merged
+      - label=backport-v1.26
+    actions:
+      backport:
+        assignees:
+          - "{{ author }}"
+        branches:
+          - "1.26"
+        labels:
+          - "backport"
+        title: "[{{ destination_branch }}](backport #{{ number }}) {{ title }}"
