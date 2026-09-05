@@ -14,7 +14,7 @@ categories:
       - 'docs'
       - 'question'
   - title: '🧰 Maintenance'
-    label:
+    labels:
       - 'chore'
       - 'ci'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'

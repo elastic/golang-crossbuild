@@ -63,16 +63,28 @@ RUN \
             libsqlite3-0 \
         && rm -rf /var/lib/apt/lists/*
 
+ARG SUEXEC_VERSION=0.2
+ARG SUEXEC_DOWNLOAD_URL=https://github.com/ncopa/su-exec/archive/v${SUEXEC_VERSION}.tar.gz
+ARG SUEXEC_DOWNLOAD_SHA256=ec4acbd8cde6ceeb2be67eda1f46c709758af6db35cacbcde41baac349855e25
+
+RUN curl -fsSL "$SUEXEC_DOWNLOAD_URL" -o suexec.tar.gz \
+    && echo "$SUEXEC_DOWNLOAD_SHA256  suexec.tar.gz" | sha256sum -c - \
+    && mkdir /suexec \
+    && tar -C /suexec --strip-components=1 -xzf suexec.tar.gz \
+    && make -C /suexec \
+    && mv /suexec/su-exec /usr/bin/ \
+    && rm -rf /suexec suexec.tar.gz
+
 ARG VERSION
 {{- if eq .FIPS "true"}}
 ARG SECURITY_VERSION=-1
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
-ARG MSFT_DOWNLOAD_SHA256=4002724aa3f71d88653c0ce2e8860e013e3ab1f9b6e57d1cdedeb519132e8c12
+ARG MSFT_DOWNLOAD_SHA256=04d749b59f3c445ed51456cec95cfc0b7e42dbcfdd3f9f7b9e2e9ae0c34e6bec
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-arm64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=a290581cfe4fe28ddd737dde3095f3dbeb7f2e4065cab4eae44dfc53b760c2f7
+ARG GOLANG_DOWNLOAD_SHA256=211ffced9dcb9633a55eac6364816ec0ddd951389a740e88fa8b3337971bdda0
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end}}
 
@@ -116,11 +128,10 @@ RUN mkdir /libpcap \
   && make
 
 {{- if eq .FIPS "true"}}
-ENV GOEXPERIMENT=systemcrypto
 ENV CGO_ENABLED=1
 ENV MS_GOTOOLCHAIN_TELEMETRY_ENABLED=0
 {{- end}}
 ENV GOLANG_CROSSBUILD=1
 VOLUME      /app
 WORKDIR     /app
-ENTRYPOINT  ["/crossbuild"]
+ENTRYPOINT  ["/entrypoint.sh"]

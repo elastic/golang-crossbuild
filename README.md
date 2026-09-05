@@ -1,8 +1,8 @@
-|                   | main | 1.25 |
+|                   | main | 1.26 |
 |-------------------|------|-|
-| golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.25)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.25)|
-| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.25)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.25)|
-| fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.25)](https://buildkite.com/elastic/fpm/builds?branch=1.25)|
+| golang-crossbuild |[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=main)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=main)|[![Build status](https://badge.buildkite.com/a62e956ff483d20043847488a8797382db305653ea9fac86b2.svg?branch=1.26)](https://buildkite.com/elastic/golang-crossbuild/builds?branch=1.26)|
+| llvm-apple        |[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=main)](https://buildkite.com/elastic/llvm-apple/builds?branch=main)|[![Build status](https://badge.buildkite.com/608fe26d86b5da77dad646eec77944c306e5ad3a427c88dcf5.svg?branch=1.26)](https://buildkite.com/elastic/llvm-apple/builds?branch=1.26)|
+| fpm               |[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=main)](https://buildkite.com/elastic/fpm/builds?branch=main)|[![Build status](https://badge.buildkite.com/86216c62729e32e235059e42d58bfb54901c20bf3394c704f3.svg?branch=1.26)](https://buildkite.com/elastic/fpm/builds?branch=1.26)|
 
 
 # golang-crossbuild Docker images
@@ -223,7 +223,8 @@ FIPS           ?=
 ```
 
 When this var is set to `"true"` the [microsoft/go](https://github.com/microsoft/go) will be used instead of the regular upstream go release.
-Additionally the docker image will have the env vars `CGO_ENABLED=1` and `GOEXPERIMENT=systemcrypto` set to ensure binaries built within the crossbuild image are FIPS compliant by default.
+Prior to Go 1.27, the Docker image had the env var `GOEXPERIMENT=systemcrypto` set to ensure binaries built within the crossbuild image are FIPS compliant by default.
+`systemcrypto` is now enabled automatically on supported platforms. More details found [here](https://github.com/microsoft/go/blob/microsoft/main/eng/doc/fips/README.md#go-127-aug-2026).
 
 ## Packaging MacOS SDK
 
@@ -251,6 +252,49 @@ docker run -it --rm \
 This will execute your projects `make build` target. While executing the build
 command the following variables with be added to the environment: GOOS, GOARCH,
 GOARM, PLATFORM_ID, CC, and CXX.
+
+### Running as a non-root user
+
+By default the container runs as root, which causes build output files on a
+bind-mounted workspace to be owned by `root` on the host. To avoid this, pass
+`CROSSBUILD_UID` and `CROSSBUILD_GID` matching your host user:
+
+```shell
+docker run -it --rm \
+  -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
+  -w /go/src/github.com/user/go-project \
+  -e CGO_ENABLED=1 \
+  -e CROSSBUILD_UID=$(id -u) \
+  -e CROSSBUILD_GID=$(id -g) \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.16.7-armhf \
+  --build-cmd "make build" \
+  -p "linux/armv7"
+```
+
+When both variables are set the entrypoint creates an ephemeral user inside the
+container with that UID/GID and drops privileges before running the build.
+Files written to the mounted workspace will then be owned by your host user.
+If neither variable is set the container behaves as before (runs as root).
+
+`GOCACHE` and `GOMODCACHE` default to paths inside the ephemeral home directory
+but are only set if not already present in the environment. You can therefore
+mount your host Go caches directly:
+
+```shell
+docker run -it --rm \
+  -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
+  -v $HOME/.cache/go-build:/go-cache \
+  -v $GOPATH/pkg/mod:/go-mod \
+  -w /go/src/github.com/user/go-project \
+  -e CGO_ENABLED=1 \
+  -e CROSSBUILD_UID=$(id -u) \
+  -e CROSSBUILD_GID=$(id -g) \
+  -e GOCACHE=/go-cache \
+  -e GOMODCACHE=/go-mod \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.16.7-armhf \
+  --build-cmd "make build" \
+  -p "linux/armv7"
+```
 
 ## fpm Docker image
 
