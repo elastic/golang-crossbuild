@@ -1,4 +1,4 @@
 # see https://wiki.debian.org/CrossToolchains
 # bullseye is EOL; packages are archived at archive.debian.org
+# security archive not yet available for bullseye; main archive contains last-known-good packages
 deb http://archive.debian.org/debian bullseye main
-deb http://archive.debian.org/debian-security bullseye-security main
