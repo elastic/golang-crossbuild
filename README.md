@@ -252,6 +252,49 @@ This will execute your projects `make build` target. While executing the build
 command the following variables with be added to the environment: GOOS, GOARCH,
 GOARM, PLATFORM_ID, CC, and CXX.
 
+### Running as a non-root user
+
+By default the container runs as root, which causes build output files on a
+bind-mounted workspace to be owned by `root` on the host. To avoid this, pass
+`CROSSBUILD_UID` and `CROSSBUILD_GID` matching your host user:
+
+```shell
+docker run -it --rm \
+  -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
+  -w /go/src/github.com/user/go-project \
+  -e CGO_ENABLED=1 \
+  -e CROSSBUILD_UID=$(id -u) \
+  -e CROSSBUILD_GID=$(id -g) \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.16.7-armhf \
+  --build-cmd "make build" \
+  -p "linux/armv7"
+```
+
+When both variables are set the entrypoint creates an ephemeral user inside the
+container with that UID/GID and drops privileges before running the build.
+Files written to the mounted workspace will then be owned by your host user.
+If neither variable is set the container behaves as before (runs as root).
+
+`GOCACHE` and `GOMODCACHE` default to paths inside the ephemeral home directory
+but are only set if not already present in the environment. You can therefore
+mount your host Go caches directly:
+
+```shell
+docker run -it --rm \
+  -v $GOPATH/src/github.com/user/go-project:/go/src/github.com/user/go-project \
+  -v $HOME/.cache/go-build:/go-cache \
+  -v $GOPATH/pkg/mod:/go-mod \
+  -w /go/src/github.com/user/go-project \
+  -e CGO_ENABLED=1 \
+  -e CROSSBUILD_UID=$(id -u) \
+  -e CROSSBUILD_GID=$(id -g) \
+  -e GOCACHE=/go-cache \
+  -e GOMODCACHE=/go-mod \
+  docker.elastic.co/beats-dev/golang-crossbuild:1.16.7-armhf \
+  --build-cmd "make build" \
+  -p "linux/armv7"
+```
+
 ## fpm Docker image
 
 This Docker image install the [fpm](https://github.com/jordansissel/fpm) tool that is used to build packages.
