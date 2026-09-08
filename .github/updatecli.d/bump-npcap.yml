@@ -4,20 +4,20 @@ pipelineid: 'bump-npcap-{{ source "latestNpcapVersion" }}'
 
 # NOTE: this pipeline is applied from a Buildkite step
 # (.buildkite/scripts/run-updatecli.sh), not from GitHub Actions like the
-# other updatecli.d/ configs in this repo. GITHUB_TOKEN is provided by the
-# elastic/vault-github-token Buildkite plugin, which also configures the
-# elastic-ci[bot] git identity used below.
+# other updatecli.d/ configs in this repo. GITHUB_TOKEN and GITHUB_ACTOR are
+# provided by the elastic/vault-github-token Buildkite plugin (with
+# configure-git-user: true). BRANCH is set in bump-npcap-pipeline.yml.
 
 scms:
   githubConfig:
     kind: github
     spec:
-      user: 'elastic-ci[bot]'
-      username: 'elastic-ci[bot]'
+      user: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       owner: elastic
       repository: golang-crossbuild
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      branch: main
+      branch: '{{ requiredEnv "BRANCH" }}'
       commitusingapi: true
 
 actions:
@@ -47,7 +47,7 @@ sources:
       owner: nmap
       repository: npcap
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      username: 'elastic-ci[bot]'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
       versionfilter:
         kind: latest
 
