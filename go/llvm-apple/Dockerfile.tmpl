@@ -8,7 +8,7 @@ COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y --no-install-recommends --allow-unauthenticated \
         && apt-get upgrade -y --no-install-recommends --allow-unauthenticated \
         && apt-get dist-upgrade -y --no-install-recommends --allow-unauthenticated \
-        && apt-get install -y --no-install-recommends --allow-unauthenticated --fix-missing \
+        && apt-get install -y --no-install-recommends --allow-unauthenticated \
             build-essential \
             ca-certificates \
             curl \
