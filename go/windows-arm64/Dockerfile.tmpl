@@ -11,8 +11,8 @@ ARG LLVM_MINGW64_SRC="https://github.com/mstorsjo/llvm-mingw/releases/download"
 ENV LLVM_MINGW64_VER="${LLVM_MINGW64_VER}"
 ENV LLVM_MINGW64_SRC="$LLVM_MINGW64_SRC"
 
-{{- if ne .DEBIAN_VERSION "12"}}
-RUN echo "This Docker image will work only with Debian >12" && exit 1
+{{- if and (ne .DEBIAN_VERSION "12") (ne .DEBIAN_VERSION "13")}}
+RUN echo "This Docker image will work only with Debian >=12" && exit 1
 {{- end }}
 
 RUN \

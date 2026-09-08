@@ -51,8 +51,14 @@ RUN \
             librpmio9 \
             librpmbuild9 \
             librpmsign9 \
-            {{- else }}
+            {{- else if eq .DEBIAN_VERSION "12" }}
             libicu72 \
+            librpm9  \
+            librpmio9 \
+            librpmbuild9 \
+            librpmsign9 \
+            {{- else }}
+            libicu76 \
             librpm9  \
             librpmio9 \
             librpmbuild9 \
