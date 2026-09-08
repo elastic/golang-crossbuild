@@ -1,3 +1,2 @@
 # see https://wiki.debian.org/CrossToolchains
 deb http://archive.debian.org/debian bullseye main
-deb http://archive.debian.org/debian-security bullseye-security main
