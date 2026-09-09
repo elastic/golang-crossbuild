@@ -1,3 +1,41 @@
 # see https://wiki.debian.org/CrossToolchains
 deb [arch=arm64] http://deb.debian.org/debian bookworm main
-deb [arch=arm64] http://deb.debian.org/debian-security/ bookworm-security main
+# TODO: bookworm-security is intentionally omitted.
+# libpcre2-8-0 and libselinux1 are Multi-Arch: same packages. The security repo
+# has amd64 updates (e.g. libpcre2-8-0 10.42-1+deb12u1) but the armel/armhf ports
+# have not yet published matching versions, so apt's M-A: same constraint prevents
+# installing those packages for foreign architectures alongside the security-patched
+# amd64 version. This breaks cross-arch images (go/armel, go/armhf, etc.).
+#
+# Alternatives considered:
+#   A) This approach: omit the security repo so all arches stay at consistent main-
+#      archive versions. Trade-off: amd64 packages in the base image lose security
+#      patches until the secondary ports catch up.
+#   B) APT pinning: pin the specific conflicting packages (libpcre2-8-0, libselinux1)
+#      to the main-archive version via /etc/apt/preferences.d/. Keeps security patches
+#      for everything else, but requires maintaining a hardcoded version list.
+#   C) Wait: once Debian publishes armel/armhf security updates for these packages,
+#      the M-A: same constraint is satisfied and this line can be restored with no
+#      other changes.
+#
+# To validate when it is safe to restore:
+#   Run the following and confirm that bookworm-security shows the same version
+#   for armel as it does for amd64 (both should be e.g. 10.42-1+deb12u1):
+#
+#   docker run --rm debian:12 bash -c '
+#     dpkg --add-architecture armel
+#     apt-get -qq update
+#     echo "--- amd64 ---"
+#     apt-cache madison libpcre2-8-0 | grep security
+#     echo "--- armel ---"
+#     apt-cache madison libpcre2-8-0:armel | grep security
+#     echo "--- libselinux1 amd64 ---"
+#     apt-cache madison libselinux1 | grep security
+#     echo "--- libselinux1 armel ---"
+#     apt-cache madison libselinux1:armel | grep security
+#   '
+#
+#   When all four "armel" lines show a version matching the "amd64" security
+#   version, uncomment the line below and remove this TODO block.
+#
+# deb [arch=arm64] http://deb.debian.org/debian-security/ bookworm-security main
