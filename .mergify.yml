@@ -1,6 +1,16 @@
+merge_queue:
+  max_parallel_checks: 1
+
 queue_rules:
   - name: default
+    batch_size: 1
     merge_method: squash
+    conditions:
+      - check-success=buildkite/golang-crossbuild
+      - check-success=CLA
+    queue_conditions:
+      - check-success=buildkite/golang-crossbuild
+      - check-success=CLA
     merge_conditions:
       - check-success=buildkite/golang-crossbuild
       - check-success=CLA
