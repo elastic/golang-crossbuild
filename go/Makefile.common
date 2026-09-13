@@ -2,7 +2,7 @@ SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)/../Makefile.common
 
 NAME           := golang-crossbuild
-VERSION        := 1.27.1
+VERSION        := $(shell cat $(SELF_DIR)/../.go-version)
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
@@ -13,7 +13,7 @@ TAG_EXTENSION:=$(TAG_EXTENSION)-fips
 endif
 endif
 
-export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE
+export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE VERSION
 
 DOCKER_CMD := docker build --progress=plain
 
