@@ -30,7 +30,8 @@ build: copy-npcap copy-sdks
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
-	@docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep -q "go$(VERSION)"
+	@echo ">> Validating $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep -q "go$(VERSION)"
 
 build-arm: copy-sdks
 	@echo $(SELF_DIR)
@@ -47,6 +48,7 @@ build-arm: copy-sdks
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
-	@docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep -q "go$(VERSION)"
+	@echo ">> Validating $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep -q "go$(VERSION)"
 
 .PHONY: build build-arm
