@@ -2,11 +2,7 @@ SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)/../Makefile.common
 
 NAME           := golang-crossbuild
-<<<<<<< HEAD
-VERSION        := 1.26.8
-=======
-VERSION        := $(shell cat $(SELF_DIR)/../.go-version)
->>>>>>> 466be70 (Derive Go version from `.go-version` across build and release automation (#766))
+ARG VERSION={{ .VERSION }}
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=

@@ -1,9 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-<<<<<<< HEAD
-ARG VERSION=1.26.8
-=======
 ARG VERSION={{ .VERSION }}
->>>>>>> 466be70 (Derive Go version from `.go-version` across build and release automation (#766))
 ARG TAG_EXTENSION=''
 
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}

@@ -1,9 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-<<<<<<< HEAD
-ARG VERSION=1.26.8
-=======
 ARG VERSION={{ .VERSION }}
->>>>>>> 466be70 (Derive Go version from `.go-version` across build and release automation (#766))
 ARG TAG_EXTENSION=''
 FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-amd64
 
@@ -50,11 +46,7 @@ RUN apt install -y \
 {{- end }}
 
 ARG REPOSITORY=docker.elastic.co/beats-dev
-<<<<<<< HEAD
-ARG VERSION=1.26.8
-=======
 ARG VERSION={{ .VERSION }}
->>>>>>> 466be70 (Derive Go version from `.go-version` across build and release automation (#766))
 ARG TAG_EXTENSION=''
 FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-arm64
 
