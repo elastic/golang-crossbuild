@@ -55,7 +55,7 @@ RUN mkdir -p /tmp/llvm-project && cd /tmp/llvm-project \
       -DLLVM_ENABLE_BACKTRACES=Off \
       -DLLVM_BUILD_32_BITS=OFF \
 {{- if eq .DEBIAN_VERSION "13" }}
-      -DCMAKE_CXX_FLAGS="-fpermissive" \
+      -DCMAKE_CXX_FLAGS="-fpermissive -include cstdint" \
 {{- end }}
       /tmp/llvm-project/llvm \
     && cmake --build . \
