@@ -51,9 +51,6 @@ Update the Go version in the main configuration files:
 - **File**: `.go-version`
   - Update to the new Go version (e.g., `1.26.0`)
 
-- **File**: `go/Makefile.common` (line 5)
-  - Update the Docker tag to match the new version
-
 #### 3. Run Version Bump Script
 Execute the automated version bump script:
 
@@ -263,7 +260,6 @@ After successful release, images are available at:
 | Component | File Path |
 |-----------|-----------|
 | Go Version | `.go-version` |
-| Docker Tag | `go/Makefile.common` (line 5) |
 | Main Workflow | `.github/workflows/bump-golang.yml` |
 | Previous Workflow | `.github/workflows/bump-golang-previous.yml` |
 | Mergify Config | `.mergify.yml` |

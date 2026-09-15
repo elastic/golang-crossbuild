@@ -2,7 +2,11 @@ SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)/../Makefile.common
 
 NAME           := golang-crossbuild
+<<<<<<< HEAD
 VERSION        := 1.26.8
+=======
+VERSION        := $(shell cat $(SELF_DIR)/../.go-version)
+>>>>>>> 466be70 (Derive Go version from `.go-version` across build and release automation (#766))
 DEBIAN_VERSION ?= 9
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
@@ -13,7 +17,7 @@ TAG_EXTENSION:=$(TAG_EXTENSION)-fips
 endif
 endif
 
-export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE
+export DEBIAN_VERSION TAG_EXTENSION NPCAP_FILE VERSION
 
 DOCKER_CMD := docker build --progress=plain
 
@@ -30,6 +34,8 @@ build: copy-npcap copy-sdks
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
+	@echo ">> Validating $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep "go$(VERSION)"
 
 build-arm: copy-sdks
 	@echo $(SELF_DIR)
@@ -46,5 +52,7 @@ build-arm: copy-sdks
 	--build-arg VCS_URL="$(VCS_URL)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
 	.
+	@echo ">> Validating $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
+	docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep "go$(VERSION)"
 
 .PHONY: build build-arm
