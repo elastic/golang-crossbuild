@@ -115,7 +115,6 @@ steps:
             makefile:
               - "Makefile"
               - "Makefile.debian7"
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
@@ -150,7 +149,6 @@ steps:
         matrix:
           setup:
             makefile:
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
@@ -188,7 +186,6 @@ steps:
             makefile:
               - "Makefile"
               - "Makefile.debian7"
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
@@ -223,7 +220,6 @@ steps:
         matrix:
           setup:
             makefile:
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
