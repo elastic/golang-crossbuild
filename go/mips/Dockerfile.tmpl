@@ -49,7 +49,7 @@ RUN apt install -y \
 #         libsystemd-dev:mips64el libsystemd0:mips64el liblz4-1:mips64el
 {{- end }}
 
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") }}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
 # librpm-dev
 RUN apt install -y \
 librpm-dev:mips64el
@@ -62,13 +62,12 @@ libsystemd-dev:mips64el
 {{- if eq .DEBIAN_VERSION "13" }}
 # librpm-dev
 RUN apt install -y \
-        librpm-dev 
+        librpm-dev
 
 # libsystemd-dev
 RUN apt install -y \
         libsystemd-dev
 {{- end }}
-
 
 RUN rm -rf /var/lib/apt/lists/*
 
