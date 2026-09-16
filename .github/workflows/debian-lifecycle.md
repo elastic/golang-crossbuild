@@ -1,7 +1,8 @@
 ---
 on:
   workflow_dispatch:
-  schedule: daily
+  schedule:
+    - cron: "0 0 1 * *"
 
 permissions:
   contents: read
