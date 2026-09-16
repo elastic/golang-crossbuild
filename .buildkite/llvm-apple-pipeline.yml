@@ -51,6 +51,7 @@ steps:
           - "10"
           - "11"
           - "12"
+          - "13"
 
   - label: ":linux: Build LLVM Apple / Ubuntu ARM - {{matrix.debianVersion}}"
     key: "build-ubuntu-arm-llvm-apple"
@@ -78,3 +79,4 @@ steps:
           - "10"
           - "11"
           - "12"
+          - "13"
