@@ -28,10 +28,6 @@ common:
 
 steps:
 
-  - label: ":linux: Validate Go version consistency"
-    command:
-      - ".buildkite/scripts/validate-go-version.sh"
-
   - wait: ~
 
   - group: "FPM"

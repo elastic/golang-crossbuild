@@ -76,17 +76,6 @@ conditions:
       image: golang
       tag: '{{ source "golangVersion" }}'
     sourceid: golangVersion
-  is:
-    name: Is version '{{ source "golangVersion" }}' not updated in 'go/Makefile.common'?
-    disablesourceinput: true
-    scmid: githubConfig
-    kind: file
-    spec:
-      file: go/Makefile.common
-      line: 5
-      content: VERSION        := {{ source `golangVersion` }}
-    failwhen: true
-
 targets:
   update-go-version:
     name: "Update .go-version"
@@ -96,15 +85,6 @@ targets:
     spec:
       content: '{{ source "golangVersion" }}'
       file: .go-version
-      matchpattern: '\d+.\d+.\d+'
-  update-go-makefile.common:
-    name: "Update go/Makefile.common"
-    sourceid: golangVersion
-    scmid: githubConfig
-    kind: file
-    spec:
-      content: '{{ source "golangVersion" }}'
-      file: go/Makefile.common
       matchpattern: '\d+.\d+.\d+'
   update-go-versions:
     name: 'Update go version {{ source "latestMicrosoftGoVersion" }}'
