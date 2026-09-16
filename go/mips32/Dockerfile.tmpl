@@ -14,9 +14,15 @@ RUN dpkg --add-architecture mips \
         linux-libc-dev-mips-cross
 
 RUN apt install -qq -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        libc6-dev-mips-cross \
+        libpopt-dev \
+        linux-libc-dev-mips-cross
+{{- else }}
         libc-dev:mips \
         libpopt-dev:mips \
         linux-libc-dev:mips
+{{- end }}
 
 {{- if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
