@@ -50,11 +50,19 @@ RUN apt install -y \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") (eq .DEBIAN_VERSION "13")}}
 # librpm-dev
 RUN apt install -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        librpm-dev
+{{- else }}
         librpm-dev:mips
+{{- end }}
 
 # libsystemd-dev
 RUN apt install -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        libsystemd-dev
+{{- else }}
         libsystemd-dev:mips
+{{- end }}
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*

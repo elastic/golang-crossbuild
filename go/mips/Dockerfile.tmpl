@@ -32,7 +32,7 @@ RUN apt install -y \
         libelf1:mips64el \
         libicu-dev:mips64el \
         libicu57:mips64el \
-        librpm-dev:mips64el \
+        librpm-dev:mips
         librpm3:mips64el \
         librpmio3:mips64el \
         librpmbuild3:mips64el \
@@ -52,11 +52,19 @@ RUN apt install -y \
 {{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") (eq .DEBIAN_VERSION "13")}}
 # librpm-dev
 RUN apt install -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        librpm-dev \
+{{- else }}
         librpm-dev:mips64el
+{{- end }}
 
 # libsystemd-dev
 RUN apt install -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        libsystemd-dev
+{{- else }}
         libsystemd-dev:mips64el
+{{- end }}
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
