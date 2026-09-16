@@ -51,7 +51,7 @@ RUN apt install -y \
 # librpm-dev
 RUN apt install -y \
 {{- if eq .DEBIAN_VERSION "13" }}
-        librpm-dev \
+        librpm-dev
 {{- else }}
         librpm-dev:mips
 {{ end }}
@@ -59,7 +59,7 @@ RUN apt install -y \
 # libsystemd-dev
 RUN apt install -y \
 {{- if eq .DEBIAN_VERSION "13" }}
-        libsystemd-dev \
+        libsystemd-dev
 {{- else }}
         libsystemd-dev:mips
 {{ end }}
