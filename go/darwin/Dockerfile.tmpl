@@ -19,7 +19,11 @@ RUN \
 {{- end }}
         libssl-dev \
         libxml2-dev \
+{{- if eq .DEBIAN_VERSION "13" }}
+        liblzma-dev \
+{{- else }}
         lzma-dev \
+{{- end }}
         llvm-dev \
         uuid-dev \
     && rm -rf /var/lib/apt/lists/*
