@@ -54,7 +54,7 @@ RUN apt install -y \
         librpm-dev \
 {{- else }}
         librpm-dev:mips
-{{- end }}
+{{ end }}
 
 # libsystemd-dev
 RUN apt install -y \
@@ -62,7 +62,7 @@ RUN apt install -y \
         libsystemd-dev \
 {{- else }}
         libsystemd-dev:mips
-{{- end }}
+{{ end }}
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
