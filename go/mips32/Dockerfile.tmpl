@@ -1,5 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-ARG VERSION=1.27.0
+ARG VERSION={{ .VERSION }}
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
@@ -14,9 +14,15 @@ RUN dpkg --add-architecture mips \
         linux-libc-dev-mips-cross
 
 RUN apt install -qq -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        libc6-dev-mips-cross \
+        libpopt-dev \
+        linux-libc-dev-mips-cross
+{{- else }}
         libc-dev:mips \
         libpopt-dev:mips \
         linux-libc-dev:mips
+{{- end }}
 
 {{- if eq .DEBIAN_VERSION "9" }}
 # librpm-dev
@@ -41,14 +47,22 @@ RUN apt install -y \
 #         libsystemd-dev:mips libsystemd0:mips liblz4-1:mips
 {{- end }}
 
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") (eq .DEBIAN_VERSION "13")}}
 # librpm-dev
 RUN apt install -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        librpm-dev
+{{- else }}
         librpm-dev:mips
+{{ end }}
 
 # libsystemd-dev
 RUN apt install -y \
+{{- if eq .DEBIAN_VERSION "13" }}
+        libsystemd-dev
+{{- else }}
         libsystemd-dev:mips
+{{ end }}
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*

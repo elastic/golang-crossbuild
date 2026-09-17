@@ -1,5 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-ARG VERSION=1.27.0
+ARG VERSION={{ .VERSION }}
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
@@ -37,7 +37,7 @@ RUN apt install -qq -y \
 #         libsystemd-dev:ppc64el libsystemd0:ppc64el liblz4-1:ppc64el
 {{- end }}
 
-{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
+{{- if or (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") (eq .DEBIAN_VERSION "13")}}
 # librpm-dev
 RUN apt install -y \
         librpm-dev:ppc64el
