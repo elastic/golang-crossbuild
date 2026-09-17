@@ -120,6 +120,7 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
@@ -155,6 +156,7 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
@@ -193,6 +195,7 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
@@ -228,6 +231,7 @@ steps:
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
