@@ -8,7 +8,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-  copilot-requests: none
+  copilot-requests: write
 
 network: defaults
 
