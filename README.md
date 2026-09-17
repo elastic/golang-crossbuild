@@ -117,22 +117,21 @@ The Makefile in the root folder is used to build the Docker images for the diffe
 it triggers the build of all Docker images for all architectures and Debian versions supported.
 
 The file `go/Makefile.common` is the default Makefile used to build the Docker images for the different architectures.
-There is additional Makefile for each Debian version that is used to build the Docker images for that Debian version.
+There are additional Makefiles for the supported Debian releases, including the older release that still has Extended LTS support.
 
-* `go/Makefile.debian7`
-* `go/Makefile.debian8`
 * `go/Makefile.debian9`
 * `go/Makefile.debian10`
 * `go/Makefile.debian11`
+* `go/Makefile.debian12`
 
-No all architectures are supported in all Debian versions, so the Makefile for each Debian version will only build the Docker images for the architectures that are supported in that Debian version.
+Not all architectures are supported in all Debian releases, so each Makefile only builds the Docker images for the architectures that are supported in that release.
 
 On the Makefiles there are some variables to define the name of the Docker image, the version of the Docker image, the Debian version, and the suffix to use in the tag of the Docker image.
 
 ```make
 NAME           := golang-crossbuild
 VERSION        := 1.20.2
-DEBIAN_VERSION ?= 9
+DEBIAN_VERSION ?= <supported-version>
 SUFFIX         := -$(shell basename $(CURDIR))
 TAG_EXTENSION  ?=
 
@@ -141,7 +140,7 @@ export DEBIAN_VERSION TAG_EXTENSION
 DOCKER_CMD := docker build
 ```
 
-In this example the name of the Docker image is `golang-crossbuild`, the go version is `1.20.2` that is uses as part of the tag, the Debian version is `9`, the suffix is `-debian9`, and the tag extension is empty. Also the `DOCKER_CMD` variable is used to define the command to use to build the Docker image, in this case `docker build`.
+In this example the name of the Docker image is `golang-crossbuild`, the go version is `1.20.2` that is uses as part of the tag, the Debian release is one of the supported ones, the suffix matches that release, and the tag extension is empty. Also the `DOCKER_CMD` variable is used to define the command to use to build the Docker image, in this case `docker build`.
 
 The tag is build using the following format:
 
@@ -154,22 +153,22 @@ The common variables to all the Makefiles are defined at `Makefile.common` file.
 To more information about the supported architextures and the correlation with comercial names,
 you can check the [Debian Supported Architectures](https://wiki.debian.org/SupportedArchitectures) page.
 
-To make and push the Docker images for all the architectures and default Debian version, you can run the following command:
+To make and push the Docker images for all the architectures and the default Debian release, you can run the following command:
 
 ```shell
 make build push
 ```
 
-To make and push the Docker images for all the architectures and Debian 10, you can run the following command:
+To make and push the Docker images for all the architectures and a supported Debian release, you can run the following command:
 
 ```shell
-make -C go -f Makefile.debian10 build push
+make -C go -f Makefile.debian<version> build push
 ```
 
-Finally, to build a single Docker image for `arm` architecture and Debian 10, you can run the following command:
+Finally, to build a single Docker image for `arm` architecture and a supported Debian release, you can run the following command:
 
 ```shell
-make -C go -f Makefile.debian10 build push IMAGES=arm
+make -C go -f Makefile.debian<version> build push IMAGES=arm
 ```
 
 ## Multiarch Docker images
