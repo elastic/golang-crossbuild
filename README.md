@@ -58,8 +58,6 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-base`
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-darwin` - darwin/amd64 (MacOS 10.11, MacOS 10.14)
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main` - linux/i386, linux/amd64, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian7` - linux/i386, linux/amd64, windows/amd64
-- `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian8` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian9` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian10` - linux/i386, linux/amd64, windows/amd64
 - `docker.elastic.co/beats-dev/golang-crossbuild:<GOLANG_VERSION>-main-debian11` - linux/i386, linux/amd64, windows/amd64
@@ -73,8 +71,6 @@ Replace `<GOLANG_VERSION>` with the version you would like to use, for instance:
 
 ### glibc
 
-* **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
-* **Debian8** uses `glibc 2.19`.
 * **Debian9** uses `glibc 2.24`.
 * **Debian10** uses `glibc 2.28`.
 * **Debian11** uses `glibc 2.31`.
@@ -97,16 +93,12 @@ Until Golang version 1.15
 | linux/{mips64,mips64le} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
 | linux/{mips,mipsle} | **See above** | **See above** | **See above** | **See above** | **See above** | **See above** |
 | linux/s390x | `1.10.8-s390x` | `1.11.13-s390x` | `1.12.12-s390` | `1.13.12-s390` | `1.14.15-s390` | `1.15.14-s390` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 7 (see **below**)) |`1.10.8-main-debian7` | `1.11.13-main-debian7` | `1.12.12-main-debian7` | `1.13.12-main-debian7` | `1.14.15-main-debian7` | `1.15.14-main-debian7` |
-| linux/{amd64,386} and windows/{amd64,386} (Debian 8 (see **below**)) | `1.10.8-main-debian8` | `1.11.13-main-debian8` | `1.12.12-main-debian8` | `1.13.12-debian8` | `1.14.15-main-debian8` | `1.15.14-main-debian8` |
 | linux/{amd64,386} and windows/{amd64,386} (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian9` |
 | linux/{amd64,386} and windows/{amd64,386} (Debian 10 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-main-debian10` |
 | linux/arm64 (Debian 9 (see **below**)) | NA | NA | NA | NA | NA | `1.15.14-base-arm-debian9` |
 
 ### glibc
 
-* **Debian7** uses `glibc 2.13` so the resulting binaries (if dynamically linked) have greater compatibility.
-* **Debian8** uses `glibc 2.19`.
 * **Debian9** uses `glibc 2.24`.
 * **Debian10** uses `glibc 2.28`.
 
@@ -309,7 +301,7 @@ For the instructions to package the MacOS SDK see the [Packaging MacOS SDK](#pac
 ## go/base Docker image
 
 This Docker image is the base image for all the other Docker images, it contains the base packages fro cross compilation.
-It is build for amd64 and arm64 architectures for Debian 9+.
+It is build for amd64 and arm64 architectures for Debian 9+ (the oldest still-supported release).
 In the folder you can find the `sources.list` file that contains the list of repositories to use to install the packages,
 this file is different for each Debian version. In some cases, this file must point to `http://archive.debian.org/debian` instead of `http://deb.debian.org/debian` to be able to install the packages, this happens when the Debian version reach the end of life.
 
@@ -318,7 +310,7 @@ When a new version of go is released, the *Dockerimage.tmpl* files must be updat
 
 ## go/base-arm Docker image
 
-The `base-arm` image is the base image to crossbuild `linux/arm64` binaries on `arm` hosts, it is build for Debian 7+.
+The `base-arm` image is the base image to crossbuild `linux/arm64` binaries on `arm` hosts, it is build for Debian 9+ (the oldest still-supported release).
 This image is user to crosscompile in `linux/arm`.
 It was replaced by the `base` image for Debian 9+ when we started to build multiarchitecture Docker images.
 It could be removed in the future, it allow to `crosscompile` arm binaries in `linux/arm64` machines, that it is not needed because the native architecture is the same than the target architecture.
@@ -326,14 +318,14 @@ It was added to golang-crossbuild due limitations of the build system.
 
 ## go/main Docker image
 
-The `main` image is the base image for the `amd64` architecture, it is build for Debian 7+.
+The `main` image is the base image for the `amd64` architecture, it is build for Debian 9+ (the oldest still-supported release).
 It is used to cross compile for `linux/amd`, `linux/amd64`, `win/amd`, and `win/amd64`.
 This Docker immage add two libraries to the `base` image, `libpcap` and `WpdPack` to be able to capture network packages on diferent OS.
 Thes two libraries are precompiled and stored at https://storage.googleapis.com/golang-crossbuild-ci-internal/sdks.
 
 ## go/darwin Docker image
 
-The `darwin` image is the base image for the MacOSX cross compilation, it is build for Debian 8+.
+The `darwin` image is the base image for the MacOSX cross compilation, it is build for Debian 9+ (the oldest still-supported release).
 It can compiles for `darwin/amd` (Debian 10+), `darwin/amd64`, `darwin/arm64`, `darwin/arm64e`, and universal binaries.
 This Docker image is based on the `base` image.
 It uses [osxcross](https://codeload.github.com/tpoechtrager/osxcross) to configure the crosscompile for MacOSX.

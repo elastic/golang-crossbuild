@@ -1,4 +1,0 @@
-# see https://wiki.debian.org/CrossToolchains
-# https://bugs.launchpad.net/torios/+bug/1835529
-deb http://archive.debian.org/debian wheezy main
-deb http://archive.debian.org/debian-security wheezy/updates main
