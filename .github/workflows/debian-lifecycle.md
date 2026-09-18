@@ -10,7 +10,18 @@ permissions:
   pull-requests: read
   copilot-requests: write
 
-network: defaults
+network:
+  allowed:
+    - defaults
+    - "deb.debian.org"
+    - "en.wikipedia.org"
+    - "endoflife.date"
+    - "wiki.debian.org"
+    - "www.debian.org"
+
+tools:
+  github:
+    mode: gh-proxy
 
 safe-outputs:
   create-issue:
@@ -32,11 +43,11 @@ Monitor Debian release lifecycle for golang-crossbuild and take repo-scoped acti
    - `README.md`
    - `go/Makefile.debian*`
    - any `sources-debian*.list` or other Debian-specific files
-2. Fetch the current Debian release lifecycle data from the official Debian release pages and determine the current set of supported versions, EOL dates, and release dates.
-3. Compare the upstream Debian lifecycle against the versions currently supported by this repository.
+2. Fetch the current Debian release lifecycle data from `https://endoflife.date/api/debian.json`. For each repo-supported version, use its `extendedSupport` value as the final supported-through date when it is present; otherwise use `eol`. Do not substitute Debian's regular-support or LTS end date for `extendedSupport`, and do not estimate ELTS from a generic duration.
+3. Cross-check release metadata against the official Debian release pages when needed. Compare the final supported-through date from step 2 against the versions currently supported by this repository.
 4. Before creating any issue, search the repository for an existing open issue for the same Debian version and lifecycle event (for example: EOL, support removal, or new release support). If an existing issue is found, update it with the latest status instead of creating a duplicate. Keep one active issue per Debian version per lifecycle track.
-5. If a repo-supported Debian version is within 120 days of EOL, create or update a GitHub issue describing the issue, affected repo files, and recommended remediation.
-6. If a repo-supported Debian version has already reached EOL, prepare a targeted remediation PR that only changes repo-owned files:
+5. If a repo-supported Debian version is within 120 days of its final supported-through date, create or update a GitHub issue describing the issue, affected repo files, and recommended remediation.
+6. If a repo-supported Debian version has already passed its final supported-through date, prepare a targeted remediation PR that only changes repo-owned files:
    - remove or deprecate the version from build matrices
    - remove or update the README tag references
    - remove or deprecate the version-specific Makefile or config
@@ -48,5 +59,5 @@ Monitor Debian release lifecycle for golang-crossbuild and take repo-scoped acti
 ## Notes
 
 - This workflow should be conservative, repo-scoped, and human-reviewable.
-- Use official Debian lifecycle sources as the source of truth.
+- Treat `endoflife.date`'s Debian `extendedSupport` field as the ELTS source of truth. Official Debian pages remain authoritative for Debian release metadata, but regular-support and LTS EOL dates are not ELTS end dates.
 - The goal is to avoid stale Debian security repositories and broken builds without overreaching into external repos.
