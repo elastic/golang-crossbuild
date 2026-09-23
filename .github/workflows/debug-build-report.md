@@ -1,8 +1,8 @@
 ---
 on:
-  # Runs every Monday at 09:00 UTC so engineers get the report at the start of the week.
+  # Fuzzy weekly schedule distributes execution time and reduces load spikes.
   schedule:
-    - cron: "0 9 * * 1"
+    - cron: weekly on monday
   # Can also be triggered on demand to investigate an active outage.
   workflow_dispatch:
     inputs:
@@ -15,8 +15,15 @@ on:
         default: "14"
         description: "Days of build history to inspect"
 
+# Each on-demand dispatch gets its own concurrency slot so two triggered runs
+# don't cancel each other; scheduled runs share a single slot (deduplication).
+concurrency:
+  job-discriminator: "${{ github.run_id }}"
+
 permissions:
   contents: read
+  issues: read
+  pull-requests: read
   copilot-requests: write
 
 # Load the debug-build skill from this repo via APM (recommended approach).
