@@ -1,4 +1,5 @@
 include Makefile.common
+include gh-aw.mak
 
 TARGETS=go
 ARM_TARGETS=go
