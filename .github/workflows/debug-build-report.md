@@ -26,6 +26,11 @@ permissions:
   pull-requests: read
   copilot-requests: write
 
+secrets:
+  BUILDKITE_LOGS_API_TOKEN:
+    value: "${{ secrets.BUILDKITE_LOGS_API_TOKEN }}"
+    description: "Buildkite API token with read-only log access for the golang-crossbuild pipeline"
+
 # Load the debug-build skill from this repo via APM (recommended approach).
 # The compiler adds an `apm` job that installs the skill bundle; the agent
 # picks it up via progressive disclosure at runtime.
@@ -45,7 +50,7 @@ mcp-servers:
     type: http
     url: "https://mcp.buildkite.com/direct"
     headers:
-      Authorization: "Bearer ${{ secrets.BUILDKITE_API_TOKEN }}"
+      Authorization: "Bearer ${{ secrets.BUILDKITE_LOGS_API_TOKEN }}"
     # Read-only tools only; agent must never trigger or cancel builds.
     allowed:
       - user_token_organization
