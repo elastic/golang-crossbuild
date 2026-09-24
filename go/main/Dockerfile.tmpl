@@ -22,26 +22,19 @@ RUN \
 
 {{- if ne .DEBIAN_VERSION "7" }}
 # librpm-dev
-# Refresh apt metadata before installing packages. The Debian base image can carry
-# a stale package index while the underlying filesystem already contains newer
-# security point releases for shared libraries such as libpcre2-8-0.
-RUN apt-get -o Acquire::Check-Valid-Until=false update \
-  && apt-get install -y --no-install-recommends --allow-unauthenticated \
-    libpcre2-8-0 \
-    librpm-dev \
-    libxml2-dev \
-    libsqlite3-dev
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+  librpm-dev \
+  libxml2-dev \
+  libsqlite3-dev
 
-RUN apt-get -o Acquire::Check-Valid-Until=false update \
-  && apt-get install -y --no-install-recommends --allow-unauthenticated \
-    libsystemd-dev
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+  libsystemd-dev
 {{- end }}
 
 {{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") (eq .DEBIAN_VERSION "13")}}
 # msitools
-RUN apt-get -o Acquire::Check-Valid-Until=false update \
-  && apt-get install -y --no-install-recommends --allow-unauthenticated \
-    msitools
+RUN apt install -y --no-install-recommends --allow-unauthenticated\
+  msitools
 {{- end }}
 
 RUN rm -rf /var/lib/apt/lists/*
