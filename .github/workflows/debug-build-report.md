@@ -31,11 +31,11 @@ secrets:
     value: "${{ secrets.BUILDKITE_LOGS_API_TOKEN }}"
     description: "Buildkite API token with read-only log access for the golang-crossbuild pipeline"
 
-# Load the debug-build skill from this repo via APM (recommended approach).
+# Load the debug-build skill from this repo via the vendored APM workflow.
 # The compiler adds an `apm` job that installs the skill bundle; the agent
 # picks it up via progressive disclosure at runtime.
 imports:
-  - uses: microsoft/apm/.github/workflows/shared/apm.md
+  - uses: shared/apm.md
     with:
       target: copilot
       packages:

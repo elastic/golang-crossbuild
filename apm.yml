@@ -14,9 +14,9 @@ version: 1.0.0
 #   (The Claude Code wrapper in .claude/skills/ is pre-installed with Claude-specific
 #    enhancements and loads the skill body from .skills/ at runtime.)
 #
-# GH AW USAGE — the GitHub Agentic Workflow at .github/workflows/debug-build-report.md
-#   loads skills via `imports: microsoft/apm/.github/workflows/shared/apm.md`.
-#   No lock file is needed for the GH AW; it resolves packages at compile time.
+# GH AW USAGE — debug-build-report.md imports the vendored workflow at
+#   .github/workflows/shared/apm.md and passes package references through its
+#   `with.packages` input.
 
 dependencies:
   apm:
