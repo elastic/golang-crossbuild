@@ -1,0 +1,23 @@
+name: golang-crossbuild
+version: 1.0.0
+
+# Agent Package Manager (https://microsoft.github.io/apm/)
+# Declares agent skills for this repository.
+#
+# Skills live in .skills/ and follow the open Agent Skills spec (agentskills.io).
+#
+# LOCAL USAGE — deploy to your AI tool:
+#   apm install
+#   → Claude Code  : .claude/skills/debug-build/
+#   → Cursor       : .cursor/rules/debug-build.mdc
+#   → GitHub Copilot: .github/
+#   (The Claude Code wrapper in .claude/skills/ is pre-installed with Claude-specific
+#    enhancements and loads the skill body from .skills/ at runtime.)
+#
+# GH AW USAGE — debug-build-report.md imports the vendored workflow at
+#   .github/workflows/shared/apm.md and passes package references through its
+#   `with.packages` input.
+
+dependencies:
+  apm:
+    - path: .skills/debug-build
