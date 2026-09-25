@@ -1,7 +1,7 @@
 # see https://wiki.debian.org/CrossToolchains
 deb http://deb.debian.org/debian bookworm main
-# Keep the security repository enabled only for the native architecture. The
-# Debian 12 base image now includes the security-patched libpcre2-8-0 package in
-# main, and this matches the exact-version requirements for libpcre2-dev without
-# reintroducing the Multi-Arch armel/armhf conflicts that were previously avoided.
-deb [arch=amd64] http://deb.debian.org/debian-security/ bookworm-security main
+# x86_64 builds add i386 as a second native architecture before the package
+# installation step, so the security repository must cover the active amd64+i386
+# set. Keeping the security repo restricted to only amd64 would still fail the
+# multiarch dependency resolution with the exact-version libpcre2 requirements.
+deb [arch=amd64,i386] http://deb.debian.org/debian-security/ bookworm-security main
