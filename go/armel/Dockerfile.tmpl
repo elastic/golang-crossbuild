@@ -4,7 +4,7 @@ ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
 {{- if eq .DEBIAN_VERSION "12" }}
-RUN printf 'Package: libpcre2-8-0 libselinux1 liblzma5\nPin: release n=bookworm\nPin-Priority: 1001\n' \
+RUN printf 'Package: libpcre2-8-0 libselinux1 liblzma5 libssl3\nPin: release n=bookworm\nPin-Priority: 1001\n' \
         > /etc/apt/preferences.d/crossbuild-multiarch \
     && apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get upgrade -y --allow-downgrades --no-install-recommends
