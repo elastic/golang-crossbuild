@@ -52,19 +52,30 @@ Minimal reproduction patterns:
 
 ### Pattern A — apt dependency conflict (most common)
 
-Reproduce the same package/install path in Docker before concluding it is an apt sources issue:
+Reproduce the same package/install path in Docker before concluding it is an apt sources issue. For Debian 12 cross-arch failures such as `go/armhf` or `go/armel`, the relevant reproduction is the actual Dockerfile target, not a generic package install:
+```bash
+docker build --progress=plain --no-cache --platform linux/armhf \
+  -f go/armhf/Dockerfile.tmpl \
+  --build-arg VERSION=1.27.1 \
+  .
+```
+
+If you need a focused probe for the exact package conflict, use the same multi-arch setup that the image performs:
 ```bash
 docker run --rm --platform linux/amd64 debian:12 bash -lc '
   set -eux
   dpkg --add-architecture armel
   dpkg --add-architecture armhf
-  apt-get update
-  apt-cache policy <conflicting-package>
-  apt-get install -y --no-install-recommends <conflicting-package>
+  apt-get -qq update
+  for arch in amd64 armel armhf; do
+    echo "--- $arch ---"
+    apt-cache madison libpcre2-8-0${arch:+:$arch} 2>/dev/null | grep security || echo "(none)"
+  done
+  apt-get install -y --no-install-recommends crossbuild-essential-armhf linux-libc-dev-armhf-cross
 '
 ```
 
-If the failure is tied to a repo/content mismatch, include the affected `sources-debian*.list` file in the reproduction check and verify whether the package version from the repo actually matches the image state.
+This is the failure mode behind the `Multi-Arch: same` errors seen in Debian 12 armhf/armel images: the security repo has amd64 updates while the secondary ports have not yet published matching versions, so `apt` rejects the foreign-arch install. If the failure is tied to a repo/content mismatch, include the affected `sources-debian*.list` file in the reproduction check and verify whether the package version from the repo actually matches the image state.
 
 ### Pattern B — Docker build failure (non-apt)
 
