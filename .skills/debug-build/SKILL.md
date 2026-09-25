@@ -28,6 +28,10 @@ branch: the target branch, per_page: 10) to list recent builds and identify whic
 
 Note the build numbers of failed builds; focus on the **most recent** one.
 
+Before reading any repository files, extract the exact failing job name, error text, and any
+`Dockerfile:NN` or package name mentioned in the build summary. These are the decisive clues for
+narrowing the investigation.
+
 ## Step 2 — Get the failure summary
 
 Call `mcp__buildkite__get_build_failure_summary` for the most recent failing build
@@ -38,9 +42,14 @@ This single call returns:
 - `jobs` — the terminal problem jobs with bounded log tails
 - Any annotations and failed test runs
 
+Do not browse the repo until the log has identified the failing package, job, or Dockerfile
+reference. If the log does not narrow the failure to a single pattern, stop and ask for the
+specific failing build or the missing log excerpt instead of guessing.
+
 ## Step 3 — Classify the failure
 
-Read the log tails and classify the root cause. Common failure patterns in this repo:
+Read the log tails and classify the root cause. Only proceed to repo/file inspection when the
+log matches a concrete pattern. Common failure patterns in this repo:
 
 ### Pattern A — apt dependency conflict (most common)
 Log contains lines like:
@@ -48,7 +57,8 @@ Log contains lines like:
 E: Unable to correct problems, you have held broken packages.
 <pkg> : Depends: <dep> (= X) but Y is to be installed
 ```
-**Go to Step 4A.**
+This is the key signal to read only the matching Dockerfile template and the relevant
+`sources-debian*.list` file; do not inspect unrelated targets. **Go to Step 4A.**
 
 ### Pattern B — Docker build failure (non-apt)
 Log contains `ERROR: failed to build` or `failed to solve` for a reason other than apt.

@@ -92,6 +92,12 @@ The Buildkite MCP tools are already running — call them as `mcp__buildkite__<t
 1. Follow the debug-build skill to identify and classify all failures over the last
    `${{ inputs.lookback_days || '14' }}` days on the target branch.
 
+   Start from the failing build summary and the exact package / Dockerfile line in the log.
+   Only open the corresponding Dockerfile template and `sources-debian*.list` file once the
+   error is narrowed to a single pattern; do not browse unrelated repository files.
+   If the log does not clearly identify the failure, stop and ask for the exact failing job
+   or log excerpt instead of guessing.
+
 2. Create one GitHub issue with the title:
    `Week of YYYY-MM-DD — N failures in golang-crossbuild/${{ inputs.branch || 'main' }}`
 
