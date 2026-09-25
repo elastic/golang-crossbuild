@@ -1,3 +1,6 @@
 # see https://wiki.debian.org/CrossToolchains
 deb [arch=arm64] http://deb.debian.org/debian bookworm main
+# Keep the security repository enabled only for the native arm64 architecture so
+# the main amd64/arm64 package set stays aligned with the base image while avoiding
+# the armel/armhf Multi-Arch dependency conflicts that originally prompted its omission.
 deb [arch=arm64] http://deb.debian.org/debian-security/ bookworm-security main

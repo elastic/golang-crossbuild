@@ -1,3 +1,6 @@
 # see https://wiki.debian.org/CrossToolchains
 deb http://deb.debian.org/debian bookworm main
-deb http://deb.debian.org/debian-security/ bookworm-security main
+# Match the native amd64 package set to the Debian 12 security point release while
+# avoiding the known armel/armhf Multi-Arch conflict that prompted the earlier
+# omission of the security repo.
+deb [arch=amd64] http://deb.debian.org/debian-security/ bookworm-security main

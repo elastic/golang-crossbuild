@@ -1,3 +1,7 @@
 # see https://wiki.debian.org/CrossToolchains
 deb http://deb.debian.org/debian bookworm main
-deb http://deb.debian.org/debian-security/ bookworm-security main
+# Keep the security repository enabled only for the native architecture. The
+# Debian 12 base image now includes the security-patched libpcre2-8-0 package in
+# main, and this matches the exact-version requirements for libpcre2-dev without
+# reintroducing the Multi-Arch armel/armhf conflicts that were previously avoided.
+deb [arch=amd64] http://deb.debian.org/debian-security/ bookworm-security main
