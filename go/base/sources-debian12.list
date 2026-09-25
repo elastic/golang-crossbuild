@@ -1,8 +1,6 @@
 # see https://wiki.debian.org/CrossToolchains
 deb http://deb.debian.org/debian bookworm main
-# Keep security updates for native amd64/i386 packages, but not foreign targets.
-# Debian can publish Multi-Arch: same updates for native architectures first; the
-# cross-architecture images pin affected native libraries (libpcre2-8-0,
-# libselinux1, liblzma5, libssl3) to bookworm/main before adding their target
-# architecture so package versions stay compatible.
-deb [arch=amd64,i386] http://deb.debian.org/debian-security/ bookworm-security main
+# Security updates are available for amd64, i386, and armhf. armel is excluded
+# because its package versions can lag; other cross-architecture images pin
+# affected native libraries to bookworm/main before adding their target architecture.
+deb [arch=amd64,i386,armhf] http://deb.debian.org/debian-security/ bookworm-security main
