@@ -38,7 +38,68 @@ This single call returns:
 - `jobs` — the terminal problem jobs with bounded log tails
 - Any annotations and failed test runs
 
-## Step 3 — Classify the failure
+## Step 3 — Reproduce in Docker before classifying the failure
+
+Before declaring any root cause, try to reproduce the failing behavior in a container that matches the affected image/arch. The goal is to distinguish a confirmed cause from a plausible guess based only on log lines.
+
+For each failing job:
+- Identify the exact Dockerfile template and target architecture.
+- Re-run the smallest equivalent build or package install in Docker using the same Debian version and arch.
+- Record whether the same error appears in the container output.
+- If a reproduction does not work, keep the diagnosis tentative and continue investigating instead of asserting a root cause.
+
+Minimal reproduction patterns:
+
+### Pattern A — apt dependency conflict (most common)
+
+Reproduce the same package/install path in Docker before concluding it is an apt sources issue. For Debian 12 cross-arch failures such as `go/armhf` or `go/armel`, the relevant reproduction is the actual Dockerfile target, not a generic package install:
+```bash
+docker build --progress=plain --no-cache --platform linux/armhf \
+  -f go/armhf/Dockerfile.tmpl \
+  --build-arg VERSION=1.27.1 \
+  .
+```
+
+If you need a focused probe for the exact package conflict, use the same multi-arch setup that the image performs:
+```bash
+docker run --rm --platform linux/amd64 debian:12 bash -lc '
+  set -eux
+  dpkg --add-architecture armel
+  dpkg --add-architecture armhf
+  apt-get -qq update
+  for arch in amd64 armel armhf; do
+    echo "--- $arch ---"
+    apt-cache madison libpcre2-8-0${arch:+:$arch} 2>/dev/null | grep security || echo "(none)"
+  done
+  apt-get install -y --no-install-recommends crossbuild-essential-armhf linux-libc-dev-armhf-cross
+'
+```
+
+This is the failure mode behind the `Multi-Arch: same` errors seen in Debian 12 armhf/armel images: the security repo has amd64 updates while the secondary ports have not yet published matching versions, so `apt` rejects the foreign-arch install. If the failure is tied to a repo/content mismatch, include the affected `sources-debian*.list` file in the reproduction check and verify whether the package version from the repo actually matches the image state.
+
+### Pattern B — Docker build failure (non-apt)
+
+Replay the same Docker build using the exact target, no cached layers, and the affected arch:
+```bash
+docker build --progress=plain --no-cache --platform linux/amd64 -f go/main/Dockerfile.tmpl .
+```
+
+If the build is generated from templates, reproduce the precise image target from the failing Makefile job instead of guessing from the error snippet.
+
+### Pattern C — Go build / test failure
+
+Re-run the same build or test target inside the image used by the job:
+```bash
+docker run --rm --platform linux/amd64 <image-tag> bash -lc 'make <target> || go test ./...'
+```
+
+### Pattern D — Infrastructure / agent failure
+
+A Docker reproduction is not the primary tool here; still check whether the job is transient and whether rerunning the same containerized step is stable.
+
+Only after a Docker reproduction or equivalent targeted build confirms the issue should the workflow classify it as a root cause.
+
+## Step 3A — Classify the failure
 
 Read the log tails and classify the root cause. Common failure patterns in this repo:
 
