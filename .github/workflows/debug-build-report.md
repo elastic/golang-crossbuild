@@ -99,6 +99,8 @@ The Buildkite MCP tools are already running — call them as `mcp__buildkite__<t
 
    **Summary** — one paragraph: what is failing, which image/target, root cause.
 
+   **Reproduction status** — whether the issue was reproduced in Docker, the exact command used, and whether the reproduction confirms the root cause or leaves it unconfirmed.
+
    **Failure frequency** — table with one row per build over the lookback window (pass and fail):
 
    | Date | Build # | State | Root cause |
