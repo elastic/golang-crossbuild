@@ -1,7 +1,6 @@
 # see https://wiki.debian.org/CrossToolchains
 deb http://deb.debian.org/debian bookworm main
-# x86_64 builds add i386 and armhf as active package sets before the package
-# installation step, so the security repository must cover the active amd64+i386
-# + armhf resolution path. armel remains on main to avoid the historical
-# Multi-Arch conflict that motivated the earlier omission of the security repo.
-deb [arch=amd64,i386,armhf] http://deb.debian.org/debian-security/ bookworm-security main
+# Keep security updates for native amd64/i386 packages, but not armhf. Debian can
+# publish Multi-Arch: same updates for amd64 before armhf; the base image pins the
+# affected native libraries to bookworm/main so their versions stay compatible.
+deb [arch=amd64,i386] http://deb.debian.org/debian-security/ bookworm-security main
