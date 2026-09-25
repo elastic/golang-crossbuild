@@ -3,6 +3,13 @@ ARG VERSION={{ .VERSION }}
 ARG TAG_EXTENSION=''
 FROM --platform=linux/amd64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-amd64
 
+{{- if eq .DEBIAN_VERSION "12" }}
+RUN printf 'Package: libpcre2-8-0 libselinux1 liblzma5\nPin: release n=bookworm\nPin-Priority: 1001\n' \
+        > /etc/apt/preferences.d/crossbuild-multiarch \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get upgrade -y --allow-downgrades --no-install-recommends
+{{- end }}
+
 RUN dpkg --add-architecture arm64 \
         && apt update -y --no-install-recommends \
         && apt upgrade -y --no-install-recommends \
@@ -49,6 +56,13 @@ ARG REPOSITORY=docker.elastic.co/beats-dev
 ARG VERSION={{ .VERSION }}
 ARG TAG_EXTENSION=''
 FROM --platform=linux/arm64 ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION} AS stage-arm64
+
+{{- if eq .DEBIAN_VERSION "12" }}
+RUN printf 'Package: libpcre2-8-0 libselinux1 liblzma5\nPin: release n=bookworm\nPin-Priority: 1001\n' \
+        > /etc/apt/preferences.d/crossbuild-multiarch \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get upgrade -y --allow-downgrades --no-install-recommends
+{{- end }}
 
 RUN dpkg --add-architecture arm64 \
         && apt update -y --no-install-recommends \

@@ -8,14 +8,9 @@ COPY sources-debian${DEBIAN_VERSION}.list /etc/apt/sources.list
 # only our sources.list is active and cross-arch packages resolve without version conflicts.
 RUN rm -f /etc/apt/sources.list.d/debian.sources
 
-{{- if eq .DEBIAN_VERSION "12" }}
-RUN printf 'Package: libpcre2-8-0 libselinux1 liblzma5\nPin: release n=bookworm\nPin-Priority: 1001\n' \
-        > /etc/apt/preferences.d/crossbuild-multiarch
-{{- end }}
-
 RUN \
     apt-get -o Acquire::Check-Valid-Until=false update \
-        && apt-get dist-upgrade -y {{ if eq .DEBIAN_VERSION "12" }}--allow-downgrades {{ end }}\
+        && apt-get dist-upgrade -y \
         && apt-get install -qq -y --no-install-recommends --allow-unauthenticated \
             build-essential \
             ca-certificates \
