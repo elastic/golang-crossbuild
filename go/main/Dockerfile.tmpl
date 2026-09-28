@@ -1,5 +1,5 @@
 ARG REPOSITORY=docker.elastic.co/beats-dev
-ARG VERSION=1.27.0
+ARG VERSION={{ .VERSION }}
 ARG TAG_EXTENSION=''
 FROM ${REPOSITORY}/golang-crossbuild:${VERSION}-base${TAG_EXTENSION}
 
@@ -31,7 +31,7 @@ RUN apt install -y --no-install-recommends --allow-unauthenticated\
   libsystemd-dev
 {{- end }}
 
-{{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12")}}
+{{- if or (eq .DEBIAN_VERSION "9") (eq .DEBIAN_VERSION "10") (eq .DEBIAN_VERSION "11") (eq .DEBIAN_VERSION "12") (eq .DEBIAN_VERSION "13")}}
 # msitools
 RUN apt install -y --no-install-recommends --allow-unauthenticated\
   msitools

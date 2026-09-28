@@ -1,4 +1,5 @@
 include Makefile.common
+include gh-aw.mak
 
 TARGETS=go
 ARM_TARGETS=go
@@ -9,12 +10,11 @@ build:
 	@echo '0' > ${status}
 	@$(foreach var,$(TARGETS), \
 		$(MAKE) -C $(var) $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian7 $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian8 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian10 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian11 $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian12 $@ || echo '1' > ${status})
+		$(MAKE) -C $(var) -f Makefile.debian12 $@ || echo '1' > ${status}; \
+		$(MAKE) -C $(var) -f Makefile.debian13 $@ || echo '1' > ${status})
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})
 
@@ -33,12 +33,11 @@ push:
 	@echo '0' > ${status}
 	@$(foreach var,$(TARGETS), \
 		$(MAKE) -C $(var) $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian7 $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian8 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian9 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian10 $@ || echo '1' > ${status}; \
 		$(MAKE) -C $(var) -f Makefile.debian11 $@ || echo '1' > ${status}; \
-		$(MAKE) -C $(var) -f Makefile.debian12 $@ || echo '1' > ${status})
+		$(MAKE) -C $(var) -f Makefile.debian12 $@ || echo '1' > ${status}; \
+		$(MAKE) -C $(var) -f Makefile.debian13 $@ || echo '1' > ${status})
 	@make -C fpm $@ || echo '1' > ${status}
 	exit $$(cat ${status})
 

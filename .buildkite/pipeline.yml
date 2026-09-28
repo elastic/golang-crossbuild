@@ -28,10 +28,6 @@ common:
 
 steps:
 
-  - label: ":linux: Validate Go version consistency"
-    command:
-      - ".buildkite/scripts/validate-go-version.sh"
-
   - wait: ~
 
   - group: "FPM"
@@ -83,6 +79,7 @@ steps:
         if: build.branch == 'main' && build.source != "schedule"
         command: "buildkite-agent pipeline upload .buildkite/llvm-apple-pipeline.yml"
         env:
+          RELEASE: "true"
           BUILDKITE_PULL_REQUEST: ${BUILDKITE_PULL_REQUEST}
           BUILDKITE_PULL_REQUEST_BASE_BRANCH: ${BUILDKITE_PULL_REQUEST_BASE_BRANCH}
           GITHUB_PR_LABELS: ${GITHUB_PR_LABELS}
@@ -118,12 +115,11 @@ steps:
           setup:
             makefile:
               - "Makefile"
-              - "Makefile.debian7"
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
@@ -154,11 +150,11 @@ steps:
         matrix:
           setup:
             makefile:
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
@@ -191,12 +187,11 @@ steps:
           setup:
             makefile:
               - "Makefile"
-              - "Makefile.debian7"
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"
@@ -227,11 +222,11 @@ steps:
         matrix:
           setup:
             makefile:
-              - "Makefile.debian8"
               - "Makefile.debian9"
               - "Makefile.debian10"
               - "Makefile.debian11"
               - "Makefile.debian12"
+              - "Makefile.debian13"
             fips:
               - "false"
               - "true"

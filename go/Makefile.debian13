@@ -1,12 +1,11 @@
-IMAGES         := base main darwin npcap
-ARM_IMAGES     := base-arm
-DEBIAN_VERSION := 8
-TAG_EXTENSION  := -debian8
+IMAGES         := base main darwin armhf armel mips ppc s390x npcap
+ARM_IMAGES     := base-arm darwin-arm64 windows-arm64
+DEBIAN_VERSION := 13
+TAG_EXTENSION  := -debian13
 
 export DEBIAN_VERSION TAG_EXTENSION
 
 build:
-	export |grep TAG_EXTENSION
 	@$(foreach var,$(IMAGES),$(MAKE) -C $(var) build || exit 1;)
 
 build-arm:

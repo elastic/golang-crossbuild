@@ -44,7 +44,7 @@ pkg_dir="llvm-mingw-$LLVM_MINGW64_VER-ucrt-ubuntu-$LLVM_MINGW_UBUNTU_REL-$m_arch
 pkg_file="$pkg_dir.tar.xz"
 src_url="$LLVM_MINGW64_SRC/$LLVM_MINGW64_VER/$pkg_file"
 echo ":: Downloading $src_url ..."
-wget "$src_url"
+wget -q "$src_url"
 # wget -q --spider "$src_url"
 
 if [ ! -f "$pkg_file" ]; then
