@@ -39,7 +39,7 @@ imports:
     with:
       target: copilot
       packages:
-        - elastic/golang-crossbuild/.skills/debug-build
+        - elastic/golang-crossbuild/.apm/skills/debug-build
 
 # Buildkite hosts the MCP server at mcp.buildkite.com — no binary install needed.
 # /direct accepts a Buildkite API token directly, which is appropriate for headless
