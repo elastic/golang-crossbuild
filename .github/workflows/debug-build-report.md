@@ -85,11 +85,12 @@ Use the **debug-build** skill to investigate recent build failures on the
 `${{ inputs.branch || 'main' }}` branch of the `golang-crossbuild` Buildkite pipeline.
 The skill is pre-installed via APM; activate it when you start.
 
-The skill contains the full investigation flow, required issue structure, and the
-repository-specific root-cause checks.
+The skill contains the investigation flow and repository-specific root-cause
+checks. The final GitHub issue format is defined separately in
+`.apm/instructions/build-debug-issue.instructions.md`.
 
-Follow the skill, keep the scope to this repository only, and do not trigger,
-cancel, or modify any Buildkite builds.
+Follow the skill, follow the issue instructions, keep the scope to this
+repository only, and do not trigger, cancel, or modify any Buildkite builds.
 
 If there are no failures in the last `${{ inputs.lookback_days || '14' }}` days,
 create an issue noting the build is healthy.
