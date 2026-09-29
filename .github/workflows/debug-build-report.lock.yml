@@ -1461,7 +1461,7 @@ jobs:
           legacy_id=${AW_APM_LEGACY_APP_ID:-}
           token_source=${AW_APM_TOKEN_SOURCE:-cascade}
 
-          # gh-aw substitutes `["elastic/golang-crossbuild/.skills/debug-build"]` at
+          # gh-aw substitutes `["elastic/golang-crossbuild/.apm/skills/debug-build"]` at
           # compile time using Go's default slice formatter, which emits
           # `[a b c]` (space-separated, no quotes) instead of valid JSON.
           # That breaks `jq --argjson` below. Repair string-array inputs
@@ -1543,7 +1543,7 @@ jobs:
           AW_APM_LEGACY_APP_ID: ${{ github.aw.import-inputs.app-id }}
           AW_APM_LEGACY_OWNER: ${{ github.aw.import-inputs.owner }}
           AW_APM_LEGACY_REPOS: ${{ github.aw.import-inputs.repositories }}
-          AW_APM_PACKAGES: "[\"elastic/golang-crossbuild/.skills/debug-build\"]"
+          AW_APM_PACKAGES: "[\"elastic/golang-crossbuild/.apm/skills/debug-build\"]"
           AW_APM_TOKEN_SOURCE: cascade
 
   conclusion:

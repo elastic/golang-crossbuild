@@ -39,7 +39,8 @@ imports:
     with:
       target: copilot
       packages:
-        - elastic/golang-crossbuild/.skills/debug-build
+        - elastic/golang-crossbuild/.apm/skills/debug-build
+        - elastic/golang-crossbuild/.apm/instructions/build-debug-issue.instructions.md
 
 # Buildkite hosts the MCP server at mcp.buildkite.com — no binary install needed.
 # /direct accepts a Buildkite API token directly, which is appropriate for headless
@@ -85,41 +86,12 @@ Use the **debug-build** skill to investigate recent build failures on the
 `${{ inputs.branch || 'main' }}` branch of the `golang-crossbuild` Buildkite pipeline.
 The skill is pre-installed via APM; activate it when you start.
 
-The Buildkite MCP tools are already running — call them as `mcp__buildkite__<tool_name>`.
+The skill contains the investigation flow and repository-specific root-cause
+checks. The final GitHub issue format is defined separately in
+`.apm/instructions/build-debug-issue.instructions.md`.
 
-## Instructions
+Follow the skill, follow the issue instructions, keep the scope to this
+repository only, and do not trigger, cancel, or modify any Buildkite builds.
 
-1. Follow the debug-build skill to identify and classify all failures over the last
-   `${{ inputs.lookback_days || '14' }}` days on the target branch.
-
-2. Create one GitHub issue with the title:
-   `Week of YYYY-MM-DD — N failures in golang-crossbuild/${{ inputs.branch || 'main' }}`
-
-   The issue must include:
-
-   **Summary** — one paragraph: what is failing, which image/target, root cause.
-
-   **Reproduction status** — whether the issue was reproduced in Docker, the exact command used, and whether the reproduction confirms the root cause or leaves it unconfirmed.
-
-   **Failure frequency** — table with one row per build over the lookback window (pass and fail):
-
-   | Date | Build # | State | Root cause |
-   |------|---------|-------|------------|
-
-   **Root cause analysis** — for apt conflicts: exact package, version mismatch, Dockerfile
-   template, `sources-debian*.list` file involved, and why it broke now.
-
-   **Affected jobs** — table: job name → Makefile target → Dockerfile template → fips variant.
-
-   **Timeline** — first failure date; correlation with upstream events (base image rebuild,
-   Debian security advisory, recent commit to this repo).
-
-   **Recommended fix** — exact files and line references, what to change, trade-offs.
-
-   **Links** — Buildkite URLs for the three most recent failing builds.
-
-## Notes
-
-- Keep the scope to this repository only.
-- Do not trigger, cancel, or modify any Buildkite builds.
-- If there are no failures in the lookback window, create an issue noting the build is healthy.
+If there are no failures in the last `${{ inputs.lookback_days || '14' }}` days,
+create an issue noting the build is healthy.
