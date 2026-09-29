@@ -13,11 +13,7 @@
             "always_trigger_comment_regex": "^(?:(?:buildkite\\W+)?(?:build|test)\\W+(?:this|it))|^/test$",
             "skip_ci_labels": [  ],
             "skip_target_branches": [ ],
-<<<<<<< HEAD
-            "skip_ci_on_only_changed": [ "\\.md$", ".mergify.yml", "^.github/" ],
-=======
             "skip_ci_on_only_changed": [ "apm.yml", "catalog-info.yaml", "\\.md$", ".aw-compiler-version", ".mergify.yml", "^.github/", "^.apm/", ".updatecli-version" ],
->>>>>>> cee7e6e (Separate issue-reporting workflow from the debug skill (#798))
             "always_require_ci_on_changed": [ ],
             "fail_on_not_mergeable": true
         }
