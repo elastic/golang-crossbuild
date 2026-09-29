@@ -17,6 +17,11 @@ The issue must include:
 | Date | Build # | State | Root cause |
 |------|---------|-------|------------|
 
+Link each build number to its Buildkite build URL using Markdown. Order rows
+newest build first, including both passing builds and reportable failing builds.
+Exclude failures that were followed by a newer successful build on the same
+branch.
+
 **Root cause analysis** — for apt conflicts: exact package, version mismatch, Dockerfile template, `sources-debian*.list` file involved, and why it broke now.
 
 **Affected jobs** — table: job name → Makefile target → Dockerfile template → fips variant.
@@ -26,5 +31,8 @@ The issue must include:
 **Recommended fix** — exact files and line references, what to change, trade-offs.
 
 **Links** — Buildkite URLs for the three most recent failing builds.
+
+Mention `@elastic/elastic-agent-control-plane` to request team review of the
+issue.
 
 Follow this format exactly, keep the scope to this repository only, and do not trigger, cancel, or modify any Buildkite builds.

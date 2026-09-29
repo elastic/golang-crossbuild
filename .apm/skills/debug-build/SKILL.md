@@ -12,7 +12,9 @@ metadata:
 
 # Debug build failures
 
-Investigate the branch provided by the user (default: `main`).
+Investigate `main` and branches named `N.N` (for example, `1.26` or `1.25`).
+If the workflow provides a branch input, investigate only that branch, after
+validating that it is `main` or matches `^[0-9]+\.[0-9]+$`.
 
 ## MCP tool naming
 
@@ -21,16 +23,30 @@ Claude Code (local) and the GitHub Agentic Workflow, so tool names are always
 `mcp__buildkite__<tool_name>` — e.g. `mcp__buildkite__list_builds`.
 No changes are needed when switching between local and GH AW execution.
 
-## Step 1 — Find recent failing builds
+## Step 1 — Find recent builds and eligible branches
 
-Use `mcp__buildkite__list_builds` (org_slug: `elastic`, pipeline_slug: `golang-crossbuild`,
-branch: the target branch, per_page: 10) to list recent builds and identify which are failing.
+Use `mcp__buildkite__list_builds` (org_slug: `elastic`, pipeline_slug:
+`golang-crossbuild`, per_page: 100) to find builds from the last seven days on
+eligible branches. Follow pagination as needed. Unless a branch input restricts
+the analysis, include only `main` and branch names matching
+`^[0-9]+\.[0-9]+$`; exclude all other branches. Inspect enough history on each
+eligible branch to determine whether each recent failure was subsequently
+recovered, including builds newer than that failure.
 
-Note the build numbers of failed builds; focus on the **most recent** one.
+For each branch, a failed build is relevant only if there is no newer successful
+build on that branch in the available build history. If any later build
+succeeded, treat the earlier failure as recovered/intermittent and do not
+report it. Apply this check to the whole branch, not just adjacent builds or
+only the last failure. Failures within the seven-day window without a later
+successful build remain reportable. If none remain, report the branch as
+healthy.
+
+Record all in-window builds (passed and failed) for the report table and sort
+the combined table by build creation date descending (newest first).
 
 ## Step 2 — Get the failure summary
 
-Call `mcp__buildkite__get_build_failure_summary` for the most recent failing build
+Call `mcp__buildkite__get_build_failure_summary` for the most recent relevant failing build
 (org_slug: `elastic`, pipeline_slug: `golang-crossbuild`, log_tail: 100).
 
 This single call returns:
@@ -236,10 +252,10 @@ refresh, then compare candidate versions.
 
 ## Step 5 — Confirm the cause spans multiple builds
 
-After identifying the root cause, confirm it's consistent by checking whether earlier builds
-fail with the same error. Use `mcp__buildkite__list_builds` to list more builds and spot
-the first build that started failing — its timestamp helps narrow down when an upstream change
-(base image update, Debian package update) occurred.
+After identifying the root cause, confirm it's consistent by checking whether earlier
+relevant builds fail with the same error. Use `mcp__buildkite__list_builds` to list more
+builds and spot the first relevant failure. Do not use recovered failures (those followed
+by a successful build on the same branch) as evidence of an ongoing issue.
 
 ## Step 6 — Summarise and propose a fix
 
