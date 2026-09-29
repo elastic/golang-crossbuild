@@ -2,6 +2,11 @@
 name: ci-agentic-workflows
 
 on:
+  # NOTE: only for testing feature/recompile branch
+  push:
+    branches:
+      - feature/recompile
+  # END NOTE
   pull_request:
     branches:
       - main
