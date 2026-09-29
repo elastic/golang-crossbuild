@@ -41,8 +41,13 @@ only the last failure. Failures within the seven-day window without a later
 successful build remain reportable. If none remain, report the branch as
 healthy.
 
-Record all in-window builds (passed and failed) for the report table and sort
-the combined table by build creation date descending (newest first).
+Record in-window passing builds and only unrecovered failing builds for the
+report table. Exclude every failed build followed by a success on the same
+branch. Sort the combined table by build creation date descending (newest
+first). Generate Buildkite links with the canonical form
+`https://buildkite.com/elastic/golang-crossbuild/builds/<build-number>`; use
+the numeric build number returned by Buildkite and never emit partial,
+redacted, or placeholder URLs.
 
 ## Step 2 — Get the failure summary
 
@@ -279,4 +284,6 @@ That file defines the required GitHub issue title, body sections, and final form
 
 - Keep the scope to this repository only.
 - Do not trigger, cancel, or modify any Buildkite builds.
-- If there are no failures in the lookback window, create an issue noting the build is healthy.
+- If there are no unrecovered failures in the lookback window, report the
+  eligible branches as healthy and do not characterize recovered failures as
+  active failures.
