@@ -251,3 +251,16 @@ Report:
 5. Any risk or trade-off (e.g. security-update coverage, architecture filters, or temporary package pins)
 
 Ask the user before implementing changes.
+
+## Output contract
+
+When the investigation is complete, follow the separate issue-reporting instruction
+file at `.apm/instructions/build-debug-issue.instructions.md`.
+
+That file defines the required GitHub issue title, body sections, and final format.
+
+## Notes
+
+- Keep the scope to this repository only.
+- Do not trigger, cancel, or modify any Buildkite builds.
+- If there are no failures in the lookback window, create an issue noting the build is healthy.
