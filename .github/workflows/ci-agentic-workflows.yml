@@ -2,11 +2,6 @@
 name: ci-agentic-workflows
 
 on:
-  # NOTE: only for testing feature/recompile branch
-  push:
-    branches:
-      - feature/recompile
-  # END NOTE
   pull_request:
     branches:
       - main
@@ -28,4 +23,4 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: make compile-aw-check
+      - run: make compile-aw-check
