@@ -28,6 +28,10 @@ CURRENT=$(grep '^NPCAP_VERSION' "$MAKEFILE" | sed 's/.*:= //')
 echo "Current npcap version: ${CURRENT}"
 echo "Latest  npcap version: ${LATEST}"
 
+# Always record LATEST in metadata so the beats trigger step can read it,
+# even if this repo is already up-to-date (beats pipeline handles the no-op).
+buildkite-agent meta-data set "new-npcap-version" "${LATEST}"
+
 if [ "$LATEST" = "$CURRENT" ]; then
   echo "Already up-to-date at ${CURRENT}. Nothing to do."
   exit 0

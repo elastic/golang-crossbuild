@@ -60,6 +60,14 @@ steps:
     plugins:
       - *vault_github_token_plugin
 
+  - label: ":beats: Trigger npcap bump in elastic/beats"
+    key: "npcap-bump-beats"
+    command: ".buildkite/scripts/trigger-beats-npcap-bump.sh"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+      instanceType: "${INSTANCE_TYPE_X86_64}"
+
 notify:
   - slack: "#ingest-notifications"
     if: build.state == "failed"
