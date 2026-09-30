@@ -12,10 +12,18 @@ The issue must include:
 
 **Reproduction status** — whether the issue was reproduced in Docker, the exact command used, and whether the reproduction confirms the root cause or leaves it unconfirmed.
 
-**Failure frequency** — table with one row per build over the lookback window (pass and fail):
+**Failure frequency** — table with one row for each passing build and each
+unrecovered failing build in the lookback window. Do not include failures that
+were followed by a successful build on the same branch.
 
 | Date | Build # | State | Root cause |
 |------|---------|-------|------------|
+
+For each row, make Build # a Markdown link using the canonical URL
+`https://buildkite.com/elastic/golang-crossbuild/builds/<build-number>` (for
+example, `[Build #2099](https://buildkite.com/elastic/golang-crossbuild/builds/2099)`).
+Never use a bare, partial, redacted, or placeholder URL. Order rows newest
+build first.
 
 **Root cause analysis** — for apt conflicts: exact package, version mismatch, Dockerfile template, `sources-debian*.list` file involved, and why it broke now.
 
@@ -25,6 +33,10 @@ The issue must include:
 
 **Recommended fix** — exact files and line references, what to change, trade-offs.
 
-**Links** — Buildkite URLs for the three most recent failing builds.
+**Links** — Markdown links to the three most recent unrecovered failing builds.
+If there are no such failures, write `None`.
+
+On its own line, include this exact plain-text team mention (no backticks, code
+formatting, escaping, or `cc` prefix): @elastic/elastic-agent-control-plane
 
 Follow this format exactly, keep the scope to this repository only, and do not trigger, cancel, or modify any Buildkite builds.
