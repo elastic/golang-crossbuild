@@ -1,0 +1,26 @@
+---
+name: ci-agentic-workflows
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.apm/**'
+      - '.github/workflows/ci-agentic-workflows.yml'
+      - '.github/workflows/*.md'
+      - '.github/workflows/.lock.yml'
+      - '.github/workflows/shared/**'
+      - '.aw-compiler-version'
+      - 'gh-aw.mak'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v7
+
+      - run: make compile-aw-check
