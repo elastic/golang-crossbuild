@@ -9,4 +9,5 @@ Dockerfile
 .status.*
 *.bck
 npcap/lib/*.exe
+bin/
 
