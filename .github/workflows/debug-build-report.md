@@ -8,11 +8,11 @@ on:
     inputs:
       branch:
         type: string
-        default: main
-        description: "Branch to analyse (default: main)"
+        default: ""
+        description: "Optional branch to analyse (main or a branch named N.N); blank analyses all eligible branches"
       lookback_days:
         type: string
-        default: "14"
+        default: "7"
         description: "Days of build history to inspect"
 
 # Each on-demand dispatch gets its own concurrency slot so two triggered runs
@@ -82,16 +82,8 @@ safe-outputs:
 
 # debug-build-report
 
-Use the **debug-build** skill to investigate recent build failures on the
-`${{ inputs.branch || 'main' }}` branch of the `golang-crossbuild` Buildkite pipeline.
-The skill is pre-installed via APM; activate it when you start.
-
-The skill contains the investigation flow and repository-specific root-cause
-checks. The final GitHub issue format is defined separately in
-`.apm/instructions/build-debug-issue.instructions.md`.
-
-Follow the skill, follow the issue instructions, keep the scope to this
-repository only, and do not trigger, cancel, or modify any Buildkite builds.
-
-If there are no failures in the last `${{ inputs.lookback_days || '14' }}` days,
-create an issue noting the build is healthy.
+Use the **debug-build** skill to analyze the `golang-crossbuild` Buildkite
+pipeline for the last `${{ inputs.lookback_days || '7' }}` days. Pass the
+optional `${{ inputs.branch }}` input through when supplied; otherwise use the
+skill's scheduled-run branch selection. Follow the skill and the
+`.apm/instructions/build-debug-issue.instructions.md` output requirements.
