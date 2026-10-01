@@ -77,6 +77,8 @@ safe-outputs:
   create-issue:
     max: 1
     close-older-issues: true
+    labels:
+      - observablt-ci
 
 ---
 
