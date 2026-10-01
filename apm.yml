@@ -20,4 +20,4 @@ version: 1.0.0
 
 dependencies:
   apm:
-    - path: .apm/skills/debug-build
+    - path: ./.apm/skills/debug-build
