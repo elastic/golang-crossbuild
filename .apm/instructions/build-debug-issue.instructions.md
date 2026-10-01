@@ -32,6 +32,6 @@ Use plain numeric build identifiers in the `Build #` column. Do not add Buildkit
 **Label** — apply the `observablt-ci` label to the issue.
 
 On its own line, include this exact plain-text team mention (no backticks, code
-formatting, escaping, or `cc` prefix): @elastic/observablt-ci
+formatting, escaping, or `cc` prefix): @elastic/elastic-agent-control-plane
 
 Follow this format exactly, keep the scope to this repository only, and do not trigger, cancel, or modify any Buildkite builds.
