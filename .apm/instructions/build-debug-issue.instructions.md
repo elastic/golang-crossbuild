@@ -6,9 +6,11 @@ applyTo: "**/*"
 Create one GitHub issue with the title:
 `Week of YYYY-MM-DD — N failures in golang-crossbuild/<branch>`
 
+Use ASD-STE100 Simplified Technical English (STE) for all prose. Keep each sentence short, direct, and easy to read. Do not add a timeline section. Do not add Buildkite build links. Use plain build numbers in the table.
+
 The issue must include:
 
-**Summary** — one paragraph: what is failing, which image/target, root cause.
+**Summary** — one paragraph: what is failing, which image/target, and the root cause.
 
 **Reproduction status** — whether the issue was reproduced in Docker, the exact command used, and whether the reproduction confirms the root cause or leaves it unconfirmed.
 
@@ -19,22 +21,15 @@ were followed by a successful build on the same branch.
 | Date | Build # | State | Root cause |
 |------|---------|-------|------------|
 
-For each row, make Build # a Markdown link using the canonical URL
-`https://buildkite.com/elastic/golang-crossbuild/builds/<build-number>` (for
-example, `[Build #2099](https://buildkite.com/elastic/golang-crossbuild/builds/2099)`).
-Never use a bare, partial, redacted, or placeholder URL. Order rows newest
-build first.
+Use plain numeric build identifiers in the `Build #` column. Do not add Buildkite URLs, partial URLs, or placeholder links. Order rows newest build first.
 
 **Root cause analysis** — for apt conflicts: exact package, version mismatch, Dockerfile template, `sources-debian*.list` file involved, and why it broke now.
 
 **Affected jobs** — table: job name → Makefile target → Dockerfile template → fips variant.
 
-**Timeline** — first failure date; correlation with upstream events (base image rebuild, Debian security advisory, recent commit to this repo).
-
 **Recommended fix** — exact files and line references, what to change, trade-offs.
 
-**Links** — Markdown links to the three most recent unrecovered failing builds.
-If there are no such failures, write `None`.
+**Label** — apply the `observablt-ci` label to the issue.
 
 On its own line, include this exact plain-text team mention (no backticks, code
 formatting, escaping, or `cc` prefix): @elastic/elastic-agent-control-plane

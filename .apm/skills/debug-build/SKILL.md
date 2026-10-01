@@ -44,10 +44,8 @@ healthy.
 Record in-window passing builds and only unrecovered failing builds for the
 report table. Exclude every failed build followed by a success on the same
 branch. Sort the combined table by build creation date descending (newest
-first). Generate Buildkite links with the canonical form
-`https://buildkite.com/elastic/golang-crossbuild/builds/<build-number>`; use
-the numeric build number returned by Buildkite and never emit partial,
-redacted, or placeholder URLs.
+first). Use the numeric build number returned by Buildkite as a plain value in
+the table. Do not add Buildkite links or URLs in issue text.
 
 ## Step 2 — Get the failure summary
 
