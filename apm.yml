@@ -1,6 +1,9 @@
 name: golang-crossbuild
 version: 1.0.0
 
+targets:
+  - copilot
+
 # Agent Package Manager (https://microsoft.github.io/apm/)
 # Declares agent skills for this repository.
 #
