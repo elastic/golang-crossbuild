@@ -139,6 +139,7 @@ spec:
       pipeline_file: ".buildkite/bump-npcap-pipeline.yml"
       maximum_timeout_in_minutes: 30
       provider_settings:
+        trigger_mode: none
         build_tags: false
         publish_commit_status: false
         build_pull_request_forks: false
