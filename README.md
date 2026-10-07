@@ -379,6 +379,11 @@ It is used to cross compile for `linux/s390x`. This Docker image is based on the
 ## go/npcap Docker image
 
 The `npcap` image is a placeholder for the `npcap` library, see [npcap](./NPCAP.md) for more information.
+It is used to cross compile for `windows/amd64`.
+
+## go/npcap-arm64 Docker image
+
+The `npcap-arm64` image is the same as the [go/npcap](#gonpcap-docker-image) image, but it is used to cross compile for `windows/arm64`.
 
 ## Troubleshooting
 

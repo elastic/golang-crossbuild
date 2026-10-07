@@ -6,13 +6,15 @@ BUILD_DATE    := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 NPCAP_VERSION := 1.89
 NPCAP_FILE    := npcap-$(NPCAP_VERSION)-oem.exe
 SUFFIX_NPCAP_VERSION := -npcap-$(NPCAP_VERSION)
+SUFFIX_NPCAP_ARM64_VERSION := -npcap-arm64-$(NPCAP_VERSION)
 NPCAP_REPOSITORY := docker.elastic.co/observability-ci
+NPCAP_LIB_DIR ?= ../npcap/lib
 GS_BUCKET_PATH ?= golang-crossbuild-ci-internal
 
 # Requires login at google storage.
 copy-npcap:
 ifeq ($(CI),true)
-	@gcloud storage cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) ../npcap/lib/$(NPCAP_FILE)
+	@gcloud storage cp gs://$(GS_BUCKET_PATH)/private/$(NPCAP_FILE) $(NPCAP_LIB_DIR)/$(NPCAP_FILE)
 else
 	@echo 'Only available if running in the CI'
 endif

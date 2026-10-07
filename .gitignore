@@ -8,6 +8,7 @@ _obj
 Dockerfile
 .status.*
 *.bck
-npcap/lib/*.exe
+go/npcap/lib/*.exe
+go/npcap-arm64/lib/*.exe
 bin/
 
