@@ -33,7 +33,7 @@ build: copy-npcap copy-sdks
 	@echo ">> Validating $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	docker run --rm --entrypoint /usr/local/go/bin/go "$(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)" version | grep "go$(VERSION)"
 
-build-arm: copy-sdks
+build-arm: copy-npcap copy-sdks
 	@echo $(SELF_DIR)
 	@echo ">> Building $(REPOSITORY)/$(NAME):$(VERSION)$(SUFFIX)$(TAG_EXTENSION)"
 	@go run $(SELF_DIR)/../template.go -t Dockerfile.tmpl -o Dockerfile
