@@ -8,5 +8,11 @@ _obj
 Dockerfile
 .status.*
 *.bck
+<<<<<<< HEAD
 npcap/lib/*.exe
+=======
+go/npcap/lib/*.exe
+go/npcap-arm64/lib/*.exe
+bin/
+>>>>>>> 1f93de4 (Add npcap image for windows/arm64 (#824))
 
