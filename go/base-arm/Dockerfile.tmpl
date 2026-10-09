@@ -89,11 +89,19 @@ ARG VERSION
 ARG SECURITY_VERSION=-1
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
+<<<<<<< HEAD
 ARG MSFT_DOWNLOAD_SHA256=9af7a777e26da9a1f032fd8efaff838d8971085c47900c3bea3ecd4d83cceb9a
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-arm64.tar.gz
 ARG GOLANG_DOWNLOAD_SHA256=4a97373d49fcacdcf3694fea368a500b00ee3e963974f3e7514132717632f052
+=======
+ARG MSFT_DOWNLOAD_SHA256=30592532b9069b89bdd84ec642bc6d93f918e927869ac1beb1db64f114923b64
+ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
+{{- else}}
+ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-arm64.tar.gz
+ARG GOLANG_DOWNLOAD_SHA256=94f3e30b8e374bc285e7dadc11e0865726b9bc6e85b841ccceaabc0214c6b7c8
+>>>>>>> c3d46b1 ([Automation] Bump Golang version to 1.27.2-1 (#827))
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end}}
 
