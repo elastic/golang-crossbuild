@@ -3,3 +3,6 @@
 # Ownership of CI or related files by the Ingest Eng Prod team
 /.buildkite @elastic/observablt-ci
 /catalog-info.yaml @elastic/observablt-ci
+
+# Agentic workflow client triggers (elastic/oblt-aw distribution)
+/.github/workflows/trigger-obs-aw-* @elastic/observablt-ci
