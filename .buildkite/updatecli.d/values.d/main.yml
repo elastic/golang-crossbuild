@@ -1,0 +1,5 @@
+# Values for bump-npcap.yml when bumping the main branch.
+branch: main
+title_prefix: ""
+backport_label: backport-skip
+description_note: ""
