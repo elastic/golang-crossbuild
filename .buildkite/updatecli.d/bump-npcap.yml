@@ -10,9 +10,9 @@ pipelineid: 'bump-npcap-{{ source "latestNpcapVersion" }}'
 # elastic/vault-github-token Buildkite plugin (configure-git-user: true),
 # which also configures the elastic-ci[bot] git identity.
 #
-# The target branch, title prefix, backport label and extra description are
-# provided via --values: values.d/main.yml for the main branch, or a values
-# file generated per target by .buildkite/scripts/bump-npcap-backports.sh.
+# The repository and target branch come from values.d/scm.yml (main). For
+# backports, .buildkite/scripts/bump-npcap-backports.sh passes an extra values
+# file overriding scm.branch and setting backport.note.
 
 scms:
   githubConfig:
@@ -20,15 +20,15 @@ scms:
     spec:
       user: 'elastic-ci[bot]'
       username: 'elastic-ci[bot]'
-      owner: elastic
-      repository: golang-crossbuild
+      owner: '{{ .scm.owner }}'
+      repository: '{{ .scm.repository }}'
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      branch: '{{ .branch }}'
-      commitusingapi: true
+      branch: '{{ .scm.branch }}'
+      commitusingapi: {{ .scm.commitusingapi }}
 
 actions:
   default:
-    title: '{{ .title_prefix }}Bump npcap to version {{ source "latestNpcapVersion" }}'
+    title: '{{ if ne .scm.branch "main" }}[{{ .scm.branch }}] {{ end }}Bump npcap to version {{ source "latestNpcapVersion" }}'
     kind: github/pullrequest
     scmid: githubConfig
     spec:
@@ -36,13 +36,13 @@ actions:
       labels:
         - automation
         - dependencies
-        - '{{ .backport_label }}'
+        - '{{ if eq .scm.branch "main" }}backport-skip{{ else }}backport{{ end }}'
       description: |
         Bumps the npcap OEM installer to v{{ source "latestNpcapVersion" }}.
         The artifact has been uploaded to the private GCS store by this automation.
 
         https://github.com/nmap/npcap/releases/tag/v{{ source "latestNpcapVersion" }}
-        {{ .description_note }}
+        {{ if .backport }}{{ .backport.note }}{{ end }}
 
 sources:
   latestNpcapVersion:

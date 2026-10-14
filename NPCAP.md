@@ -25,8 +25,8 @@ runs daily and:
    * `1.X` if it builds the exact Go version (`.go-version`) used by beats,
    * otherwise `1.X.Y.x`, created from the `v1.X.Y` tag if it does not exist yet.
 
-   These PRs are labelled `automation` and `backport`, and Mergify merges them once CI passes. Once merged,
-   the `golang-crossbuild:1.X.Y-npcap-<version>-*` images are published, and the elastic/beats `bump-npcap`
+   These PRs are labelled `automation` and `backport`, and need a review. Once merged, the
+   `golang-crossbuild:1.X.Y-npcap-<version>-*` images are published, and the elastic/beats `bump-npcap`
    workflow can bump the npcap version in beats.
 
 Bumping the npcap version on a `1.X.Y.x` branch only publishes new `-npcap-<version>` images; images built

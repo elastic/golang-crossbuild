@@ -28,6 +28,7 @@ CROSSBUILD_REPO="elastic/golang-crossbuild"
 BEATS_REPO="elastic/beats"
 ACTIVE_BRANCHES_URL="https://storage.googleapis.com/artifacts-api/snapshots/branches.json"
 UPDATECLI_CONFIG="${WORKSPACE}/.buildkite/updatecli.d/bump-npcap.yml"
+UPDATECLI_VALUES="${WORKSPACE}/.buildkite/updatecli.d/values.d/scm.yml"
 DRY_RUN="${DRY_RUN:-}"
 
 github_api() {
@@ -61,6 +62,60 @@ npcap_version_at() { # <ref>
 
 go_version_at() { # <repo> <ref>
   file_at_ref "$1" .go-version "$2" | tr -d '[:space:]'
+}
+
+# Prints the branch building <go_version>: X.Y if it builds exactly that
+# version, X.Y.Z.x otherwise (which may not exist yet, see ensure_branch).
+target_branch_for() { # <go_version>
+  local minor="${1%.*}"
+  if branch_exists "$minor" && [ "$(go_version_at "$CROSSBUILD_REPO" "$minor")" = "$1" ]; then
+    echo "$minor"
+  else
+    echo "${1}.x"
+  fi
+}
+
+# Prints the npcap version of <branch>, or of the v<go_version> tag it would
+# be created from if it does not exist yet.
+npcap_version_for() { # <branch> <go_version>
+  if branch_exists "$1"; then
+    npcap_version_at "$1"
+  else
+    npcap_version_at "v$2"
+  fi
+}
+
+# Creates <branch> from the v<go_version> tag. An existing branch is reused.
+ensure_branch() { # <branch> <go_version>
+  if branch_exists "$1"; then
+    return 0
+  fi
+  local tag_sha
+  tag_sha=$(github_api "https://api.github.com/repos/${CROSSBUILD_REPO}/commits/v$2" | jq -r .sha)
+  if [ -n "$DRY_RUN" ]; then
+    echo "[dry-run] would create branch $1 from v$2 (${tag_sha})"
+    return 0
+  fi
+  echo "Creating branch $1 from v$2 (${tag_sha})"
+  github_api -X POST "https://api.github.com/repos/${CROSSBUILD_REPO}/git/refs" \
+    -d "{\"ref\": \"refs/heads/$1\", \"sha\": \"${tag_sha}\"}" > /dev/null
+}
+
+# Opens, or updates, the updatecli PR bumping NPCAP_VERSION on <branch>.
+open_bump_pr() { # <branch> <go_version> <beats_branches>
+  local values="${VALUES_DIR}/$1.yml"
+  cat > "$values" <<EOF
+scm:
+  branch: "$1"
+backport:
+  note: "Backport of ${MAIN_PR_URL:-the npcap ${LATEST} bump on main} for Go $2, used by the elastic/beats branches: $3."
+EOF
+  if [ -n "$DRY_RUN" ]; then
+    echo "[dry-run] would run updatecli against $1 with:"
+    cat "$values"
+  else
+    "$(dirname "$0")/run-updatecli.sh" "$UPDATECLI_CONFIG" --values "$UPDATECLI_VALUES" --values "$values"
+  fi
 }
 
 echo "--- Checking npcap version on main"
@@ -101,32 +156,14 @@ VALUES_DIR=$(mktemp -d)
 SUMMARY=""
 for go_version in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | sort -uV); do
   beats_branches=$(awk -v v="$go_version" '$1 == v { print $2 }' "$BEATS_GO_VERSIONS" | paste -sd, - | sed 's/,/, /g')
-  minor="${go_version%.*}"
 
   if [ "$go_version" = "$MAIN_GO" ]; then
     echo "Go ${go_version}: built by main, already on npcap ${LATEST}."
     continue
-  elif branch_exists "$minor" && [ "$(go_version_at "$CROSSBUILD_REPO" "$minor")" = "$go_version" ]; then
-    target="$minor"
-  else
-    target="${go_version}.x"
-    if ! branch_exists "$target"; then
-      tag_sha=$(github_api "https://api.github.com/repos/${CROSSBUILD_REPO}/commits/v${go_version}" | jq -r .sha)
-      if [ -n "$DRY_RUN" ]; then
-        echo "[dry-run] would create branch ${target} from v${go_version} (${tag_sha})"
-      else
-        echo "Creating branch ${target} from v${go_version} (${tag_sha})"
-        github_api -X POST "https://api.github.com/repos/${CROSSBUILD_REPO}/git/refs" \
-          -d "{\"ref\": \"refs/heads/${target}\", \"sha\": \"${tag_sha}\"}" > /dev/null
-      fi
-    fi
   fi
 
-  if branch_exists "$target"; then
-    current=$(npcap_version_at "$target")
-  else
-    current="$MAIN_NPCAP (new branch from v${go_version})"
-  fi
+  target=$(target_branch_for "$go_version")
+  current=$(npcap_version_for "$target" "$go_version")
   echo "Go ${go_version} (beats ${beats_branches}): branch ${target}, npcap ${current}"
 
   if [ "$current" = "$LATEST" ]; then
@@ -134,20 +171,8 @@ for go_version in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | sort -uV); do
     continue
   fi
 
-  values="${VALUES_DIR}/${target}.yml"
-  cat > "$values" <<EOF
-branch: "${target}"
-title_prefix: "[${target}] "
-backport_label: backport
-description_note: "Backport of ${MAIN_PR_URL:-the npcap ${LATEST} bump on main} for Go ${go_version}, used by the elastic/beats branches: ${beats_branches}."
-EOF
-
-  if [ -n "$DRY_RUN" ]; then
-    echo "[dry-run] would run updatecli against ${target} with:"
-    cat "$values"
-  else
-    "$(dirname "$0")/run-updatecli.sh" "$UPDATECLI_CONFIG" --values "$values"
-  fi
+  ensure_branch "$target" "$go_version"
+  open_bump_pr "$target" "$go_version" "$beats_branches"
   SUMMARY+="* \`${target}\` (Go ${go_version}): npcap ${current} → ${LATEST} PR opened or updated"$'\n'
 done
 
