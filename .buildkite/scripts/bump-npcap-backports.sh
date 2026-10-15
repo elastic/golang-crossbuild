@@ -114,6 +114,8 @@ EOF
     echo "[dry-run] would run updatecli against $1 with:"
     cat "$values"
   else
+    # Later --values files override earlier ones (deep merge), so scm.branch
+    # from $values wins over scm.yml. Keep scm.yml first.
     "$(dirname "$0")/run-updatecli.sh" "$UPDATECLI_CONFIG" --values "$UPDATECLI_VALUES" --values "$values"
   fi
 }
