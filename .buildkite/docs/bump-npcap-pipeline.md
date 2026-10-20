@@ -9,7 +9,7 @@ then opens a pull request to update `NPCAP_VERSION`.
 | --- | --- |
 | Platform | Buildkite |
 | Source | [`bump-npcap-pipeline.yml`](../bump-npcap-pipeline.yml) |
-| Trigger | Not specified in the checked-in repository |
+| Trigger | Enabled weekly schedule on `main`; branch, PR, and tag builds are disabled |
 
 ## Purpose
 
@@ -20,10 +20,13 @@ change.
 
 ## When it runs
 
-The checked-in pipeline file does not declare a schedule, branch filter, or
-event trigger. It is not uploaded by `.buildkite/pipeline.yml`; the
-Buildkite-side configuration that starts it is not available in this
-repository.
+The checked-in pipeline file does not declare its Buildkite-side trigger.
+Buildkite API configuration checked 2026-10-20 identifies the pipeline as
+`golang-crossbuild-bump-npcap` and reports an enabled weekly schedule on
+`main`: `0 4 * * 1 America/New_York`, labeled `Weekly` with message
+`Weekly check for new npcap release`. The API reports branch, pull-request,
+and tag builds disabled, with trigger mode `none`. The pipeline is not
+uploaded by `.buildkite/pipeline.yml`.
 
 ## Execution flow
 
@@ -55,6 +58,9 @@ uploaded GCS object's MD5. It skips download/upload when the object already
 exists. The Updatecli configuration says it is deliberately kept under
 `.buildkite/updatecli.d/`, separate from the GitHub Actions Go-version updater.
 Failed builds send a notification to `#ingest-notifications`.
+The schedule and build-trigger settings above come from Buildkite API
+configuration checked 2026-10-20; the checked-in YAML remains the authority
+for step behavior.
 
 ## Sources and history
 
@@ -63,4 +69,5 @@ Failed builds send a notification to `#ingest-notifications`.
   [`run-updatecli.sh`](../scripts/run-updatecli.sh),
   [`common.sh`](../scripts/common.sh)
 - Updatecli configuration: [`bump-npcap.yml`](../updatecli.d/bump-npcap.yml)
+- Buildkite API configuration checked 2026-10-20: [`golang-crossbuild-bump-npcap`](https://buildkite.com/elastic/golang-crossbuild-bump-npcap)
 - History: [`4517625`](https://github.com/elastic/golang-crossbuild/commit/4517625) added the automated NPCAP bump pipeline and scripts.

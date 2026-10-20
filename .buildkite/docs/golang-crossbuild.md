@@ -9,7 +9,7 @@ uploads the FPM and LLVM Apple image pipelines.
 | --- | --- |
 | Platform | Buildkite |
 | Source | [`pipeline.yml`](../pipeline.yml) |
-| Trigger | Not declared in the checked-in YAML; step conditions select applicable branches and pull requests |
+| Trigger | Buildkite API branch configuration `main 1.*`, branch/PR/tag builds enabled, and a daily schedule on `main` |
 
 ## Purpose
 
@@ -19,8 +19,16 @@ pipelines when their branch or changed-file conditions match.
 
 ## When it runs
 
-This file does not declare Buildkite-side pipeline triggers or schedules.
-Within a running build:
+Buildkite API configuration checked 2026-10-20 sets the branch configuration
+to `main 1.*` and enables branch, pull-request, and tag builds. Its enabled
+pull-request filter is
+`build.pull_request.id == null || (build.creator.name == 'elasticmachine' && build.pull_request.id != null)`.
+As a result, pull-request builds are limited to pull requests created by
+`elasticmachine`; non-pull-request builds pass this filter. The API also
+reports an enabled schedule on `main`: `0 12 * * * America/New_York`, labeled
+`Daily` with message `Builds once per day`.
+
+Within a running build, the checked-in YAML applies these step conditions:
 
 - FPM is uploaded for pull requests targeting `main` when matching files
   change, or for builds on `main`.
@@ -79,11 +87,13 @@ Apple upload conditions and changed-path lists are local configuration; the
 uploaded pipeline execution is described separately on their index pages.
 
 The root file does not define when Buildkite creates builds, nor does it
-identify the complete remote pipeline settings. Although the group is named
-`Release`, its checked-in steps do not set `RELEASE`; the local build scripts
-default `REPOSITORY` to `STAGING_IMAGE` when that variable is unset. External
-Buildkite environment settings are not visible here, so the resulting
-destination cannot be confirmed from this checkout alone.
+identify the complete remote pipeline settings. The trigger and schedule
+details above come from the Buildkite API configuration, checked 2026-10-20;
+the checked-in YAML remains the authority for step behavior. Although the
+group is named `Release`, its checked-in steps do not set `RELEASE`; the local
+build scripts default `REPOSITORY` to `STAGING_IMAGE` when that variable is
+unset. External Buildkite environment settings are not visible here, so the
+resulting destination cannot be confirmed from this checkout alone.
 
 ## Sources and history
 
@@ -92,4 +102,5 @@ destination cannot be confirmed from this checkout alone.
   [`publish.sh`](../scripts/publish.sh), [`common.sh`](../scripts/common.sh)
 - Post-release helper: [`post-release.sh`](../scripts/post-release.sh)
 - Related pipeline pages: [FPM](fpm.md), [LLVM Apple](llvm-apple.md)
+- Buildkite API configuration checked 2026-10-20: [`golang-crossbuild`](https://buildkite.com/elastic/golang-crossbuild)
 - History: [`35c16ef`](https://github.com/elastic/golang-crossbuild/commit/35c16ef) introduced changed-path filtering; [`307a86d`](https://github.com/elastic/golang-crossbuild/commit/307a86d) restricted the pipeline upload to `main`; [`2eb7717`](https://github.com/elastic/golang-crossbuild/commit/2eb7717) kept LLVM Apple off scheduled builds; [`6d4a9cf`](https://github.com/elastic/golang-crossbuild/commit/6d4a9cf) added LLVM release behavior.
