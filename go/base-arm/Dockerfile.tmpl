@@ -86,14 +86,14 @@ RUN curl -fsSL "$SUEXEC_DOWNLOAD_URL" -o suexec.tar.gz \
 
 ARG VERSION
 {{- if eq .FIPS "true"}}
-ARG SECURITY_VERSION=-2
+ARG SECURITY_VERSION=-1
 ARG GOLANG_DOWNLOAD_URL=https://aka.ms/golang/release/latest/go$VERSION$SECURITY_VERSION.linux-arm64.tar.gz
 # Use a different arg name for microsoft/go sha so it can be handled seperately from the regular golang sha
-ARG MSFT_DOWNLOAD_SHA256=1e87af32aa7fe1b55d481f1d710b7f4ea7c5561d799c8f0c9634626e80edb002
+ARG MSFT_DOWNLOAD_SHA256=133b5020784b7b93d472d2a94107ca17a7d032dbdc7fbdb2fd6ffaa1166c86da
 ARG DOWNLOAD_SHA256=$MSFT_DOWNLOAD_SHA256
 {{- else}}
 ARG GOLANG_DOWNLOAD_URL=https://golang.org/dl/go$VERSION.linux-arm64.tar.gz
-ARG GOLANG_DOWNLOAD_SHA256=94f3e30b8e374bc285e7dadc11e0865726b9bc6e85b841ccceaabc0214c6b7c8
+ARG GOLANG_DOWNLOAD_SHA256=a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49
 ARG DOWNLOAD_SHA256=$GOLANG_DOWNLOAD_SHA256
 {{- end}}
 
