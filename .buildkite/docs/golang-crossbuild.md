@@ -76,6 +76,7 @@ shared helpers, and the configured registry and agent plugins.
 | Item | Details |
 | --- | --- |
 | Inputs | Build branch, pull-request metadata, changed paths, `GOLANG_VERSION`, and Makefile/FIPS matrix values. |
+| Pipeline environment | Buildkite API configuration checked 2026-10-20 sets `ELASTIC_PR_COMMENTS_ENABLED=true`. |
 | Outputs | Docker images, GitHub commit statuses, and—on qualifying post-release runs—a pushed version tag. |
 | Agents | GCP x86 and AWS ARM agent configurations are declared in the YAML. |
 | Plugins | Google OIDC authentication and Vault-backed Docker registry/Docker Hub login plugins. Secret values are not included here. |

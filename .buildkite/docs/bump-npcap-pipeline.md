@@ -47,6 +47,7 @@ flowchart TD
 | Item | Details |
 | --- | --- |
 | Inputs | `UPDATECLI_CONFIG=.buildkite/updatecli.d/bump-npcap.yml`; public NPCAP release metadata; credentials supplied through plugins. |
+| Pipeline environment | Buildkite API configuration checked 2026-10-20 sets `ELASTIC_PR_COMMENTS_ENABLED=false`. |
 | Outputs | OEM installer in `gs://golang-crossbuild-ci-internal/private/` when missing; Updatecli may open a pull request labeled `automation`, `dependencies`, and `backport-skip`. |
 | Permissions | Google Cloud access uses the Google OIDC plugin. Updatecli uses an ephemeral GitHub token and configures `elastic-ci[bot]` as the Git identity. |
 | Secrets | `NPCAP_USERNAME`, `NPCAP_PASSWORD`, and `GITHUB_TOKEN` are provided by Vault-backed plugins. Values are not documented here. |
