@@ -1,0 +1,6 @@
+scm:
+  enabled: true
+  owner: elastic
+  repository: golang-crossbuild
+  branch: main
+  commitusingapi: true
