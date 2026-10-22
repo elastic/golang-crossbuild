@@ -439,6 +439,8 @@ jobs:
           private-key: ${{ env.ROW_PRIVATE_KEY }}
           owner: ${{ matrix.group.owner != '' && matrix.group.owner || github.repository_owner }}
           repositories: ${{ matrix.group.repositories }}
+          # gh-aw >= v0.92 strict mode requires explicit token scopes; this token only reads skill packages.
+          permission-contents: read
       - name: Select APM package token
         id: package-token
         env:
