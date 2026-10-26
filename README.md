@@ -416,3 +416,11 @@ The tmp dir can be safely deleted after this.
 
 The SDKs should be uploaded into the `gs://golang-crossbuild-ci-internal/sdks` bucket on GCP (Google Cloud Platform).
 This is accessible to authorized users in the `elastic-observability-ci` project [here](https://console.cloud.google.com/storage/browser/golang-crossbuild-ci-internal/sdks).
+
+## CI pipeline documentation
+
+This repository's checked-in CI configuration is documented in the
+[GitHub Actions workflow index](.github/workflows/README.md) and the
+[Buildkite pipeline index](.buildkite/README.md). The pages describe the
+checked-in configuration; remote Buildkite settings and reusable workflows
+maintained in other repositories may not be visible here.
