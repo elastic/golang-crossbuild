@@ -97,7 +97,8 @@ ensure_branch() { # <branch> <go_version>
     return 0
   fi
   echo "Creating branch $1 from v$2 (${tag_sha})"
-  github_api -X POST "https://api.github.com/repos/${CROSSBUILD_REPO}/git/refs" \
+  github_api -X POST -H "Content-Type: application/json" \
+    "https://api.github.com/repos/${CROSSBUILD_REPO}/git/refs" \
     -d "{\"ref\": \"refs/heads/$1\", \"sha\": \"${tag_sha}\"}" > /dev/null
 }
 

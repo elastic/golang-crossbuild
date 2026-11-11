@@ -66,6 +66,7 @@ steps:
   # active elastic/beats branches. See NPCAP.md#automated-backports.
   - label: ":twisted_rightwards_arrows: Backport NPCAP_VERSION to active Go versions"
     key: "npcap-backports"
+    depends_on: "npcap-bump-crossbuild"
     command: ".buildkite/scripts/bump-npcap-backports.sh"
     agents:
       provider: "gcp"
