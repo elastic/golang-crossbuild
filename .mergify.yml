@@ -50,6 +50,34 @@ pull_request_rules:
     actions:
       queue:
         name: default
+  # npcap backports opened by .buildkite/scripts/bump-npcap-backports.sh. They are
+  # only created after the npcap bump PR on main has been reviewed and merged,
+  # so the main PR itself (base=main) is intentionally excluded.
+  - name: automatic approval for automated npcap backport pull requests
+    conditions:
+      - check-success=buildkite/golang-crossbuild
+      - label=automation
+      - label=backport
+      - head~=^updatecli
+      - -base=main
+      - files=Makefile.common
+      - "#files=1"
+    actions:
+      review:
+        type: APPROVE
+        message: Automatically approving mergify
+  - name: squash and merge automated npcap backport pull requests after CI passes
+    conditions:
+      - label=automation
+      - label=backport
+      - head~=^updatecli
+      - -base=main
+      - -conflict
+      - files=Makefile.common
+      - "#files=1"
+    actions:
+      queue:
+        name: default
   - name: notify the backport has not been merged yet
     conditions:
       - -merged

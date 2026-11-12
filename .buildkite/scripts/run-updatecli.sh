@@ -2,7 +2,8 @@
 # Installs updatecli (version pinned in .updatecli-version) and applies the
 # given updatecli pipeline config.
 #
-# Usage: run-updatecli.sh <path-to-config>
+# Usage: run-updatecli.sh <path-to-config> [extra updatecli apply args...]
+#   e.g. run-updatecli.sh config.yml --values values.yml
 #
 # Required environment:
 #   GITHUB_TOKEN (exported by the elastic/vault-github-token Buildkite plugin)
@@ -12,6 +13,7 @@ source "$(dirname "$0")/common.sh"
 
 MSG="path to an updatecli config file is required"
 CONFIG=${1:?$MSG}
+shift
 
 UPDATECLI_VERSION=$(cat "${WORKSPACE}/.updatecli-version")
 
@@ -31,4 +33,4 @@ chmod +x "${BIN}/updatecli"
 export PATH="${PATH}:${BIN}"
 
 echo "--- Running updatecli apply against ${CONFIG}"
-updatecli apply --config "${CONFIG}"
+updatecli apply --config "${CONFIG}" "$@"

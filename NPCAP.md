@@ -12,7 +12,28 @@ Credentials to the artifact service can be found in the `APM-Shared` folder in t
 
 4) After you've updated the npcap version in golang-crossbuild, make sure to change the npcap version specified in the [packetbeat magefile](https://github.com/elastic/beats/blob/main/x-pack/packetbeat/magefile.go)
 
-## Backports
+## Automated backports
+
+The `golang-crossbuild-bump-npcap` Buildkite pipeline ([bump-npcap-pipeline.yml](.buildkite/bump-npcap-pipeline.yml))
+runs daily and:
+
+1. Uploads the latest npcap OEM installer to `gs://golang-crossbuild-ci-internal/private`.
+2. Opens a PR bumping `NPCAP_VERSION` on `main`. This PR needs a human review.
+3. Once that PR has been merged, opens PRs bumping `NPCAP_VERSION` on the branches that build the Go
+   versions used by the [active elastic/beats branches](https://storage.googleapis.com/artifacts-api/snapshots/branches.json)
+   (see [bump-npcap-backports.sh](.buildkite/scripts/bump-npcap-backports.sh)):
+   * `1.X` if it builds the exact Go version (`.go-version`) used by beats,
+   * otherwise `1.X.Y.x`, created from the `v1.X.Y` tag if it does not exist yet.
+
+   These PRs are labelled `automation` and `backport`, and Mergify merges them once CI passes. Once merged,
+   the `golang-crossbuild:1.X.Y-npcap-<version>-*` images are published, and the elastic/beats `bump-npcap`
+   workflow can bump the npcap version in beats.
+
+Bumping the npcap version on a `1.X.Y.x` branch only publishes new `-npcap-<version>` images; images built
+for previous npcap versions remain available, so consumers still pinned to an older npcap version are not
+affected.
+
+## Manual backports
 
 If you'd like to backport any NCAP_VERSION to any existing golang-crosbuild version, then you need to:
 

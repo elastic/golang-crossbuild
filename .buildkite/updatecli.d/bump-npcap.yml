@@ -9,6 +9,10 @@ pipelineid: 'bump-npcap-{{ source "latestNpcapVersion" }}'
 # .github/updatecli.d/ directory. GITHUB_TOKEN is provided by the
 # elastic/vault-github-token Buildkite plugin (configure-git-user: true),
 # which also configures the elastic-ci[bot] git identity.
+#
+# The repository and target branch come from values.d/scm.yml (main). For
+# backports, .buildkite/scripts/bump-npcap-backports.sh passes an extra values
+# file overriding scm.branch and setting backport.note.
 
 scms:
   githubConfig:
@@ -16,15 +20,15 @@ scms:
     spec:
       user: 'elastic-ci[bot]'
       username: 'elastic-ci[bot]'
-      owner: elastic
-      repository: golang-crossbuild
+      owner: '{{ .scm.owner }}'
+      repository: '{{ .scm.repository }}'
       token: '{{ requiredEnv "GITHUB_TOKEN" }}'
-      branch: main
-      commitusingapi: true
+      branch: '{{ .scm.branch }}'
+      commitusingapi: {{ .scm.commitusingapi }}
 
 actions:
   default:
-    title: 'Bump npcap to version {{ source "latestNpcapVersion" }}'
+    title: '{{ if ne .scm.branch "main" }}[{{ .scm.branch }}] {{ end }}Bump npcap to version {{ source "latestNpcapVersion" }}'
     kind: github/pullrequest
     scmid: githubConfig
     spec:
@@ -32,12 +36,13 @@ actions:
       labels:
         - automation
         - dependencies
-        - backport-skip
+        - '{{ if eq .scm.branch "main" }}backport-skip{{ else }}backport{{ end }}'
       description: |
         Bumps the npcap OEM installer to v{{ source "latestNpcapVersion" }}.
         The artifact has been uploaded to the private GCS store by this automation.
 
         https://github.com/nmap/npcap/releases/tag/v{{ source "latestNpcapVersion" }}
+        {{ if .backport }}{{ .backport.note }}{{ end }}
 
 sources:
   latestNpcapVersion:
@@ -61,8 +66,7 @@ conditions:
     kind: file
     spec:
       file: Makefile.common
-      line: 6
-      content: 'NPCAP_VERSION := {{ source "latestNpcapVersion" }}'
+      matchpattern: '(?m)^NPCAP_VERSION := {{ source "latestNpcapVersion" }}$'
     failwhen: true
 
 targets:
