@@ -29,6 +29,11 @@ common:
         path: "kv/ci-shared/observability-github-secrets/golang-crossbuild/NPCAP_PASSWORD"
         field: "data"
         env_var: "NPCAP_PASSWORD"
+  - docker_elastic_login_plugin: &docker_elastic_login_plugin
+      # Logs in to docker.elastic.co so the backports step can check whether
+      # the npcap images are published.
+      elastic/vault-docker-login#v0.6.0:
+        secret_path: "kv/ci-shared/platform-ingest/elastic_docker_registry"
   - vault_github_token_plugin: &vault_github_token_plugin
       # Provides an ephemeral GITHUB_TOKEN and configures the elastic-ci[bot]
       # git identity used by updatecli to open the version-bump PR.
@@ -74,6 +79,7 @@ steps:
       instanceType: "${INSTANCE_TYPE_X86_64}"
     plugins:
       - *vault_github_token_plugin
+      - *docker_elastic_login_plugin
 
 notify:
   - slack: "#ingest-notifications"

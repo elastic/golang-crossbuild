@@ -11,6 +11,9 @@
 #   - X.Y.Z.x otherwise, created from the vX.Y.Z tag if it does not exist yet
 # and a PR bumping NPCAP_VERSION is opened against it with updatecli.
 #
+# A Go version is skipped when its npcap image is already published, because
+# that is the artifact beats checks for before it bumps npcap.
+#
 # Nothing is propagated until the npcap bump PR on main has been merged, so
 # a new npcap version is always reviewed on main first. The script is safe to
 # re-run: targets already on the latest version are skipped, and updatecli
@@ -18,6 +21,7 @@
 #
 # Required environment:
 #   GITHUB_TOKEN (exported by the elastic/vault-github-token Buildkite plugin)
+#   docker login to docker.elastic.co (elastic/vault-docker-login Buildkite plugin)
 # Optional environment:
 #   DRY_RUN=1    print the targets without creating branches or PRs
 set -euo pipefail
@@ -29,6 +33,9 @@ BEATS_REPO="elastic/beats"
 ACTIVE_BRANCHES_URL="https://storage.googleapis.com/artifacts-api/snapshots/branches.json"
 UPDATECLI_CONFIG="${WORKSPACE}/.buildkite/updatecli.d/bump-npcap.yml"
 UPDATECLI_VALUES="${WORKSPACE}/.buildkite/updatecli.d/values.d/scm.yml"
+NPCAP_IMAGE_REPO="docker.elastic.co/observability-ci/golang-crossbuild"
+# Beats checks for the debian9 image of a Go version before it bumps npcap.
+NPCAP_IMAGE_SUFFIX="debian9"
 DRY_RUN="${DRY_RUN:-}"
 
 github_api() {
@@ -53,6 +60,21 @@ branch_exists() { # <branch>
     200) return 0 ;;
     404) return 1 ;;
     *) echo "ERROR: unexpected HTTP ${status} checking branch $1" >&2; exit 1 ;;
+  esac
+}
+
+# Returns 0 if the npcap image of <go_version> at ${LATEST} is published, 1 if
+# it is not, and exits on any other error (for example a failed login) so it
+# is not mistaken for "missing".
+npcap_image_exists() { # <go_version>
+  local image="${NPCAP_IMAGE_REPO}:$1-npcap-${LATEST}-${NPCAP_IMAGE_SUFFIX}"
+  local output
+  if output=$(docker manifest inspect "$image" 2>&1); then
+    return 0
+  fi
+  case "$output" in
+    *"no such manifest"*|*"manifest unknown"*|*"not found"*) return 1 ;;
+    *) echo "ERROR: cannot check image ${image}: ${output}" >&2; exit 1 ;;
   esac
 }
 
@@ -180,12 +202,18 @@ for go_version in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | sort -uV); do
     continue
   fi
 
+  if npcap_image_exists "$go_version"; then
+    SUMMARY+="* Go ${go_version}: image npcap ${LATEST} already published"$'\n'
+    echo "Go ${go_version}: image npcap ${LATEST} already published."
+    continue
+  fi
+
   target=$(target_branch_for "$go_version")
   current=$(npcap_version_for "$target" "$go_version")
   echo "Go ${go_version} (beats ${beats_branches}): branch ${target}, npcap ${current}"
 
   if [ "$current" = "$LATEST" ]; then
-    SUMMARY+="* \`${target}\` (Go ${go_version}): already on npcap ${LATEST}"$'\n'
+    SUMMARY+="* \`${target}\` (Go ${go_version}): on npcap ${LATEST}, image not published yet"$'\n'
     continue
   fi
 
