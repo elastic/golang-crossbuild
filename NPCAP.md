@@ -25,9 +25,32 @@ runs daily and:
    * `1.X` if it builds the exact Go version (`.go-version`) used by beats,
    * otherwise `1.X.Y.x`, created from the `v1.X.Y` tag if it does not exist yet.
 
+   A Go version is skipped when its image `golang-crossbuild:1.X.Y-npcap-<version>-debian9` is already
+   published. The script checks the image, not the branch, because the image is what beats looks for.
+
    These PRs are labelled `automation` and `backport`, and Mergify merges them once CI passes. Once merged,
    the `golang-crossbuild:1.X.Y-npcap-<version>-*` images are published, and the elastic/beats `bump-npcap`
    workflow can bump the npcap version in beats.
+
+### How beats picks the npcap version
+
+The elastic/beats `bump-npcap` workflow reads `NPCAP_VERSION` from the golang-crossbuild branch named after the
+`1.X` of the Go version in the beats `.go-version`. If that branch does not exist, it reads `main`. It never
+reads a `1.X.Y.x` branch. Before it opens a PR, it requires the image
+`golang-crossbuild:1.X.Y-npcap-<version>-debian9` to exist, with the full Go version `1.X.Y`.
+
+This means a bump on a `1.X.Y.x` branch does not change what beats reads. It publishes the image that the
+beats check waits for. Beats picks up the new version only after the `1.X` branch (or `main`, if there is no
+`1.X` branch) carries it.
+
+The script needs a `docker.elastic.co` login to check images, and the `gh` CLI with `GITHUB_TOKEN`.
+
+### Testing the helpers
+
+Start a build of the `golang-crossbuild-bump-npcap` pipeline with `TEST_IMAGE_CHECK=1` (add `DRY_RUN=1` to
+be safe). The `Test npcap image check` step runs
+[test-npcap-lib.sh](.buildkite/scripts/test-npcap-lib.sh) against the real GitHub API and registry. Set
+`TEST_IMAGE_GO` and `TEST_IMAGE_NPCAP` to check a different published tag.
 
 Bumping the npcap version on a `1.X.Y.x` branch only publishes new `-npcap-<version>` images; images built
 for previous npcap versions remain available, so consumers still pinned to an older npcap version are not

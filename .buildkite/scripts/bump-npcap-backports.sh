@@ -20,71 +20,21 @@
 # reuses its existing PR for a target.
 #
 # Required environment:
-#   GITHUB_TOKEN (exported by the elastic/vault-github-token Buildkite plugin)
+#   GITHUB_TOKEN (exported by the elastic/vault-github-token Buildkite plugin,
+#                 read by the gh CLI)
 #   docker login to docker.elastic.co (elastic/vault-docker-login Buildkite plugin)
 # Optional environment:
 #   DRY_RUN=1    print the targets without creating branches or PRs
 set -euo pipefail
 
 source "$(dirname "$0")/common.sh"
+source "$(dirname "$0")/npcap-lib.sh"
 
-CROSSBUILD_REPO="elastic/golang-crossbuild"
 BEATS_REPO="elastic/beats"
 ACTIVE_BRANCHES_URL="https://storage.googleapis.com/artifacts-api/snapshots/branches.json"
 UPDATECLI_CONFIG="${WORKSPACE}/.buildkite/updatecli.d/bump-npcap.yml"
 UPDATECLI_VALUES="${WORKSPACE}/.buildkite/updatecli.d/values.d/scm.yml"
-NPCAP_IMAGE_REPO="docker.elastic.co/observability-ci/golang-crossbuild"
-# Beats checks for the debian9 image of a Go version before it bumps npcap.
-NPCAP_IMAGE_SUFFIX="debian9"
 DRY_RUN="${DRY_RUN:-}"
-
-github_api() {
-  curl -sfL -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    -H "X-GitHub-Api-Version: 2022-11-28" "$@"
-}
-
-# Prints the raw content of <path> in <repo> at <ref>.
-file_at_ref() { # <repo> <path> <ref>
-  github_api -H "Accept: application/vnd.github.raw" \
-    "https://api.github.com/repos/$1/contents/$2?ref=$3"
-}
-
-# Returns 0 if <branch> exists in this repo, 1 if it does not, and exits on
-# any other API error so a transient failure is not mistaken for "missing".
-branch_exists() { # <branch>
-  local status
-  status=$(curl -sL -o /dev/null -w '%{http_code}' \
-    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "https://api.github.com/repos/${CROSSBUILD_REPO}/branches/$1")
-  case "$status" in
-    200) return 0 ;;
-    404) return 1 ;;
-    *) echo "ERROR: unexpected HTTP ${status} checking branch $1" >&2; exit 1 ;;
-  esac
-}
-
-# Returns 0 if the npcap image of <go_version> at ${LATEST} is published, 1 if
-# it is not, and exits on any other error (for example a failed login) so it
-# is not mistaken for "missing".
-npcap_image_exists() { # <go_version>
-  local image="${NPCAP_IMAGE_REPO}:$1-npcap-${LATEST}-${NPCAP_IMAGE_SUFFIX}"
-  local output
-  if output=$(docker manifest inspect "$image" 2>&1); then
-    return 0
-  fi
-  case "$output" in
-    *"no such manifest"*|*"manifest unknown"*|*"not found"*) return 1 ;;
-    *) echo "ERROR: cannot check image ${image}: ${output}" >&2; exit 1 ;;
-  esac
-}
-
-npcap_version_at() { # <ref>
-  file_at_ref "$CROSSBUILD_REPO" Makefile.common "$1" | sed -n 's/^NPCAP_VERSION := //p'
-}
-
-go_version_at() { # <repo> <ref>
-  file_at_ref "$1" .go-version "$2" | tr -d '[:space:]'
-}
 
 # Prints the branch building <go_version>: X.Y if it builds exactly that
 # version, X.Y.Z.x otherwise (which may not exist yet, see ensure_branch).
@@ -113,15 +63,14 @@ ensure_branch() { # <branch> <go_version>
     return 0
   fi
   local tag_sha
-  tag_sha=$(github_api "https://api.github.com/repos/${CROSSBUILD_REPO}/commits/v$2" | jq -r .sha)
+  tag_sha=$(gh api "repos/${CROSSBUILD_REPO}/commits/v$2" --jq .sha)
   if [ -n "$DRY_RUN" ]; then
     echo "[dry-run] would create branch $1 from v$2 (${tag_sha})"
     return 0
   fi
   echo "Creating branch $1 from v$2 (${tag_sha})"
-  github_api -X POST -H "Content-Type: application/json" \
-    "https://api.github.com/repos/${CROSSBUILD_REPO}/git/refs" \
-    -d "{\"ref\": \"refs/heads/$1\", \"sha\": \"${tag_sha}\"}" > /dev/null
+  gh api -X POST "repos/${CROSSBUILD_REPO}/git/refs" \
+    -f ref="refs/heads/$1" -f sha="${tag_sha}" > /dev/null
 }
 
 # Opens, or updates, the updatecli PR bumping NPCAP_VERSION on <branch>.
@@ -143,19 +92,9 @@ EOF
   fi
 }
 
-echo "--- Checking for the gh CLI on this agent"
-# Informational only: the script uses curl today. This tells us whether the
-# agent image has gh, so the GitHub calls can move to it.
-if command -v gh > /dev/null; then
-  gh --version | head -1
-else
-  echo "gh CLI not found on this agent"
-fi
-
 echo "--- Checking npcap version on main"
 
-LATEST=$(retry 3 github_api https://api.github.com/repos/nmap/npcap/releases/latest \
-  | jq -r .tag_name | sed 's/^v//')
+LATEST=$(retry 3 gh api repos/nmap/npcap/releases/latest --jq .tag_name | sed 's/^v//')
 MAIN_NPCAP=$(npcap_version_at main)
 MAIN_GO=$(go_version_at "$CROSSBUILD_REPO" main)
 
@@ -167,9 +106,9 @@ if [ "$MAIN_NPCAP" != "$LATEST" ]; then
   exit 0
 fi
 
-MAIN_PR_URL=$(github_api -G "https://api.github.com/search/issues" \
-  --data-urlencode "q=repo:${CROSSBUILD_REPO} is:pr is:merged base:main in:title \"Bump npcap to version ${LATEST}\"" \
-  | jq -r '.items[0].html_url // empty' || true)
+MAIN_PR_URL=$(gh api -X GET search/issues \
+  -f q="repo:${CROSSBUILD_REPO} is:pr is:merged base:main in:title \"Bump npcap to version ${LATEST}\"" \
+  --jq '.items[0].html_url // empty' || true)
 
 echo "--- Collecting Go versions of the active elastic/beats branches"
 
@@ -202,7 +141,7 @@ for go_version in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | sort -uV); do
     continue
   fi
 
-  if npcap_image_exists "$go_version"; then
+  if npcap_image_exists "$go_version" "$LATEST"; then
     SUMMARY+="* Go ${go_version}: image npcap ${LATEST} already published"$'\n'
     echo "Go ${go_version}: image npcap ${LATEST} already published."
     continue

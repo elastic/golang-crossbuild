@@ -81,16 +81,17 @@ steps:
       - *vault_github_token_plugin
       - *docker_elastic_login_plugin
 
-  # Manual check, run with TEST_IMAGE_CHECK=1: validates the image check used by
-  # the backports step.
+  # Manual check, run with TEST_IMAGE_CHECK=1: validates the GitHub and image
+  # helpers (npcap-lib.sh) used by the backports step.
   - label: ":mag: Test npcap image check"
     if: build.env("TEST_IMAGE_CHECK") == "1"
-    command: ".buildkite/scripts/test-npcap-image-check.sh"
+    command: ".buildkite/scripts/test-npcap-lib.sh"
     agents:
       provider: "gcp"
       image: "${IMAGE_UBUNTU_X86_64}"
       instanceType: "${INSTANCE_TYPE_X86_64}"
     plugins:
+      - *vault_github_token_plugin
       - *docker_elastic_login_plugin
 
 notify:
