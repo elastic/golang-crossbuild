@@ -143,7 +143,13 @@ MAIN_PR_URL=$(github_api -G "https://api.github.com/search/issues" \
 echo "--- Collecting Go versions of the active elastic/beats branches"
 
 BEATS_GO_VERSIONS=$(mktemp)
-for beats_branch in $(retry 3 curl -sfL "$ACTIVE_BRANCHES_URL" | jq -r '.branches[]'); do
+# Assign first: a failure inside a command substitution in a for list is ignored.
+BEATS_BRANCHES=$(retry 3 curl -sfL "$ACTIVE_BRANCHES_URL" | jq -r '.branches[]')
+if [ -z "$BEATS_BRANCHES" ]; then
+  echo "ERROR: no active beats branches found at ${ACTIVE_BRANCHES_URL}" >&2
+  exit 1
+fi
+for beats_branch in $BEATS_BRANCHES; do
   go_version=$(go_version_at "$BEATS_REPO" "$beats_branch")
   if ! [[ "$go_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "ERROR: unexpected .go-version '${go_version}' on ${BEATS_REPO}@${beats_branch}" >&2
