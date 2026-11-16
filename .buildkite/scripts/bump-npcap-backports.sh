@@ -121,6 +121,15 @@ EOF
   fi
 }
 
+echo "--- Checking for the gh CLI on this agent"
+# Informational only: the script uses curl today. This tells us whether the
+# agent image has gh, so the GitHub calls can move to it.
+if command -v gh > /dev/null; then
+  gh --version | head -1
+else
+  echo "gh CLI not found on this agent"
+fi
+
 echo "--- Checking npcap version on main"
 
 LATEST=$(retry 3 github_api https://api.github.com/repos/nmap/npcap/releases/latest \
