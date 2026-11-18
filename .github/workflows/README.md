@@ -18,7 +18,7 @@ documented to the extent visible in their caller files.
 | Observability Agentic Workflow: issues | [trigger-obs-aw-issues](docs/trigger-obs-aw-issues.md) |
 | Observability Agentic Workflow: pull requests | [trigger-obs-aw-pull-request](docs/trigger-obs-aw-pull-request.md) |
 | Debian lifecycle monitor | [debian-lifecycle](docs/debian-lifecycle.md) |
-| Build failure report | \`.github/oblt-aw/scheduled/debug-build-report.md\` via \`obs:repo-scheduled\` |
+| Build failure report | [debug-build-report](docs/debug-build-report.md) |
 
 The Debian lifecycle and build failure report workflows are authored as
 GitHub Agentic Workflow Markdown sources and compiled into the corresponding
