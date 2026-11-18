@@ -19,7 +19,7 @@ targets:
 #
 # SCHEDULED AW — obs:repo-scheduled reads x-oblt-aw below. The scheduled brief is
 #   .github/oblt-aw/scheduled/debug-build-report.md; skill + issue format stay in
-#   .apm/ and are imported via obs.fragments → additional-instructions-fragments.
+#   .apm/ and are imported via obs.fragments → automations[].additional-instructions-fragments.
 # LOCAL IDE — dependencies.apm still installs the debug-build skill for humans.
 
 dependencies:
@@ -35,11 +35,11 @@ x-oblt-aw:
     common: {}
     workflows:
       repo-scheduled:
-        additional-instructions-fragments:
-          - debug-build
-          - build-debug-issue
         automations:
           - id: debug-build-report
             instructions-file: .github/oblt-aw/scheduled/debug-build-report.md
+            additional-instructions-fragments:
+              - debug-build
+              - build-debug-issue
             schedule-profiles: [weekly]
             capabilities: [buildkite-logs]
