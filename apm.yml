@@ -17,8 +17,9 @@ targets:
 #   (The Claude Code wrapper in .claude/skills/ is pre-installed with Claude-specific
 #    enhancements and loads the skill body from .apm/skills/ at runtime.)
 #
-# SCHEDULED AW — obs:repo-scheduled reads x-oblt-aw below and the instruction
-#   file under .github/oblt-aw/scheduled/ (framework owns lock/cron).
+# SCHEDULED AW — obs:repo-scheduled reads x-oblt-aw below. The scheduled brief is
+#   .github/oblt-aw/scheduled/debug-build-report.md; skill + issue format stay in
+#   .apm/ and are imported via obs.fragments → additional-instructions-fragments.
 # LOCAL IDE — dependencies.apm still installs the debug-build skill for humans.
 
 dependencies:
@@ -28,9 +29,15 @@ dependencies:
 x-oblt-aw:
   version: 1
   obs:
+    fragments:
+      build-debug-issue: .apm/instructions/build-debug-issue.instructions.md
+      debug-build: .apm/skills/debug-build/SKILL.md
     common: {}
     workflows:
       repo-scheduled:
+        additional-instructions-fragments:
+          - debug-build
+          - build-debug-issue
         automations:
           - id: debug-build-report
             instructions-file: .github/oblt-aw/scheduled/debug-build-report.md
