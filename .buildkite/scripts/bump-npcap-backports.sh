@@ -4,20 +4,21 @@
 # golang-crossbuild:<go>-npcap-<version>-* images beats needs get published.
 # This automates the manual steps described in NPCAP.md#backports.
 #
-# For each Go version X.Y.Z found in the .go-version of the active beats
-# branches, the target branch in this repo is:
-#   - main, if main builds X.Y.Z (already bumped by the main updatecli step)
-#   - X.Y,  if the X.Y branch builds X.Y.Z
-#   - X.Y.Z.x otherwise, created from the vX.Y.Z tag if it does not exist yet
-# and a PR bumping NPCAP_VERSION is opened against it with updatecli.
-#
-# A Go version is skipped when its npcap image is already published, because
-# that is the artifact beats checks for before it bumps npcap.
+# Beats reads NPCAP_VERSION from the X.Y branch of this repo (or from main if
+# there is no X.Y branch), and then requires the image
+# <X.Y.Z>-npcap-<version>-debian9 for its own Go version X.Y.Z. So for the
+# Go versions X.Y.Z found in the .go-version of the active beats branches:
+#   1. The X.Y branch is bumped if it exists, even when it builds another patch
+#      version, because that is the version beats reads.
+#   2. The image of X.Y.Z must exist. If it is not published and no X.Y branch
+#      builds X.Y.Z, the X.Y.Z.x branch is bumped, created from the vX.Y.Z tag
+#      if it does not exist yet. main already builds its own Go version.
+# A PR bumping NPCAP_VERSION is opened against each branch with updatecli.
 #
 # Nothing is propagated until the npcap bump PR on main has been merged, so
 # a new npcap version is always reviewed on main first. The script is safe to
-# re-run: targets already on the latest version are skipped, and updatecli
-# reuses its existing PR for a target.
+# re-run: branches already on the latest version are skipped, and updatecli
+# reuses its existing PR for a branch.
 #
 # Required environment:
 #   GITHUB_TOKEN (exported by the elastic/vault-github-token Buildkite plugin,
@@ -35,17 +36,6 @@ ACTIVE_BRANCHES_URL="https://storage.googleapis.com/artifacts-api/snapshots/bran
 UPDATECLI_CONFIG="${WORKSPACE}/.buildkite/updatecli.d/bump-npcap.yml"
 UPDATECLI_VALUES="${WORKSPACE}/.buildkite/updatecli.d/values.d/scm.yml"
 DRY_RUN="${DRY_RUN:-}"
-
-# Prints the branch building <go_version>: X.Y if it builds exactly that
-# version, X.Y.Z.x otherwise (which may not exist yet, see ensure_branch).
-target_branch_for() { # <go_version>
-  local minor="${1%.*}"
-  if branch_exists "$minor" && [ "$(go_version_at "$CROSSBUILD_REPO" "$minor")" = "$1" ]; then
-    echo "$minor"
-  else
-    echo "${1}.x"
-  fi
-}
 
 # Prints the npcap version of <branch>, or of the v<go_version> tag it would
 # be created from if it does not exist yet.
@@ -133,7 +123,31 @@ echo "--- Reconciling npcap ${LATEST} on the golang-crossbuild branches"
 
 VALUES_DIR=$(mktemp -d)
 SUMMARY=""
+
+# 1. The X.Y branches, which are the npcap version that beats reads.
+for minor in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | cut -d. -f1,2 | sort -uV); do
+  beats_branches=$(awk -v m="$minor" '{ split($1, v, "."); if (v[1] "." v[2] == m) print $2 }' "$BEATS_GO_VERSIONS" \
+    | paste -sd, - | sed 's/,/, /g')
+
+  if ! branch_exists "$minor"; then
+    echo "Go ${minor} (beats ${beats_branches}): no ${minor} branch, beats reads main."
+    continue
+  fi
+
+  current=$(npcap_version_at "$minor")
+  echo "Go ${minor} (beats ${beats_branches}): branch ${minor}, npcap ${current}"
+  if [ "$current" = "$LATEST" ]; then
+    SUMMARY+="* \`${minor}\`: already on npcap ${LATEST}"$'\n'
+    continue
+  fi
+
+  open_bump_pr "$minor" "$minor" "$beats_branches"
+  SUMMARY+="* \`${minor}\`: npcap ${current} → ${LATEST} PR opened or updated"$'\n'
+done
+
+# 2. The image of each Go version that beats uses.
 for go_version in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | sort -uV); do
+  minor="${go_version%.*}"
   beats_branches=$(awk -v v="$go_version" '$1 == v { print $2 }' "$BEATS_GO_VERSIONS" | paste -sd, - | sed 's/,/, /g')
 
   if [ "$go_version" = "$MAIN_GO" ]; then
@@ -147,7 +161,13 @@ for go_version in $(cut -d' ' -f1 "$BEATS_GO_VERSIONS" | sort -uV); do
     continue
   fi
 
-  target=$(target_branch_for "$go_version")
+  if branch_exists "$minor" && [ "$(go_version_at "$CROSSBUILD_REPO" "$minor")" = "$go_version" ]; then
+    SUMMARY+="* Go ${go_version}: image npcap ${LATEST} not published yet, built by \`${minor}\`"$'\n'
+    echo "Go ${go_version}: image not published yet, it is built by ${minor}."
+    continue
+  fi
+
+  target="${go_version}.x"
   current=$(npcap_version_for "$target" "$go_version")
   echo "Go ${go_version} (beats ${beats_branches}): branch ${target}, npcap ${current}"
 
