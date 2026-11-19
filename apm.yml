@@ -17,10 +17,29 @@ targets:
 #   (The Claude Code wrapper in .claude/skills/ is pre-installed with Claude-specific
 #    enhancements and loads the skill body from .apm/skills/ at runtime.)
 #
-# GH AW USAGE — debug-build-report.md imports the vendored workflow at
-#   .github/workflows/shared/apm.md and passes package references through its
-#   `with.packages` input.
+# SCHEDULED AW — obs:repo-scheduled reads x-oblt-aw below. The scheduled brief is
+#   .github/oblt-aw/scheduled/debug-build-report.md; skill + issue format stay in
+#   .apm/ and are imported via obs.fragments → automations[].additional-instructions-fragments.
+# LOCAL IDE — dependencies.apm still installs the debug-build skill for humans.
 
 dependencies:
   apm:
     - path: ./.apm/skills/debug-build
+
+x-oblt-aw:
+  version: 1
+  obs:
+    fragments:
+      build-debug-issue: .apm/instructions/build-debug-issue.instructions.md
+      debug-build: .apm/skills/debug-build/SKILL.md
+    common: {}
+    workflows:
+      repo-scheduled:
+        automations:
+          - id: debug-build-report
+            instructions-file: .github/oblt-aw/scheduled/debug-build-report.md
+            additional-instructions-fragments:
+              - debug-build
+              - build-debug-issue
+            schedule-profiles: [weekly]
+            capabilities: [buildkite-logs]
