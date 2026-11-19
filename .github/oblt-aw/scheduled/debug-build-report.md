@@ -1,28 +1,13 @@
----
-# Profiles/capabilities are also set in apm.yml (APM wins when both set).
-schedule-profiles: [weekly]
-capabilities:
-  - buildkite-logs
----
-
 # debug-build-report (obs:repo-scheduled)
 
 Analyze the `golang-crossbuild` Buildkite pipeline (`org_slug: elastic`,
-`pipeline_slug: golang-crossbuild`) for the last **7** days.
+`pipeline_slug: golang-crossbuild`) for the last **7** days. Use the skill's
+scheduled-run branch selection (`main` and `N.N` branches). Prefer `noop` when
+every eligible branch is healthy (no unrecovered failures). Create at most one
+issue, and apply label `observablt-ci` when creating one.
 
-## Framework notes
-
-- This automation runs through `obs:repo-scheduled` (not a consumer-owned lock).
-- Buildkite MCP tools are available when capability `buildkite-logs` is wired
-  (`mcp__buildkite__*`). Do not trigger, cancel, or modify builds.
-- Safe outputs allow creating at most one issue. Prefer `noop` when every
-  eligible branch is healthy (no unrecovered failures).
-- Apply label `observablt-ci` when creating an issue.
-- Docker may be unavailable on the scheduled runner. If you cannot reproduce
-  in Docker, keep the diagnosis tentative and say so under Reproduction status.
-- There is no `branch` / `lookback_days` dispatch input on this path. Always
-  use a 7-day lookback and the skill's scheduled-run branch selection
-  (`main` and `N.N` branches).
+Docker may be unavailable on the scheduled runner. If you cannot reproduce in
+Docker, keep the diagnosis tentative and say so under Reproduction status.
 
 ## Diagnosis and issue format
 
