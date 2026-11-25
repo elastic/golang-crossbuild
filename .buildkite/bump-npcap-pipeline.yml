@@ -4,6 +4,7 @@ env:
   IMAGE_UBUNTU_X86_64: "family/platform-ingest-eng-prod-base-ubuntu-2204"
   INSTANCE_TYPE_X86_64: "n2-standard-4"
   UPDATECLI_CONFIG: ".buildkite/updatecli.d/bump-npcap.yml"
+  UPDATECLI_VALUES: ".buildkite/updatecli.d/values.d/scm.yml"
 
 # This section is used to define the plugins that will be used in the pipeline.
 # See https://buildkite.com/docs/pipelines/integrations/plugins/using#using-yaml-anchors-with-plugins
@@ -28,6 +29,11 @@ common:
         path: "kv/ci-shared/observability-github-secrets/golang-crossbuild/NPCAP_PASSWORD"
         field: "data"
         env_var: "NPCAP_PASSWORD"
+  - docker_elastic_login_plugin: &docker_elastic_login_plugin
+      # Logs in to docker.elastic.co so the backports step can check whether
+      # the npcap images are published.
+      elastic/vault-docker-login#v0.6.0:
+        secret_path: "kv/ci-shared/platform-ingest/elastic_docker_registry"
   - vault_github_token_plugin: &vault_github_token_plugin
       # Provides an ephemeral GITHUB_TOKEN and configures the elastic-ci[bot]
       # git identity used by updatecli to open the version-bump PR.
@@ -52,13 +58,41 @@ steps:
 
   - label: ":golang: Bump NPCAP_VERSION in Makefile.common"
     key: "npcap-bump-crossbuild"
-    command: ".buildkite/scripts/run-updatecli.sh ${UPDATECLI_CONFIG}"
+    command: ".buildkite/scripts/run-updatecli.sh ${UPDATECLI_CONFIG} --values ${UPDATECLI_VALUES}"
     agents:
       provider: "gcp"
       image: "${IMAGE_UBUNTU_X86_64}"
       instanceType: "${INSTANCE_TYPE_X86_64}"
     plugins:
       - *vault_github_token_plugin
+
+  # Only acts once the npcap bump PR on main has been merged (a previous run),
+  # then opens PRs for the branches building the Go versions used by the
+  # active elastic/beats branches. See NPCAP.md#automated-backports.
+  - label: ":twisted_rightwards_arrows: Backport NPCAP_VERSION to active Go versions"
+    key: "npcap-backports"
+    depends_on: "npcap-bump-crossbuild"
+    command: ".buildkite/scripts/bump-npcap-backports.sh"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+      instanceType: "${INSTANCE_TYPE_X86_64}"
+    plugins:
+      - *vault_github_token_plugin
+      - *docker_elastic_login_plugin
+
+  # Manual check, run with TEST_IMAGE_CHECK=1: validates the GitHub and image
+  # helpers (npcap-lib.sh) used by the backports step.
+  - label: ":mag: Test npcap image check"
+    if: build.env("TEST_IMAGE_CHECK") == "1"
+    command: ".buildkite/scripts/test-npcap-lib.sh"
+    agents:
+      provider: "gcp"
+      image: "${IMAGE_UBUNTU_X86_64}"
+      instanceType: "${INSTANCE_TYPE_X86_64}"
+    plugins:
+      - *vault_github_token_plugin
+      - *docker_elastic_login_plugin
 
 notify:
   - slack: "#ingest-notifications"
